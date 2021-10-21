@@ -13,6 +13,8 @@ require("dotenv").config()
 router.get("/", verifyToken, checkManager, async (req, res) => {
   try {
     const users = await User.find({ isActive: true }, "-password")
+      .populate({ path: "createBy", select: "name" })
+      .populate({ path: "updateBy", select: "name" })
     res.json({
       success: true,
       users,
@@ -32,6 +34,8 @@ router.get("/", verifyToken, checkManager, async (req, res) => {
 router.get("/:id", verifyToken, checkManager, async (req, res) => {
   try {
     const user = await User.findById(req.params.id, "-password")
+      .populate({ path: "createBy", select: "name" })
+      .populate({ path: "updateBy", select: "name" })
     res.json({
       success: true,
       user,
