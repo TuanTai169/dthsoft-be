@@ -1,7 +1,7 @@
 const router = require("express").Router()
 const verifyToken = require("../../middleware/authorization")
 const Customer = require("../../models/Customer")
-const { customerValidation } = require("../../validation")
+const { customerValidation } = require("../../tools/validation")
 
 // @route POST api/customer/
 // @decs CREATE customer
@@ -60,6 +60,8 @@ router.post("/", verifyToken, async (req, res) => {
 router.get("/", verifyToken, async (req, res) => {
   try {
     const customers = await Customer.find({ isActive: true })
+      .populate({ path: "createBy", select: "name" })
+      .populate({ path: "updateBy", select: "name" })
     res.json({
       success: true,
       customers,
@@ -79,6 +81,8 @@ router.get("/", verifyToken, async (req, res) => {
 router.get("/:id", verifyToken, async (req, res) => {
   try {
     const customer = await Customer.findById(req.params.id)
+      .populate({ path: "createBy", select: "name" })
+      .populate({ path: "updateBy", select: "name" })
     if (!customer)
       res.status(400).json({
         success: false,

@@ -2,7 +2,7 @@ const router = require("express").Router()
 const { checkManager, checkAdmin } = require("../../middleware/authentication")
 const verifyToken = require("../../middleware/authorization")
 const Room = require("../../models/Room")
-const { roomValidation } = require("../../validation")
+const { roomValidation } = require("../../tools/validation")
 
 // @route POST api/room/
 // @decs CREATE room
@@ -57,6 +57,8 @@ router.post("/", verifyToken, checkAdmin, async (req, res) => {
 router.get("/", verifyToken, async (req, res) => {
   try {
     const rooms = await Room.find({ isActive: true })
+      .populate({ path: "createBy", select: "name" })
+      .populate({ path: "updateBy", select: "name" })
     res.json({
       success: true,
       rooms,
@@ -76,6 +78,8 @@ router.get("/", verifyToken, async (req, res) => {
 router.get("/allByFloor/:floor", verifyToken, async (req, res) => {
   try {
     const rooms = await Room.find({ isActive: true, floor: req.params.floor })
+      .populate({ path: "createBy", select: "name" })
+      .populate({ path: "updateBy", select: "name" })
     res.json({
       success: true,
       rooms,
@@ -95,6 +99,8 @@ router.get("/allByFloor/:floor", verifyToken, async (req, res) => {
 router.get("/:id", verifyToken, async (req, res) => {
   try {
     const room = await Room.findById(req.params.id)
+      .populate({ path: "createBy", select: "name" })
+      .populate({ path: "updateBy", select: "name" })
     if (!room)
       res.json({
         success: false,
