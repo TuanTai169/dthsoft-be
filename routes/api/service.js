@@ -52,6 +52,8 @@ router.post("/", verifyToken, async (req, res) => {
 router.get("/", verifyToken, async (req, res) => {
   try {
     const services = await Service.find({ isActive: true })
+      .populate({ path: "createBy", select: "name" })
+      .populate({ path: "updateBy", select: "name" })
     res.json({
       success: true,
       services,
@@ -71,6 +73,8 @@ router.get("/", verifyToken, async (req, res) => {
 router.get("/:id", verifyToken, async (req, res) => {
   try {
     const service = await Service.findById(req.params.id)
+      .populate({ path: "createBy", select: "name" })
+      .populate({ path: "updateBy", select: "name" })
     if (!service)
       res.json({
         success: false,

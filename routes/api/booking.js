@@ -94,8 +94,13 @@ router.post("/:book", verifyToken, async (req, res) => {
 router.get("/", verifyToken, async (req, res) => {
   try {
     const bookings = await Booking.find({ isActive: true })
-      .populate("customer")
-      .populate("rooms")
+      .populate({ path: "customer", select: "name email phone" })
+      .populate({
+        path: "rooms",
+        select: "roomNumber floor price roomType status",
+      })
+      .populate({ path: "createBy", select: "name" })
+      .populate({ path: "updateBy", select: "name" })
     res.json({
       success: true,
       bookings,
@@ -115,6 +120,13 @@ router.get("/", verifyToken, async (req, res) => {
 router.get("/:id", verifyToken, async (req, res) => {
   try {
     const booking = await Booking.findById(req.params.id)
+      .populate({ path: "customer", select: "name email phone" })
+      .populate({
+        path: "rooms",
+        select: "roomNumber floor price roomType status",
+      })
+      .populate({ path: "createBy", select: "name" })
+      .populate({ path: "updateBy", select: "name" })
     res.json({
       success: true,
       booking,
@@ -206,48 +218,6 @@ router.put(`/update/:id`, verifyToken, async (req, res) => {
 })
 
 // @route PUT api/booking/
-// @decs DELETE booking
-// @access Private
-router.put(`/delete/:id`, verifyToken, async (req, res) => {
-  try {
-    const userId = req.userId
-    const bookingID = req.params.id
-    const booking = await Booking.findById(bookingID)
-
-    const bookingDeleteCondition = { _id: bookingID }
-
-    const deleted = {
-      isActive: false,
-      updateBy: userId,
-      status: "CANCELLED",
-    }
-
-    let deletedBooking = await Booking.findOneAndUpdate(
-      bookingDeleteCondition,
-      deleted,
-      {
-        new: true,
-      }
-    )
-
-    //Change STATUS ROOM
-    await toolRoom.changeStatusArrayRooms(booking.rooms, "READY", userId)
-
-    res.json({
-      success: true,
-      message: "Booking deleted successfully",
-      deletedBooking,
-    })
-  } catch (error) {
-    console.log(error)
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-    })
-  }
-})
-
-// @route PUT api/booking/
 // @decs CHANGE ROOM
 // @access Private
 router.put(
@@ -317,5 +287,52 @@ router.put(
     }
   }
 )
+
+// @route PUT api/booking/
+// @decs CANCELLED BOOKING
+// @access Private
+router.put(`/cancelled/:bookingID`, verifyToken, async (req, res) => {
+  const userId = req.userId
+  const bookingID = req.params.bookingID
+  try {
+    const booking = await Booking.findById(bookingID)
+    const rooms = booking.rooms
+    const status = booking.status
+    if (status === "CHECK IN" || status === "CHECK OUT")
+      return res.status(400).json({
+        success: false,
+        message: "Booking has been check in or check out",
+      })
+
+    //UPDATE
+    const bookingUpdateCondition = { _id: bookingID }
+
+    let updateBooking = {
+      isActive: false,
+      status: "CANCELLED",
+      updateBy: userId,
+    }
+    let updatedBooking = await Booking.findOneAndUpdate(
+      bookingUpdateCondition,
+      updateBooking,
+      {
+        new: true,
+      }
+    )
+    //Change STATUS room
+    await toolRoom.changeStatusArrayRooms(rooms, "READY", userId)
+    res.json({
+      success: true,
+      message: "Booking cancelled successfully",
+      updatedBooking,
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    })
+  }
+})
 
 module.exports = router

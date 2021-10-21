@@ -4,6 +4,7 @@ const Booking = require("../../models/Booking")
 const Receipt = require("../../models/Receipt")
 const toolRoom = require("../../tools/roomTool")
 const toolReceipt = require("../../tools/receiptTool")
+const { receiptValidation } = require("../../tools/validation")
 
 // @route POST api/receipt/
 // @decs CREATE RECEIPT / PAYMENT
@@ -12,6 +13,13 @@ router.post("/", verifyToken, async (req, res) => {
   const { booking, paidOut, refund } = req.body
   const userId = req.userId
 
+  //Validation
+  const { error } = receiptValidation(req.body)
+  if (error)
+    return res.status(400).json({
+      success: false,
+      message: error.details[0].message,
+    })
   try {
     const bookingItem = await Booking.findById(booking)
     if (!bookingItem)
@@ -20,6 +28,13 @@ router.post("/", verifyToken, async (req, res) => {
         message: "Booking not found",
       })
 
+    // Check for existing receipt
+    const receiptExist = await Receipt.findOne({ booking })
+    if (receiptExist)
+      return res.status(400).json({
+        success: false,
+        message: "Receipt already taken",
+      })
     //ALL GOOD
     const newReceipt = new Receipt({
       booking,
@@ -57,7 +72,18 @@ router.post("/", verifyToken, async (req, res) => {
 // @access Private
 router.get("/", verifyToken, async (req, res) => {
   try {
-    const receipts = await Receipt.find({ isActive: true }).populate("booking")
+    const receipts = await Receipt.find({ isActive: true })
+      .populate({
+        path: "booking",
+        select: "-isActive -createBy -updateBy -createdAt -updatedAt",
+        populate: { path: "customer", select: "name email phone" },
+        populate: {
+          path: "rooms",
+          select: "roomNumber floor price roomType status",
+        },
+      })
+      .populate({ path: "createBy", select: "name" })
+      .populate({ path: "updateBy", select: "name" })
     res.json({
       success: true,
       receipts,
@@ -76,7 +102,18 @@ router.get("/", verifyToken, async (req, res) => {
 // @access Private
 router.get("/:id", verifyToken, async (req, res) => {
   try {
-    const booking = await Receipt.findById(req.params.id).populate("booking")
+    const booking = await Receipt.findById(req.params.id)
+      .populate({
+        path: "booking",
+        select: "-isActive -createBy -updateBy -createdAt -updatedAt",
+        populate: { path: "customer", select: "name email phone" },
+        populate: {
+          path: "rooms",
+          select: "roomNumber floor price roomType status",
+        },
+      })
+      .populate({ path: "createBy", select: "name" })
+      .populate({ path: "updateBy", select: "name" })
     res.json({
       success: true,
       booking,
@@ -89,4 +126,45 @@ router.get("/:id", verifyToken, async (req, res) => {
     })
   }
 })
+
+// @route PUT api/booking/
+// @decs UPDATE booking
+// @access Private
+router.put(`/update/:id`, verifyToken, async (req, res) => {
+  const { booking, paidOut, refund } = req.body
+  const userId = req.userId
+
+  try {
+    // All good
+    let updateReceipt = {
+      booking,
+      paidOut,
+      refund,
+      status: "PAID",
+      updateBy: userId,
+    }
+
+    const receiptUpdateCondition = { _id: req.params.id }
+
+    let updatedReceipt = await Receipt.findByIdAndUpdate(
+      receiptUpdateCondition,
+      updateReceipt,
+      {
+        new: true,
+      }
+    )
+    res.json({
+      success: true,
+      message: "Receipt updated successfully",
+      updatedReceipt,
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    })
+  }
+})
+
 module.exports = router
