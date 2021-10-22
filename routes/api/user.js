@@ -10,7 +10,7 @@ require("dotenv").config()
 // @route GET api/user/
 // @decs READ all user
 // @access Private
-router.get("/", verifyToken, checkManager, async (req, res) => {
+router.get("/", verifyToken, async (req, res) => {
   try {
     const users = await User.find({ isActive: true }, "-password")
       .populate({ path: "createBy", select: "name" })
@@ -31,7 +31,7 @@ router.get("/", verifyToken, checkManager, async (req, res) => {
 // @route GET api/user/
 // @decs READ a user
 // @access Private
-router.get("/:id", verifyToken, checkManager, async (req, res) => {
+router.get("/:id", verifyToken, async (req, res) => {
   try {
     const user = await User.findById(req.params.id, "-password")
       .populate({ path: "createBy", select: "name" })
@@ -153,7 +153,7 @@ router.put(`/update/:id`, verifyToken, checkManager, async (req, res) => {
 // @route DELETE api/user/
 // @decs delete user
 // @access Private
-router.put(`/delete/:id`, verifyToken, checkAdmin, async (req, res) => {
+router.put(`/delete/:id`, verifyToken, checkManager, async (req, res) => {
   try {
     const userDeleteCondition = { _id: req.params.id }
     const deleted = { isActive: false, updateBy: req.userId }

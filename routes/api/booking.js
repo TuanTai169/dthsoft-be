@@ -275,7 +275,7 @@ router.put(
       await toolRoom.changeStatusOneRoom(roomChooseID, "READY", userId)
       res.json({
         success: true,
-        message: "Booking updated successfully",
+        message: "Change room successfully",
         updatedBooking,
       })
     } catch (error) {

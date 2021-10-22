@@ -21,9 +21,9 @@ const customerValidation = (data) => {
   const schema = Joi.object({
     name: Joi.string().min(6).required(),
     email: Joi.string().min(10).required().email(),
-    phone: Joi.string().min(10).required(),
+    phone: Joi.string().min(10).max(10).required(),
     cmnd: Joi.string(),
-    address: Joi.string().min(10),
+    address: Joi.string(),
     gender: Joi.string(),
     birthDate: Joi.date(),
     note: Joi.string(),

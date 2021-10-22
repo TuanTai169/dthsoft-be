@@ -116,14 +116,14 @@ router.put("/update/:id", verifyToken, async (req, res) => {
     note,
     isActive,
   } = req.body
-
+  const cusId = req.params.id
   //Validation
-  if (!name || !email)
+  const { error } = customerValidation(req.body)
+  if (error)
     return res.status(400).json({
       success: false,
-      message: "Name and email are required",
+      message: error.details[0].message,
     })
-
   try {
     //All good
     let updateCustomer = {
@@ -139,7 +139,7 @@ router.put("/update/:id", verifyToken, async (req, res) => {
       updateBy: req.userId,
     }
 
-    const cusUpdatedCondition = { _id: req.params.id }
+    const cusUpdatedCondition = { _id: cusId }
 
     updatedCustomer = await Customer.findOneAndUpdate(
       cusUpdatedCondition,
