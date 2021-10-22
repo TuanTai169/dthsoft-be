@@ -3,11 +3,12 @@ const { checkManager, checkAdmin } = require("../../middleware/authentication")
 const verifyToken = require("../../middleware/authorization")
 const Room = require("../../models/Room")
 const { roomValidation } = require("../../tools/validation")
+const toolRoom = require("../../tools/roomTool")
 
 // @route POST api/room/
 // @decs CREATE room
 // @access Private
-router.post("/", verifyToken, checkAdmin, async (req, res) => {
+router.post("/", verifyToken, checkManager, async (req, res) => {
   const { roomNumber, floor, price, roomType, status } = req.body
 
   //Validation
@@ -75,7 +76,7 @@ router.get("/", verifyToken, async (req, res) => {
 // @route GET api/room/:floor
 // @decs SORT room by floor
 // @access Private
-router.get("/allByFloor/:floor", verifyToken, async (req, res) => {
+router.get("/all-by-floor/:floor", verifyToken, async (req, res) => {
   try {
     const rooms = await Room.find({ isActive: true, floor: req.params.floor })
       .populate({ path: "createBy", select: "name" })
@@ -122,7 +123,7 @@ router.get("/:id", verifyToken, async (req, res) => {
 // @route PUT api/room/
 // @decs UPDATE room by ID
 // @access Private
-router.put("/update/:id", verifyToken, async (req, res) => {
+router.put("/update/:id", verifyToken, checkManager, async (req, res) => {
   const { roomNumber, floor, price, roomType, status, isActive } = req.body
 
   //Validation
@@ -170,7 +171,7 @@ router.put("/update/:id", verifyToken, async (req, res) => {
 // @route PUT api/room/
 // @decs DELETE room
 // @access Private
-router.put(`/delete/:id`, verifyToken, checkAdmin, async (req, res) => {
+router.put(`/delete/:id`, verifyToken, checkManager, async (req, res) => {
   try {
     const roomDeleteCondition = { _id: req.params.id }
     const deleted = { isActive: false, updateBy: req.userId }
@@ -196,24 +197,17 @@ router.put(`/delete/:id`, verifyToken, checkAdmin, async (req, res) => {
 })
 
 // @route PUT api/room/
-// @decs UPDATE STATUS ROOM
+// @decs CHANGE STATUS ROOM
 // @access Private
-router.put(`/changeStatus/:id`, verifyToken, async (req, res) => {
-  const { status } = req.body
+router.put(`/change-status/:status/:id`, verifyToken, async (req, res) => {
   try {
-    const roomUpdateCondition = { _id: req.params.id }
-    const updated = { status: status, updateBy: req.userId }
-    let updatedRoom = await Room.findOneAndUpdate(
-      roomUpdateCondition,
-      updated,
-      {
-        new: true,
-      }
-    )
+    const roomId = req.params.id
+    const userId = req.userId
+    const status = req.params.status === "fix" ? "FIXING" : "READY"
+    await toolRoom.changeStatusOneRoom(roomId, status, userId)
     res.json({
       success: true,
-      message: "Room status updated successfully",
-      updatedRoom,
+      message: `Room is ${status}`,
     })
   } catch (error) {
     console.log(error)

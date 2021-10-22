@@ -6,7 +6,7 @@ const Service = require("../../models/Service")
 // @route POST api/service/
 // @decs CREATE service
 // @access Private
-router.post("/", verifyToken, async (req, res) => {
+router.post("/", verifyToken, checkManager, async (req, res) => {
   const { name, price } = req.body
 
   //Validation
@@ -96,7 +96,7 @@ router.get("/:id", verifyToken, async (req, res) => {
 // @route PUT api/service/
 // @decs UPDATE service
 // @access Private
-router.put("/update/:id", verifyToken, async (req, res) => {
+router.put("/update/:id", verifyToken, checkManager, async (req, res) => {
   const { name, price, isActive } = req.body
 
   //Validation
