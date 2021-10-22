@@ -76,11 +76,13 @@ router.get("/", verifyToken, async (req, res) => {
       .populate({
         path: "booking",
         select: "-isActive -createBy -updateBy -createdAt -updatedAt",
-        populate: { path: "customer", select: "name email phone" },
-        populate: {
-          path: "rooms",
-          select: "roomNumber floor price roomType status",
-        },
+        populate: [
+          { path: "customer", select: "name email phone" },
+          {
+            path: "rooms",
+            select: "roomNumber floor price roomType status",
+          },
+        ],
       })
       .populate({ path: "createBy", select: "name" })
       .populate({ path: "updateBy", select: "name" })
@@ -106,11 +108,13 @@ router.get("/:id", verifyToken, async (req, res) => {
       .populate({
         path: "booking",
         select: "-isActive -createBy -updateBy -createdAt -updatedAt",
-        populate: { path: "customer", select: "name email phone" },
-        populate: {
-          path: "rooms",
-          select: "roomNumber floor price roomType status",
-        },
+        populate: [
+          { path: "customer", select: "name email phone" },
+          {
+            path: "rooms",
+            select: "roomNumber floor price roomType status",
+          },
+        ],
       })
       .populate({ path: "createBy", select: "name" })
       .populate({ path: "updateBy", select: "name" })

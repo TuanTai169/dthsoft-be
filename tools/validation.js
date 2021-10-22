@@ -1,5 +1,6 @@
 // VALIDATION
 const Joi = require("@hapi/joi")
+Joi.objectId = require("joi-objectid")(Joi)
 
 //Create User Validation
 const userValidation = (data) => {
@@ -42,6 +43,16 @@ const roomValidation = (data) => {
   return schema.validate(data)
 }
 
+//Create Room Validation
+const receiptValidation = (data) => {
+  const schema = Joi.object({
+    booking: Joi.objectId(),
+    paidOut: Joi.number().required().min(0),
+    refund: Joi.number(),
+  })
+  return schema.validate(data)
+}
 module.exports.userValidation = userValidation
 module.exports.customerValidation = customerValidation
 module.exports.roomValidation = roomValidation
+module.exports.receiptValidation = receiptValidation
