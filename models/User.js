@@ -36,6 +36,8 @@ const UserSchema = new Schema(
       enum: ["EMPLOYEE", "MANAGER", "ADMIN"],
       default: "EMPLOYEE",
     },
+    resetPasswordToken: { type: String },
+    resetPasswordExpires: { type: Date },
     createBy: {
       type: Schema.Types.ObjectId,
       ref: "users",
