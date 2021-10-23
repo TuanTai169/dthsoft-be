@@ -2,8 +2,10 @@ const router = require("express").Router()
 const verifyToken = require("../../middleware/authorization")
 const Booking = require("../../models/Booking")
 const Receipt = require("../../models/Receipt")
+const Customer = require("../../models/Customer")
 const toolRoom = require("../../tools/roomTool")
 const toolReceipt = require("../../tools/receiptTool")
+const sendEmail = require("../../utils/mailer")
 const { receiptValidation } = require("../../tools/validation")
 
 // @route POST api/receipt/
@@ -53,6 +55,18 @@ router.post("/", verifyToken, async (req, res) => {
     //Change STATUS RECEIPT
     await toolReceipt.changeStatusBooking(booking, "CHECK OUT", userId)
 
+    //Send to customer email
+    const customer = await Customer.findById(bookingItem.customer)
+
+    const message =
+      `Dear ${customer.name}!\n\n` +
+      `Thank you for using our service! See you again on the closest day!`
+
+    await sendEmail({
+      email: customer.email,
+      subject: `THANK YOU !`,
+      message,
+    })
     res.json({
       success: true,
       message: `Receipt created successfully`,

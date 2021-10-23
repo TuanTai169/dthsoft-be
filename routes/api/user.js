@@ -82,19 +82,27 @@ router.post("/", verifyToken, checkManager, async (req, res) => {
       roles: roles || "EMPLOYEE",
       createBy: req.userId,
       updateBy: null,
+      resetPasswordToken: "",
+      resetPasswordExpires: null,
     })
     await newUser.save()
 
     //Return Token JWT
     const accessToken = jwt.sign(
       { userId: newUser._id },
-      process.env.ACCESS_TOKEN_SECRET
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN }
     )
     res.json({
       success: true,
       message: "User created successfully",
       accessToken,
-      user: newUser,
+      newUser: {
+        id: newUser._id,
+        name: newUser.name,
+        email: newUser.email,
+        role: newUser.roles,
+      },
     })
   } catch (error) {
     console.log(error)
