@@ -1,0 +1,12 @@
+[
+  {
+    "icon": "bx bx-user",
+    "link": "/profile",
+    "content": "Profile"
+  },
+  {
+    "icon": "bx bx-cog",
+    "link": "/settings",
+    "content": "Settings"
+  }
+]
