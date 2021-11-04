@@ -24,6 +24,7 @@ exports.changeStatusOneRoom = async (room, status, userId) => {
     updatedRoom = await Room.findByIdAndUpdate(filter, update, {
       new: true,
     })
+    return updatedRoom
   } catch (error) {
     console.log(error)
     res.status(500).json({
