@@ -204,10 +204,16 @@ router.put(`/change-status/:status/:id`, verifyToken, async (req, res) => {
     const roomId = req.params.id
     const userId = req.userId
     const status = req.params.status === "fix" ? "FIXING" : "READY"
-    await toolRoom.changeStatusOneRoom(roomId, status, userId)
+    const updatedRoom = await toolRoom.changeStatusOneRoom(
+      roomId,
+      status,
+      userId
+    )
+
     res.json({
       success: true,
-      message: `Room is ${status}`,
+      message: `Room updated successfully`,
+      updatedRoom: updatedRoom,
     })
   } catch (error) {
     console.log(error)
