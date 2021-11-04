@@ -1,36 +1,8 @@
 import axios from "axios"
 import * as types from "../constants/authConstant"
-// import { createSlice } from "@reduxjs/toolkit"
 import setAuthToken from "./../../utils/setAuthToken"
 import { toast } from "react-toastify"
 import { HOST_API_URL } from "../constants/api"
-
-// const initialState = {
-//   accessToken: null,
-//   user: null,
-//   success: null,
-//   message: null,
-// }
-
-// const auth = createSlice({
-//   name: "auth",
-//   initialState,
-//   reducers: {
-//     loginSuccess(state, action) {
-//       state.accessToken = action.payload.accessToken
-//     },
-//     userSuccess(state, action) {
-//       state.user = action.payload.user
-//     },
-//     messageSuccess(state, action) {
-//       state.message = action.payload.message
-//     },
-//   },
-// })
-
-// const { loginSuccess } = auth.actions
-// const { userSuccess } = auth.actions
-// const { messageSuccess } = auth.actions
 
 //LOAD USER
 export const loadUser = () => {

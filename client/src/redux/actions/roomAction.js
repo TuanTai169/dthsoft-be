@@ -1,15 +1,14 @@
 import * as types from "../constants/roomConstant"
 import axios from "axios"
 import { toast } from "react-toastify"
-//import { BASE_API_URL } from "./../constants/api"
-import { LOCAL_API_URL } from "./../constants/api"
+import { HOST_API_URL } from "./../constants/api"
 
 // READ ALL Room
 export const getAllRoom = () => {
   return async (dispatch) => {
     try {
       dispatch({ type: types.SET_ROOM_LOADING, payload: true })
-      const response = await axios.get(`${LOCAL_API_URL}/room`)
+      const response = await axios.get(`${HOST_API_URL}/room`)
 
       if (response.data.success) {
         dispatch({
@@ -18,8 +17,8 @@ export const getAllRoom = () => {
         })
       }
     } catch (error) {
-      toast.error(error.response)
-      dispatch({ type: types.SET_ROOM_ERROR })
+      toast.error(error.response.data.message)
+      //dispatch({ type: types.SET_ROOM_ERROR })
     }
   }
 }
@@ -28,7 +27,7 @@ export const getAllRoom = () => {
 export const findRoom = (id) => {
   return async (dispatch) => {
     try {
-      const response = await axios.get(`${LOCAL_API_URL}/room/${id}`)
+      const response = await axios.get(`${HOST_API_URL}/room/${id}`)
 
       if (response.data.success) {
         dispatch({
@@ -47,7 +46,7 @@ export const findRoom = (id) => {
 export const addRoom = (newRoom) => {
   return async (dispatch) => {
     try {
-      const response = await axios.post(`${LOCAL_API_URL}/room`, newRoom)
+      const response = await axios.post(`${HOST_API_URL}/room`, newRoom)
       if (response.data.success) {
         dispatch({
           type: types.ADD_ROOM,
@@ -56,7 +55,7 @@ export const addRoom = (newRoom) => {
         toast.success(response.data.message)
       }
     } catch (error) {
-      toast.error(error.response)
+      toast.error(error.response.data.message)
     }
   }
 }
@@ -65,7 +64,7 @@ export const addRoom = (newRoom) => {
 export const deleteRoom = (id) => {
   return async (dispatch) => {
     try {
-      const response = await axios.put(`${LOCAL_API_URL}/room/delete/${id}`)
+      const response = await axios.put(`${HOST_API_URL}/room/delete/${id}`)
 
       if (response.data.success) {
         dispatch({
@@ -84,9 +83,31 @@ export const updateRoom = (updateRoom) => {
   return async (dispatch) => {
     try {
       const response = await axios.put(
-        `${LOCAL_API_URL}/room/update/${updateRoom._id}`,
+        `${HOST_API_URL}/room/update/${updateRoom._id}`,
         updateRoom
       )
+      if (response.data.success) {
+        dispatch({
+          type: types.UPDATE_ROOM,
+          payload: response.data.updatedRoom,
+        })
+        toast.success(response.data.message)
+      }
+    } catch (error) {
+      toast.error(error.response)
+    }
+  }
+}
+
+//GET READY
+export const changeStatusRoom = (id, status) => {
+  return async (dispatch) => {
+    console.log(id, status)
+    try {
+      const response = await axios.put(
+        `${HOST_API_URL}/room/change-status/${status}/${id}`
+      )
+      console.log(response.data.updatedRoom)
       if (response.data.success) {
         dispatch({
           type: types.UPDATE_ROOM,

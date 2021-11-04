@@ -43,11 +43,6 @@ const roomReducer = (state = initialState, action) => {
         ...state,
         rooms: newRooms,
       }
-    case types.FIND_ROOM:
-      return {
-        ...state,
-        room: payload,
-      }
     default:
       return state
   }
