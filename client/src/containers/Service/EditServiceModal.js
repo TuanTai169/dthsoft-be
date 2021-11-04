@@ -10,6 +10,7 @@ const EditServiceModal = (props) => {
   const [editService, setEditService] = useState(service)
 
   useEffect(() => setEditService(service), [service])
+
   const onChangeNewForm = (event) =>
     setEditService({
       ...editService,
@@ -18,18 +19,18 @@ const EditServiceModal = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    resetAddPostData()
+    resetEditPostData()
     dispatch(updateService(editService))
   }
 
-  const resetAddPostData = () => {
+  const resetEditPostData = () => {
     handlerModalClose()
     setEditService(service)
   }
   const { name, price } = editService
   return (
     <div>
-      <Modal show={show} onHide={resetAddPostData} animation={false}>
+      <Modal show={show} onHide={resetEditPostData} animation={false}>
         <Modal.Header closeButton>
           <Modal.Title>Edit Service</Modal.Title>
         </Modal.Header>
@@ -63,7 +64,7 @@ const EditServiceModal = (props) => {
             <Button variant="primary" type="submit">
               Save
             </Button>
-            <Button variant="danger" onClick={resetAddPostData}>
+            <Button variant="danger" onClick={resetEditPostData}>
               Close
             </Button>
           </Modal.Footer>

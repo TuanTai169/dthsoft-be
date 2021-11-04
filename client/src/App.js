@@ -2,7 +2,6 @@ import React, { useEffect } from "react"
 import { HashRouter, Route, Switch } from "react-router-dom"
 import Layout from "./components/Layout/Layout"
 import Login from "./containers/Login/Login"
-import NotFound from "./components/Common/NotFound/NotFound"
 
 import { loadUser } from "./redux/actions/authAction"
 import { useDispatch } from "react-redux"
@@ -21,7 +20,6 @@ function App() {
         <Switch>
           <Route exact path="/login" component={Login} />
           <ProtectedRoute exact path="/" component={Layout} />
-          <Route component={NotFound} />
         </Switch>
       </HashRouter>
       <ToastContainer autoClose={3000} theme="colored" />

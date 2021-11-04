@@ -12,6 +12,7 @@ import Customers from "../../containers/Customer/Customers"
 import Services from "../../containers/Service/Services"
 import Rooms from "../../containers/Room/Rooms"
 import Users from "../../containers/User/Users"
+import NotFound from "./../Common/NotFound/NotFound"
 
 const Layout = () => {
   const themeReducer = useSelector((state) => state.themeReducer)
@@ -41,8 +42,9 @@ const Layout = () => {
                     <Route path="/" exact component={Dashboard} />
                     <Route path="/customers" component={Customers} />
                     <Route path="/services" component={Services} />
-                    <Route path="/rooms" component={Rooms} />
+                    <Route path="/room-diagram" component={Rooms} />
                     <Route path="/users" component={Users} />
+                    <Route path="*" component={NotFound} />
                   </Switch>
                 </div>
               </div>

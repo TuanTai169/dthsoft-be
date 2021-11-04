@@ -1,7 +1,6 @@
 import * as types from "../constants/serviceConstant"
 import axios from "axios"
 import { toast } from "react-toastify"
-//import { BASE_API_URL } from "./../constants/api"
 import { HOST_API_URL } from "./../constants/api"
 
 // READ ALL Service
