@@ -105,17 +105,8 @@ router.get("/:id", verifyToken, async (req, res) => {
 // @decs UPDATE customer
 // @access Private
 router.put("/update/:id", verifyToken, async (req, res) => {
-  const {
-    name,
-    email,
-    phone,
-    address,
-    cmnd,
-    gender,
-    birthDate,
-    note,
-    isActive,
-  } = req.body
+  const { name, email, phone, address, cmnd, gender, birthDate, note } =
+    req.body
   const cusId = req.params.id
   //Validation
   const { error } = customerValidation(req.body)
@@ -135,7 +126,6 @@ router.put("/update/:id", verifyToken, async (req, res) => {
       gender: gender || "male",
       birthDate: birthDate || "",
       note: note || "",
-      isActive: isActive,
       updateBy: req.userId,
     }
 
