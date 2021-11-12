@@ -38,7 +38,6 @@ const roomValidation = (data) => {
     price: Joi.number().required(),
     roomType: Joi.string(),
     status: Joi.string(),
-    isActive: Joi.boolean(),
   })
   return schema.validate(data)
 }

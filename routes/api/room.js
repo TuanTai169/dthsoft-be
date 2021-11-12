@@ -124,7 +124,7 @@ router.get("/:id", verifyToken, async (req, res) => {
 // @decs UPDATE room by ID
 // @access Private
 router.put("/update/:id", verifyToken, checkManager, async (req, res) => {
-  const { roomNumber, floor, price, roomType, status, isActive } = req.body
+  const { roomNumber, floor, price, roomType, status } = req.body
 
   //Validation
   if (!roomNumber || !price)
@@ -141,7 +141,6 @@ router.put("/update/:id", verifyToken, checkManager, async (req, res) => {
       price: price,
       roomType: roomType,
       status: status,
-      isActive: isActive,
       updateBy: req.userId,
     }
 

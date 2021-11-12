@@ -117,7 +117,7 @@ router.post("/", verifyToken, checkManager, async (req, res) => {
 // @decs UPDATE user
 // @access Private
 router.put(`/update/:id`, verifyToken, checkManager, async (req, res) => {
-  const { name, email, phone, address, image, isActive, roles } = req.body
+  const { name, email, password, phone, address, image, roles } = req.body
 
   //Simple Validation
   if (!name || !email)
@@ -130,10 +130,10 @@ router.put(`/update/:id`, verifyToken, checkManager, async (req, res) => {
     let updateUser = {
       name: name,
       email: email,
+      password: password,
       phone: phone || "",
       address: address || "",
       image: image || "",
-      isActive: isActive,
       roles: roles || "EMPLOYEE",
       updateBy: req.userId,
     }
