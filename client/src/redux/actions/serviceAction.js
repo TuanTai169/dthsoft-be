@@ -17,7 +17,7 @@ export const getAllService = () => {
         })
       }
     } catch (error) {
-      toast.error(error)
+      toast.error(error.response.data.message)
       dispatch({ type: types.SET_SERVICE_ERROR })
     }
   }

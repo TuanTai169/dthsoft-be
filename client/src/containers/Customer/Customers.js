@@ -1,53 +1,88 @@
-import React from "react"
+import React, { useCallback, useEffect, useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { getAllCustomer } from "../../redux/actions/customerAction"
+import CustomerTable from "./CustomerTable"
+import Pagination from "../../components/Common/Pagination/Pagination"
+import AddCustomerModal from "./AddCustomerModal"
+import { Button, ButtonToolbar, Spinner } from "react-bootstrap"
 
-import Table from "../../components/Common/table/Table"
+function Customers() {
+  const [currentPage, setCurrentPage] = useState(1)
+  const [isOpen, setIsOpen] = useState(false)
 
-import customerList from "../../assets/JsonData/customers-list.json"
+  //GET LIST CUS
+  const customers = useSelector((state) => state.customerReducer.customers)
+  const isLoading = useSelector(
+    (state) => state.customerReducer.isCustomerLoading
+  )
+  const role = useSelector((state) => state.auth.user.roles)
+  const dispatch = useDispatch()
 
-const customerTableHead = [
-  "",
-  "name",
-  "email",
-  "phone",
-  "total orders",
-  "total spend",
-  "location",
-]
+  useEffect(() => {
+    dispatch(getAllCustomer())
+  }, [dispatch])
 
-const renderHead = (item, index) => <th key={index}>{item}</th>
+  const totalItems = customers.length
+  const limit = 6
+  const totalPages = Math.ceil(totalItems / limit)
 
-const renderBody = (item, index) => (
-  <tr key={index}>
-    <td>{item.id}</td>
-    <td>{item.name}</td>
-    <td>{item.email}</td>
-    <td>{item.phone}</td>
-    <td>{item.total_orders}</td>
-    <td>{item.total_spend}</td>
-    <td>{item.location}</td>
-    <td></td>
-  </tr>
-)
+  const currentData = customers.slice(
+    (currentPage - 1) * limit,
+    (currentPage - 1) * limit + limit
+  )
 
-const Customers = () => {
+  const handlerModalClose = () => setIsOpen(false)
+  const onChangedPage = useCallback(
+    (event, page) => {
+      event.preventDefault()
+      setCurrentPage(page)
+    },
+    [setCurrentPage]
+  )
+
   return (
     <div>
-      <h2 className="page-header">customers</h2>
-      <div className="row">
-        <div className="col-12">
-          <div className="card">
-            <div className="card__body">
-              <Table
-                limit="10"
-                headData={customerTableHead}
-                renderHead={(item, index) => renderHead(item, index)}
-                bodyData={customerList}
-                renderBody={(item, index) => renderBody(item, index)}
+      <>
+        {isLoading === false ? (
+          <div className="spinner-container">
+            <Spinner animation="border" variant="info" />
+          </div>
+        ) : (
+          <div className="page">
+            <div className="page__header">
+              <div className="page__title">
+                <h3>Customers</h3>
+              </div>
+              <div className="page__action">
+                <ButtonToolbar>
+                  <Button
+                    variant="success"
+                    className={role === "EMPLOYEE" ? "disabled" : ""}
+                    onClick={() => setIsOpen(true)}
+                  >
+                    Add Customer
+                  </Button>
+                  <AddCustomerModal
+                    show={isOpen}
+                    handlerModalClose={handlerModalClose}
+                  />
+                </ButtonToolbar>
+              </div>
+            </div>
+            <div className="page__body">
+              <CustomerTable role={role} customers={currentData} />
+            </div>
+            <div className="page__footer">
+              <Pagination
+                totalPages={totalPages}
+                pageNeighbours={2}
+                onChangedPage={onChangedPage}
+                currentPage={currentPage}
               />
             </div>
           </div>
-        </div>
-      </div>
+        )}
+      </>
     </div>
   )
 }

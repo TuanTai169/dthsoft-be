@@ -1,0 +1,31 @@
+import React from "react"
+import { Table } from "react-bootstrap"
+
+const CustomerForm = (props) => {
+  const { customer } = props
+
+  //Render Table
+  const tableHead = ["Name", "Phone", "CMND", "Email"]
+  const renderHead = tableHead.map((item, index) => {
+    return <th key={index}>{item}</th>
+  })
+  return (
+    <>
+      <Table striped>
+        <thead>
+          <tr>{renderHead}</tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{customer.name}</td>
+            <td>{customer.phone}</td>
+            <td>{customer.cmnd}</td>
+            <td>{customer.email}</td>
+          </tr>
+        </tbody>
+      </Table>
+    </>
+  )
+}
+
+export default CustomerForm
