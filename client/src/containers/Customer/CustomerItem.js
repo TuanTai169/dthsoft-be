@@ -7,7 +7,7 @@ import EditCustomersModal from "./EditCustomerModal"
 import { deleteCustomer } from "../../redux/actions/customerAction"
 
 const CustomerItem = (props) => {
-  const { customer, role } = props
+  const { customer } = props
   const dispatch = useDispatch()
 
   const [isViewOpen, setIsViewOpen] = useState(false)
@@ -41,7 +41,6 @@ const CustomerItem = (props) => {
           </Button>
           <Button
             variant="primary"
-            className={role === "EMPLOYEE" ? "disabled" : "btn btn-edit"}
             style={{ marginLeft: "12px" }}
             onClick={() => setIsEditOpen(true)}
           >
@@ -49,7 +48,6 @@ const CustomerItem = (props) => {
           </Button>
           <Button
             variant="danger"
-            className={role === "EMPLOYEE" ? "disabled" : "btn btn-delete"}
             style={{ marginLeft: "12px" }}
             onClick={() =>
               setConformDialog({

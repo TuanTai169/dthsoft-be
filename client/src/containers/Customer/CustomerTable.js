@@ -3,7 +3,7 @@ import { Table } from "react-bootstrap"
 import CustomerItem from "./CustomerItem"
 
 function CustomerTable(props) {
-  const { customers, role } = props
+  const { customers } = props
 
   const tableHead = ["name", "email", "phone", "action"]
   const renderHead = tableHead.map((item, index) => {
@@ -19,7 +19,7 @@ function CustomerTable(props) {
         <tbody>
           {customers.map((customer) => (
             <tr key={customer._id}>
-              <CustomerItem role={role} customer={customer} />
+              <CustomerItem customer={customer} />
             </tr>
           ))}
         </tbody>

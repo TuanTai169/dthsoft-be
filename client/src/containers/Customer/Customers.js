@@ -15,7 +15,7 @@ function Customers() {
   const isLoading = useSelector(
     (state) => state.customerReducer.isCustomerLoading
   )
-  const role = useSelector((state) => state.auth.user.roles)
+
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -55,11 +55,7 @@ function Customers() {
               </div>
               <div className="page__action">
                 <ButtonToolbar>
-                  <Button
-                    variant="success"
-                    className={role === "EMPLOYEE" ? "disabled" : ""}
-                    onClick={() => setIsOpen(true)}
-                  >
+                  <Button variant="success" onClick={() => setIsOpen(true)}>
                     Add Customer
                   </Button>
                   <AddCustomerModal
@@ -70,7 +66,7 @@ function Customers() {
               </div>
             </div>
             <div className="page__body">
-              <CustomerTable role={role} customers={currentData} />
+              <CustomerTable customers={currentData} />
             </div>
             <div className="page__footer">
               <Pagination
