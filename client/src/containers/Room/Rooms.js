@@ -5,9 +5,11 @@ import lodash from "lodash"
 import RoomItem from "./RoomItem"
 import AddRoomModal from "./AddRoomModal"
 import { getAllRoom } from "../../redux/actions/roomAction"
+import ViewAllBookingModal from "../Booking/ViewAllBookingModal"
 
 const Rooms = () => {
   const [isOpenAddModal, setIsOpenAddModal] = useState(false)
+  const [isOpenBookingModal, seIsOpenBookingModal] = useState(false)
 
   const rooms = useSelector((state) => state.roomReducer.rooms)
   const role = useSelector((state) => state.auth.user.roles)
@@ -25,6 +27,7 @@ const Rooms = () => {
 
   //Close Add Modal
   const handlerCloseAddModal = () => setIsOpenAddModal(false)
+  const handlerCloseBookingModal = () => seIsOpenBookingModal(false)
   return (
     <div>
       <div className="page__header" style={{ marginBottom: "10px" }}>
@@ -33,7 +36,7 @@ const Rooms = () => {
         </div>
         <div className="page__status">
           <Button
-            variant="outline-info"
+            variant="outline-warning"
             style={{
               marginLeft: "16px",
               fontWeight: "bold",
@@ -47,14 +50,14 @@ const Rooms = () => {
             <Button
               variant={
                 item[0] === "OCCUPIED"
-                  ? "outline-success"
+                  ? "outline-primary"
                   : item[0] === "CLEANING"
-                  ? "outline-secondary"
-                  : item[0] === "BOOKING"
-                  ? "outline-warning"
-                  : item[0] === "FIXING"
                   ? "outline-danger"
-                  : "outline-primary"
+                  : item[0] === "BOOKING"
+                  ? "outline-info"
+                  : item[0] === "FIXING"
+                  ? "outline-secondary"
+                  : "outline-success"
               }
               key={index}
               style={{
@@ -75,9 +78,21 @@ const Rooms = () => {
         </div>
         <div className="page__action">
           <ButtonToolbar>
+            <Button
+              onClick={() => seIsOpenBookingModal(true)}
+              style={{ marginRight: "10px" }}
+            >
+              List Booking
+            </Button>
             {role !== "EMPLOYEE" && (
-              <Button onClick={() => setIsOpenAddModal(true)}>Add Room</Button>
+              <Button variant="success" onClick={() => setIsOpenAddModal(true)}>
+                Add Room
+              </Button>
             )}
+            <ViewAllBookingModal
+              show={isOpenBookingModal}
+              handlerModalClose={handlerCloseBookingModal}
+            />
             <AddRoomModal
               show={isOpenAddModal}
               handlerModalClose={handlerCloseAddModal}

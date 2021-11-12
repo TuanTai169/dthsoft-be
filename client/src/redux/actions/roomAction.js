@@ -18,12 +18,12 @@ export const getAllRoom = () => {
       }
     } catch (error) {
       toast.error(error.response.data.message)
-      //dispatch({ type: types.SET_ROOM_ERROR })
+      dispatch({ type: types.SET_ROOM_ERROR })
     }
   }
 }
 
-// READ ALL room
+// READ 1 room
 export const findRoom = (id) => {
   return async (dispatch) => {
     try {
@@ -102,12 +102,10 @@ export const updateRoom = (updateRoom) => {
 //GET READY
 export const changeStatusRoom = (id, status) => {
   return async (dispatch) => {
-    console.log(id, status)
     try {
       const response = await axios.put(
         `${HOST_API_URL}/room/change-status/${status}/${id}`
       )
-      console.log(response.data.updatedRoom)
       if (response.data.success) {
         dispatch({
           type: types.UPDATE_ROOM,

@@ -18,9 +18,9 @@ const RoomItem = (props) => {
             status === "OCCUPIED"
               ? "tomato"
               : status === "CLEANING"
-              ? "#ccc"
-              : status === "FIXING"
               ? "yellow"
+              : status === "FIXING"
+              ? "#ccc"
               : status === "BOOKING"
               ? "#0FF"
               : "#fff",
