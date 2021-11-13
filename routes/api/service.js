@@ -11,7 +11,7 @@ router.post("/", verifyToken, checkManager, async (req, res) => {
 
   //Validation
   if (!name || !price)
-    res.status(400).json({
+    return res.status(400).json({
       success: false,
       message: "Name and price of service are required",
     })

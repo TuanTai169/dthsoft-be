@@ -87,22 +87,16 @@ router.post("/", verifyToken, checkManager, async (req, res) => {
     })
     await newUser.save()
 
-    //Return Token JWT
-    const accessToken = jwt.sign(
-      { userId: newUser._id },
-      process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: process.env.JWT_EXPIRES_IN }
-    )
+    // //Return Token JWT
+    // const accessToken = jwt.sign(
+    //   { userId: newUser._id },
+    //   process.env.ACCESS_TOKEN_SECRET,
+    //   { expiresIn: process.env.JWT_EXPIRES_IN }
+    // )
     res.json({
       success: true,
       message: "User created successfully",
-      accessToken,
-      newUser: {
-        id: newUser._id,
-        name: newUser.name,
-        email: newUser.email,
-        role: newUser.roles,
-      },
+      newUser: newUser,
     })
   } catch (error) {
     console.log(error)
@@ -117,7 +111,7 @@ router.post("/", verifyToken, checkManager, async (req, res) => {
 // @decs UPDATE user
 // @access Private
 router.put(`/update/:id`, verifyToken, checkManager, async (req, res) => {
-  const { name, email, password, phone, address, image, roles } = req.body
+  const { name, email, phone, address, image } = req.body
 
   //Simple Validation
   if (!name || !email)
@@ -130,11 +124,9 @@ router.put(`/update/:id`, verifyToken, checkManager, async (req, res) => {
     let updateUser = {
       name: name,
       email: email,
-      password: password,
       phone: phone || "",
       address: address || "",
       image: image || "",
-      roles: roles || "EMPLOYEE",
       updateBy: req.userId,
     }
 
@@ -177,6 +169,35 @@ router.put(`/delete/:id`, verifyToken, checkManager, async (req, res) => {
       success: true,
       message: "User deleted successfully",
       deletedUser,
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    })
+  }
+})
+
+// @route UPDATE api/user/
+// @decs change ROLES
+// @access Private
+router.put(`/change-role/:id`, verifyToken, checkAdmin, async (req, res) => {
+  const { role } = req.body
+  try {
+    const userUpdateCondition = { _id: req.params.id }
+    const updated = { roles: role, updateBy: req.userId }
+    let updatedUser = await User.findOneAndUpdate(
+      userUpdateCondition,
+      updated,
+      {
+        new: true,
+      }
+    )
+    res.json({
+      success: true,
+      message: "User updated successfully",
+      updatedUser,
     })
   } catch (error) {
     console.log(error)

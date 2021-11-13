@@ -24,11 +24,15 @@ const BookingTable = (props) => {
           <tr>{renderHead}</tr>
         </thead>
         <tbody>
-          {bookings.map((booking) => (
-            <tr key={booking._id}>
-              <BookingItem booking={booking} />
-            </tr>
-          ))}
+          {Array.isArray(bookings) && bookings.length ? (
+            bookings.map((booking) => (
+              <tr key={booking._id}>
+                <BookingItem booking={booking} />
+              </tr>
+            ))
+          ) : (
+            <h5>No Booking</h5>
+          )}
         </tbody>
       </Table>
     </>

@@ -36,6 +36,7 @@ router.post("/:book", verifyToken, async (req, res) => {
 
     // //Calculate room's price
     const roomCharge = await toolRoom.calculateRoomCharge(rooms)
+
     const totalRoomCharge = roomCharge * diffInDays
     // //Calculate service's price
     const serviceCharge = await toolService.calculateServiceCharge(services)
@@ -95,9 +96,10 @@ router.get("/", verifyToken, async (req, res) => {
   try {
     const bookings = await Booking.find({ isActive: true })
       .populate({ path: "customer", select: "name email phone" })
+
       .populate({
-        path: "rooms",
-        select: "roomNumber floor price roomType status",
+        path: "services",
+        select: "name price",
       })
       .populate({ path: "createBy", select: "name" })
       .populate({ path: "updateBy", select: "name" })
