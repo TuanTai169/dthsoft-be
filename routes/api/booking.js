@@ -96,7 +96,10 @@ router.get("/", verifyToken, async (req, res) => {
   try {
     const bookings = await Booking.find({ isActive: true })
       .populate({ path: "customer", select: "name email phone" })
-
+      .populate({
+        path: "rooms",
+        select: "roomNumber floor price roomType status",
+      })
       .populate({
         path: "services",
         select: "name price",
@@ -126,6 +129,10 @@ router.get("/:id", verifyToken, async (req, res) => {
       .populate({
         path: "rooms",
         select: "roomNumber floor price roomType status",
+      })
+      .populate({
+        path: "services",
+        select: "name price",
       })
       .populate({ path: "createBy", select: "name" })
       .populate({ path: "updateBy", select: "name" })
