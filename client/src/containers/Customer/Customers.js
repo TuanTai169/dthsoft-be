@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import { getAllCustomer } from "../../redux/actions/customerAction"
+import React, { useCallback, useState } from "react"
+import { useSelector } from "react-redux"
+
 import CustomerTable from "./CustomerTable"
 import Pagination from "../../components/Common/Pagination/Pagination"
 import AddCustomerModal from "./AddCustomerModal"
@@ -15,12 +15,6 @@ function Customers() {
   const isLoading = useSelector(
     (state) => state.customerReducer.isCustomerLoading
   )
-
-  const dispatch = useDispatch()
-
-  useEffect(() => {
-    dispatch(getAllCustomer())
-  }, [dispatch])
 
   const totalItems = customers.length
   const limit = 6

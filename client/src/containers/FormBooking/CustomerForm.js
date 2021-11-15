@@ -7,7 +7,11 @@ const CustomerForm = (props) => {
   //Render Table
   const tableHead = ["Name", "Phone", "CMND", "Email"]
   const renderHead = tableHead.map((item, index) => {
-    return <th key={index}>{item}</th>
+    return (
+      <th key={index} style={{ fontWeight: 500 }}>
+        {item}
+      </th>
+    )
   })
   return (
     <>
@@ -17,10 +21,14 @@ const CustomerForm = (props) => {
         </thead>
         <tbody>
           <tr>
-            <td>{customer.name}</td>
-            <td>{customer.phone}</td>
-            <td>{customer.cmnd}</td>
-            <td>{customer.email}</td>
+            {customer !== null && (
+              <>
+                <td>{customer.name}</td>
+                <td>{customer.phone}</td>
+                <td>{customer.cmnd}</td>
+                <td>{customer.email}</td>
+              </>
+            )}
           </tr>
         </tbody>
       </Table>

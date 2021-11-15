@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
+import React, { useState } from "react"
+import { useSelector } from "react-redux"
 import { Button, ButtonToolbar } from "react-bootstrap"
 import lodash from "lodash"
 import RoomItem from "./RoomItem"
 import AddRoomModal from "./AddRoomModal"
-import { getAllRoom } from "../../redux/actions/roomAction"
 import ViewAllBookingModal from "../Booking/ViewAllBookingModal"
 
 const Rooms = () => {
@@ -13,9 +12,6 @@ const Rooms = () => {
 
   const rooms = useSelector((state) => state.roomReducer.rooms)
   const role = useSelector((state) => state.auth.user.roles)
-  const dispatch = useDispatch()
-
-  useEffect(() => dispatch(getAllRoom()), [dispatch])
 
   //Group BY FLOOR
   const roomGroupedByFloor = lodash.groupBy(rooms, "floor")

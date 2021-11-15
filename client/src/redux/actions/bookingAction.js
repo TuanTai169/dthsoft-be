@@ -43,3 +43,64 @@ export const addBooking = (newBooking, status) => {
     }
   }
 }
+
+// UPDATE BOOKING
+export const updateBooking = (updateBooking) => {
+  return async (dispatch) => {
+    try {
+      const response = await axios.put(
+        `${HOST_API_URL}/room/update/${updateBooking._id}`,
+        updateBooking
+      )
+      if (response.data.success) {
+        dispatch({
+          type: types.UPDATE_BOOKING,
+          payload: response.data.updatedBooking,
+        })
+        toast.success(response.data.message)
+      }
+    } catch (error) {
+      toast.error(error.response)
+    }
+  }
+}
+
+//CANCELLED BOOKING
+export const cancelledBooking = (bookingId) => {
+  return async (dispatch) => {
+    try {
+      const response = await axios.put(
+        `${HOST_API_URL}/booking/cancelled/${bookingId}`
+      )
+      if (response.data.success) {
+        dispatch({
+          type: types.CANCELLED_BOOKING,
+          payload: bookingId,
+        })
+        toast.success(response.data.message)
+      }
+    } catch (error) {
+      toast.error(error.response.data.message)
+    }
+  }
+}
+
+//CHANGE ROOM
+export const changeRoom = (bookingId, startRoom, endRoom) => {
+  return async (dispatch) => {
+    try {
+      const response = await axios.put(
+        `${HOST_API_URL}/booking/change-room/${bookingId}/${startRoom}/${endRoom}`
+      )
+      if (response.data.success) {
+        dispatch({
+          type: types.UPDATE_BOOKING,
+          payload: response.data.updatedBooking,
+        })
+        toast.success(response.data.message)
+      }
+    } catch (error) {
+      toast.error(error.response.data.message)
+    }
+  }
+}

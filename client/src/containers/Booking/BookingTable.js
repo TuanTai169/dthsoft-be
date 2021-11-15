@@ -8,11 +8,10 @@ const BookingTable = (props) => {
   const tableHead = [
     "#ID",
     "Customer",
-    "Phone",
     "Room",
     "Check in",
     "Check out",
-    "action",
+    "Action",
   ]
   const renderHead = tableHead.map((item, index) => {
     return <th key={index}>{item}</th>

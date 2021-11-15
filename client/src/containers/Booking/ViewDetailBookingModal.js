@@ -1,8 +1,9 @@
 import React from "react"
-import { Modal, Button, Form, Row, Col } from "react-bootstrap"
+import { Modal, Button, Form, Row, Col, FloatingLabel } from "react-bootstrap"
 import { convertStringToDate } from "../../utils/convertDateTime"
 import CustomerForm from "../FormBooking/CustomerForm"
 import RoomForm from "../FormBooking/RoomForm"
+import ServiceForm from "./../FormBooking/ServiceForm"
 
 const ViewDetailBookingModal = (props) => {
   const { show, handlerModalClose, booking } = props
@@ -14,6 +15,8 @@ const ViewDetailBookingModal = (props) => {
     checkInDate,
     checkOutDate,
     deposit,
+    discount,
+    services,
     totalPrice,
   } = booking
 
@@ -28,40 +31,74 @@ const ViewDetailBookingModal = (props) => {
         </Modal.Header>
         <Form>
           <Modal.Body>
-            <Row className="mb-3">
-              <Form.Group as={Col} controlId="formGridCheckIn">
-                <Form.Label>Check in</Form.Label>
-                <Form.Control type="text" value={checkInDateConvert} disabled />
-              </Form.Group>
-              <Form.Group as={Col} controlId="formGridCheckOut">
-                <Form.Label>Check out</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={checkOutDateConvert}
-                  disabled
-                />
-              </Form.Group>
-              <Form.Group as={Col} controlId="formGridDeposit">
-                <Form.Label>Deposit</Form.Label>
-                <Form.Control type="text" value={deposit} disabled />
-              </Form.Group>
+            <Row className="mb-3" style={{ borderBottom: "1px solid #bbb" }}>
+              <Col>
+                <FloatingLabel
+                  controlId="floatingCheckIn"
+                  label="Check in "
+                  className="mb-3"
+                >
+                  <Form.Control
+                    type="text"
+                    value={checkInDateConvert}
+                    disabled
+                  />
+                </FloatingLabel>
+              </Col>
+              <Col>
+                <FloatingLabel
+                  controlId="floatingCheckOut"
+                  label="Check out"
+                  className="mb-3"
+                >
+                  <Form.Control
+                    type="text"
+                    value={checkOutDateConvert}
+                    disabled
+                  />
+                </FloatingLabel>
+              </Col>
+              <Col>
+                <FloatingLabel
+                  controlId="floatingDiscount"
+                  label="Discount (%)"
+                  className="mb-3"
+                >
+                  <Form.Control type="text" value={` ${discount}`} disabled />
+                </FloatingLabel>
+              </Col>
+              <Col>
+                <FloatingLabel
+                  controlId="floatingDeposit"
+                  label="Deposit"
+                  className="mb-3"
+                >
+                  <Form.Control type="text" value={`$ ${deposit}`} disabled />
+                </FloatingLabel>
+              </Col>
             </Row>
-            <Row className="mb-3">
+            <Row className="mb-3" style={{ borderBottom: "1px solid #bbb" }}>
               <Form.Group controlId="formGridCustomer">
                 <Form.Label>Customer</Form.Label>
                 <CustomerForm customer={customer} />
               </Form.Group>
             </Row>
-            <Row className="mb-3">
+            <Row className="mb-3" style={{ borderBottom: "1px solid #bbb" }}>
               <Form.Group controlId="formGridRoom">
                 <Form.Label>Room</Form.Label>
                 <RoomForm rooms={rooms} />
               </Form.Group>
             </Row>
+            <Row className="mb-3" style={{ borderBottom: "1px solid #bbb" }}>
+              <Form.Group as={Col} controlId="formGridService">
+                <Form.Label>Service</Form.Label>
+                <ServiceForm services={services} />
+              </Form.Group>
+            </Row>
             <p>
               Total Price:{" "}
               <strong style={{ color: "red", fontSize: "20px" }}>
-                ${totalPrice}
+                $ {totalPrice}
               </strong>{" "}
             </p>
           </Modal.Body>
