@@ -1,15 +1,14 @@
 import React from "react"
 import { Table } from "react-bootstrap"
-import CustomerItem from "./CustomerItem"
+import UserItem from "./UserItem"
 
-function CustomerTable(props) {
-  const { customers, role } = props
+function UserTable(props) {
 
+  const { users, roles } = props
   const tableHead = ["name", "email", "phone", "action"]
   const renderHead = tableHead.map((item, index) => {
     return <th key={index}>{item}</th>
   })
-
   return (
     <>
       <Table striped>
@@ -17,9 +16,9 @@ function CustomerTable(props) {
           <tr>{renderHead}</tr>
         </thead>
         <tbody>
-          {customers.map((customer) => (
-            <tr key={customer._id}>
-              <CustomerItem role={role} customer={customer} />
+          {users.map((user) => (
+            <tr key={user._id}>
+              <UserItem roles={roles} user={user} />
             </tr>
           ))}
         </tbody>
@@ -28,4 +27,4 @@ function CustomerTable(props) {
   )
 }
 
-export default CustomerTable
+export default UserTable

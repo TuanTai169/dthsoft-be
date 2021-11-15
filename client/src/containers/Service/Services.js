@@ -1,6 +1,5 @@
-import React, { useCallback, useEffect, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import { getAllService } from "../../redux/actions/serviceAction"
+import React, { useCallback, useState } from "react"
+import { useSelector } from "react-redux"
 import ServiceTable from "./ServiceTable"
 import Pagination from "../../components/Common/Pagination/Pagination"
 import AddServiceModal from "./AddServiceModal"
@@ -14,12 +13,6 @@ function Services() {
   const services = useSelector((state) => state.serviceReducer.services)
   const isLoading = useSelector((state) => state.serviceReducer.serviceLoading)
   const role = useSelector((state) => state.auth.user.roles)
-
-  const dispatch = useDispatch()
-
-  useEffect(() => {
-    dispatch(getAllService())
-  }, [dispatch])
 
   const totalItems = services.length
   const limit = 6

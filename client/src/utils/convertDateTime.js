@@ -9,9 +9,7 @@ export const convertStringToDate = (date) => {
     " " +
     ("00" + dt.getHours()).slice(-2) +
     ":" +
-    ("00" + dt.getMinutes()).slice(-2) +
-    ":" +
-    ("00" + dt.getSeconds()).slice(-2)
+    ("00" + dt.getMinutes()).slice(-2)
   return fmDate
 }
 

@@ -58,7 +58,7 @@ function EditCustomerModal(props) {
         <Form onSubmit={handleSubmit}>
           <Modal.Body>
             <FloatingLabel
-              controlId="floatingTextarea"
+              controlId="floatingName"
               label="Name"
               className="mb-3"
             >

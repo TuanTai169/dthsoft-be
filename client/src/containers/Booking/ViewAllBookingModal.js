@@ -1,21 +1,17 @@
-import React, { useEffect } from "react"
+import React from "react"
 import { Modal, Button } from "react-bootstrap"
-import { getAllBooking } from "./../../redux/actions/bookingAction"
-import { useDispatch, useSelector } from "react-redux"
+import { useSelector } from "react-redux"
 import BookingTable from "./BookingTable"
 import lodash from "lodash"
 
 const ViewAllBookingModal = (props) => {
   const { show, handlerModalClose } = props
-  const dispatch = useDispatch()
 
   // GET ALL BOOKING
   const bookings = useSelector((state) => state.bookingReducer.bookings)
 
   // BOOKING GROUP BY BOOKING
   const bookingGroupBy = lodash.groupBy(bookings, "status")
-
-  useEffect(() => dispatch(getAllBooking()), [dispatch])
 
   return (
     <>

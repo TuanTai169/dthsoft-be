@@ -3,7 +3,6 @@ import "./layout.css"
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux"
 import themeAction from "../../redux/actions/themeAction"
-
 import Sidebar from "../Sidebar/Sidebar"
 import TopNav from "../Topnav/TopNav"
 
@@ -13,6 +12,11 @@ import Services from "../../containers/Service/Services"
 import Rooms from "../../containers/Room/Rooms"
 import Users from "../../containers/User/Users"
 import NotFound from "../Common/NotFound/NotFound"
+import { getAllBooking } from "../../redux/actions/bookingAction"
+import { getAllCustomer } from "../../redux/actions/customerAction"
+import { getAllRoom } from "../../redux/actions/roomAction"
+import { getAllService } from "../../redux/actions/serviceAction"
+import { getAllUser } from "../../redux/actions/userAction"
 
 const Layout = () => {
   const themeReducer = useSelector((state) => state.themeReducer)
@@ -24,6 +28,11 @@ const Layout = () => {
     const colorClass = localStorage.getItem("colorMode", "theme-mode-light")
     dispatch(themeAction.setMode(themeClass))
     dispatch(themeAction.setColor(colorClass))
+    dispatch(getAllRoom())
+    dispatch(getAllCustomer())
+    dispatch(getAllBooking())
+    dispatch(getAllService())
+    dispatch(getAllUser())
   }, [dispatch])
 
   return (

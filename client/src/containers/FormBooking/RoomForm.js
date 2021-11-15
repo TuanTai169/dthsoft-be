@@ -7,7 +7,11 @@ const RoomForm = (props) => {
   //Render Table
   const tableHead = ["Number", "Floor", "Type", "Price"]
   const renderHead = tableHead.map((item, index) => {
-    return <th key={index}>{item}</th>
+    return (
+      <th key={index} style={{ fontWeight: 500 }}>
+        {item}
+      </th>
+    )
   })
   return (
     <>

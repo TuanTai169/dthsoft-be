@@ -29,6 +29,19 @@ const bookingReducer = (state = initialState, action) => {
         ...state,
         bookings: [...state.bookings, payload],
       }
+    case types.UPDATE_BOOKING:
+      const newBookings = state.bookings.map((booking) =>
+        booking._id === payload._id ? payload : booking
+      )
+      return {
+        ...state,
+        bookings: newBookings,
+      }
+    case types.CANCELLED_BOOKING:
+      return {
+        ...state,
+        bookings: state.bookings.filter((booking) => booking._id !== payload),
+      }
     default:
       return state
   }

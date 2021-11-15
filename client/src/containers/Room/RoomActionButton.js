@@ -1,11 +1,19 @@
-import React from "react"
+import React, { useState } from "react"
 import { ButtonToolbar, Button } from "react-bootstrap"
 import { changeStatusRoom } from "../../redux/actions/roomAction"
 import { useDispatch } from "react-redux"
+import BookingModal from "../Booking/BookingModal"
+import CheckInModal from "../Booking/CheckInModal"
 
 const RoomActionButton = (props) => {
   const dispatch = useDispatch()
+
   const { room, handlerModalClose } = props
+  const [isOpenBooking, setIsOpenBooking] = useState(false)
+  const [isOpenCheckIn, setIsOpenCheckIn] = useState(false)
+
+  const handlerCloseBookingModal = () => setIsOpenBooking(false)
+  const handlerCloseCheckInModal = () => setIsOpenCheckIn(false)
 
   const { status, _id } = room
 
@@ -50,13 +58,21 @@ const RoomActionButton = (props) => {
         )}
         {/* CHECK IN */}
         {status === "READY" && (
-          <Button variant="info" style={{ marginLeft: "4px", color: "#fff" }}>
+          <Button
+            variant="info"
+            style={{ marginLeft: "4px", color: "#fff" }}
+            onClick={() => setIsOpenBooking(true)}
+          >
             <i className="bx bxs-user-x"></i>
             <span>&ensp;Booking</span>
           </Button>
         )}
         {(status === "BOOKING" || status === "READY") && (
-          <Button variant="primary" style={{ marginLeft: "4px" }}>
+          <Button
+            variant="primary"
+            style={{ marginLeft: "4px" }}
+            onClick={() => setIsOpenCheckIn(true)}
+          >
             <i className="bx bxs-user-check"></i>
             <span>&ensp;Check in</span>
           </Button>
@@ -68,6 +84,18 @@ const RoomActionButton = (props) => {
             <span>&ensp;Check out</span>
           </Button>
         )}
+        <BookingModal
+          show={isOpenBooking}
+          handlerModalClose={handlerCloseBookingModal}
+          currentRoom={room}
+          handlerParentModalClose={handlerModalClose}
+        />
+        <CheckInModal
+          show={isOpenCheckIn}
+          handlerModalClose={handlerCloseCheckInModal}
+          currentRoom={room}
+          handlerParentModalClose={handlerModalClose}
+        />
       </ButtonToolbar>
     </>
   )

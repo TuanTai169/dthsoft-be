@@ -19,7 +19,6 @@ const AddRoomModal = (props) => {
 
   const handlerSubmit = (e) => {
     e.preventDefault()
-    console.log(newRoom)
     resetAddPostData()
     dispatch(addRoom(newRoom))
   }

@@ -1,11 +1,11 @@
 import React from "react"
 import { Table } from "react-bootstrap"
-import CustomerItem from "./CustomerItem"
+import CustomersItem from "./CustomersItem"
 
-function CustomerTable(props) {
-  const { customers, role } = props
+function CustomersTable(props) {
+  const { customers } = props
 
-  const tableHead = ["name", "email", "phone", "action"]
+  const tableHead = ["name", "gender", , "email", "phone", "address", "action"]
   const renderHead = tableHead.map((item, index) => {
     return <th key={index}>{item}</th>
   })
@@ -19,7 +19,7 @@ function CustomerTable(props) {
         <tbody>
           {customers.map((customer) => (
             <tr key={customer._id}>
-              <CustomerItem role={role} customer={customer} />
+              <CustomersItem customer={customer} />
             </tr>
           ))}
         </tbody>
@@ -28,4 +28,4 @@ function CustomerTable(props) {
   )
 }
 
-export default CustomerTable
+export default CustomersTable
