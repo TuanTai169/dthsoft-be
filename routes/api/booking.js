@@ -47,8 +47,8 @@ router.post("/:book", verifyToken, async (req, res) => {
     //Price
     const VAT = 10
     const totalPrice = (
-      (totalRoomCharge + serviceCharge) *
-      (1 + VAT / 100)
+      (totalRoomCharge + serviceCharge) * (1 + VAT / 100 - discount / 100) -
+      deposit
     ).toFixed()
 
     const newBooking = new Booking({
@@ -139,6 +139,46 @@ router.get("/:id", verifyToken, async (req, res) => {
     res.json({
       success: true,
       booking,
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    })
+  }
+})
+
+// @route PUT api/booking/
+// @decs Change from BOOKING to CHECK IN
+// @access Private
+router.put(`/change-to-check-in/:id`, verifyToken, async (req, res) => {
+  const userId = req.userId
+  const bookingID = req.params.id
+  try {
+    const booking = await Booking.findById(bookingID)
+    const rooms = booking.rooms
+    //All good
+    let updateBooking = {
+      status: "CHECK IN",
+      updateBy: userId,
+    }
+    const bookingUpdateCondition = { _id: req.params.id }
+
+    let updatedBooking = await Booking.findOneAndUpdate(
+      bookingUpdateCondition,
+      updateBooking,
+      {
+        new: true,
+      }
+    )
+    //Change STATUS ROOM
+    await toolRoom.changeStatusArrayRooms(rooms, "OCCUPIED", userId)
+
+    res.json({
+      success: true,
+      message: "Booking updated successfully",
+      updatedBooking,
     })
   } catch (error) {
     console.log(error)
