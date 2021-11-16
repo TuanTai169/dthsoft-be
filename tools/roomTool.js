@@ -1,5 +1,7 @@
 const Room = require("../models/Room")
+const moment = require("moment")
 const _ = require("lodash")
+
 exports.changeStatusArrayRooms = async (rooms, status, userId) => {
   try {
     for (const room of rooms) {
@@ -53,20 +55,16 @@ exports.changeRoom = (rooms, roomChooseID, roomChangeID) => {
   return rooms
 }
 
-exports.getNumberOfDays = (start, end) => {
-  const date1 = new Date(start)
-  const date2 = new Date(end)
+exports.getNumberOfDays = (checkInDate, checkOutDate) => {
+  const start = moment(checkInDate, "YYYY-MM-DD HH:mm")
+  const end = moment(checkOutDate, "YYYY-MM-DD HH:mm")
+  //Difference in number of days
+  const dayDiff =
+    Math.round(moment.duration(end.diff(start)).asDays()) < 1
+      ? 1
+      : Math.round(moment.duration(end.diff(start)).asDays())
 
-  // One day in milliseconds
-  const oneDay = 1000 * 60 * 60 * 24
-
-  // Calculating the time difference between two dates
-  const diffInTime = date2.getTime() - date1.getTime()
-
-  // Calculating the no. of days between two dates
-  const diffInDays = Math.round(diffInTime / oneDay)
-
-  return diffInDays
+  return dayDiff
 }
 
 const getAllInfoRoom = async (rooms) => {
