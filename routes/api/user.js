@@ -111,7 +111,7 @@ router.post("/", verifyToken, checkManager, async (req, res) => {
 // @decs UPDATE PROFILE
 // @access Private
 router.put(`/update-profile/:id`, verifyToken, async (req, res) => {
-  const { name, email, password, phone, address } = req.body
+  const { name, email, password, phone, address, image } = req.body
 
   //Simple Validation
   if (!name || !email)
@@ -131,6 +131,9 @@ router.put(`/update-profile/:id`, verifyToken, async (req, res) => {
       password: hashedPassword,
       phone: phone,
       address: address,
+      image:
+        image ||
+        "https://res.cloudinary.com/dgd99lsii/image/upload/v1637135199/avatar/male_avatar_bvpfgh.png",
       updateBy: req.userId,
     }
 
@@ -172,7 +175,9 @@ router.put(`/update/:id`, verifyToken, checkManager, async (req, res) => {
       email: email,
       phone: phone || "",
       address: address || "",
-      image: image || "",
+      image:
+        image ||
+        "https://res.cloudinary.com/dgd99lsii/image/upload/v1637135199/avatar/male_avatar_bvpfgh.png",
       updateBy: req.userId,
     }
 

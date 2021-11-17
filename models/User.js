@@ -26,6 +26,8 @@ const UserSchema = new Schema(
     },
     image: {
       type: String,
+      default:
+        "https://res.cloudinary.com/dgd99lsii/image/upload/v1637135199/avatar/male_avatar_bvpfgh.png",
     },
     isActive: {
       type: Boolean,
