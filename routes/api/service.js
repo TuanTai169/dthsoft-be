@@ -17,7 +17,7 @@ router.post("/", verifyToken, checkManager, async (req, res) => {
     })
   try {
     //Check for existing service
-    const serviceExist = await Service.findOne({ name })
+    const serviceExist = await Service.findOne({ name, isActive: true })
     if (serviceExist)
       return res.status(400).json({
         success: false,

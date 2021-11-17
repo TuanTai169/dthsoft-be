@@ -20,7 +20,6 @@ const sendEmail = async (options) => {
     auth: {
       type: "OAuth2",
       user: process.env.EMAIL_USERNAME,
-      //pass: process.env.EMAIL_PASSWORD,
       clientId: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
       refreshToken: process.env.REFRESH_TOKEN_EMAIL,
@@ -36,8 +35,8 @@ const sendEmail = async (options) => {
     from: `DTH SOFT <${process.env.EMAIL_USERNAME}>`,
     to: options.email,
     subject: options.subject,
-    text: options.message,
-    //html: options.message,
+    //text: options.message,
+    html: options.message,
   }
   // Actually send the email
   await transporter.sendMail(mailOptions)

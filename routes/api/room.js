@@ -20,7 +20,7 @@ router.post("/", verifyToken, checkManager, async (req, res) => {
     })
   try {
     //Check for existing email
-    const roomExist = await Room.findOne({ roomNumber })
+    const roomExist = await Room.findOne({ roomNumber, isActive: true })
     if (roomExist)
       return res.status(400).json({
         success: false,
@@ -202,7 +202,16 @@ router.put(`/change-status/:status/:id`, verifyToken, async (req, res) => {
   try {
     const roomId = req.params.id
     const userId = req.userId
-    const status = req.params.status === "fix" ? "FIXING" : "READY"
+    const status =
+      req.params.status === "fix"
+        ? "FIXING"
+        : req.params.status === "occupied"
+        ? "OCCUPIED"
+        : req.params.status === "clean"
+        ? "CLEANING"
+        : req.params.status === "book"
+        ? "BOOKING"
+        : "READY"
     const updatedRoom = await toolRoom.changeStatusOneRoom(
       roomId,
       status,

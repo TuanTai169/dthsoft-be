@@ -58,9 +58,14 @@ router.post("/", verifyToken, async (req, res) => {
     //Send to customer email
     const customer = await Customer.findById(bookingItem.customer)
 
-    const message =
-      `Dear ${customer.name}!\n\n` +
-      `Thank you for using our service! See you again on the closest day!`
+    const message = `
+            <div style="max-width: 700px; margin:auto; border: 8px solid #ddd; padding: 50px 20px; font-size: 110%;">
+            <h2 style="text-align: center; text-transform: uppercase; color: teal;">Thank to customer</h2>
+            <p> Dear <strong> ${customer.name}</strong>!</p>
+            <p>Congratulations on your successful payment ! Have a beautiful day! </p>
+            <p>Thank you for using our service! See you again on the closest day!</p>
+            </div>
+          `
 
     await sendEmail({
       email: customer.email,
@@ -90,12 +95,15 @@ router.get("/", verifyToken, async (req, res) => {
       .populate({
         path: "booking",
         select: "-isActive -createBy -updateBy -createdAt -updatedAt",
-        populate: { path: "customer", select: "name email phone" },
         populate: [
           { path: "customer", select: "name email phone" },
           {
             path: "rooms",
             select: "roomNumber floor price roomType status",
+          },
+          {
+            path: "services",
+            select: "name price",
           },
         ],
       })
