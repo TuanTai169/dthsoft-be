@@ -19,7 +19,7 @@ router.post("/", verifyToken, async (req, res) => {
     })
   try {
     //Check for existing email
-    const emailExist = await Customer.findOne({ email })
+    const emailExist = await Customer.findOne({ email, isActive: true })
     if (emailExist)
       return res.status(409).json({
         success: false,

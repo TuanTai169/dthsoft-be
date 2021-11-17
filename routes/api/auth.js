@@ -31,6 +31,44 @@ router.get("/", verifyToken, async (req, res) => {
   }
 })
 
+// @route POST api/auth/login
+// @decs Login user
+// @access public
+router.post("/login", async (req, res) => {
+  const { email, password } = req.body
+  try {
+    // Check for existing email
+    const user = await User.findOne({ email, isActive: true })
+    if (!user)
+      return res
+        .status(400)
+        .json({ success: false, message: "Incorrect email or password" })
+
+    // Email found
+    const passwordValid = await bcrypt.compare(password, user.password)
+    if (!passwordValid)
+      return res
+        .status(400)
+        .json({ success: false, message: "Incorrect email or password" })
+
+    //All good
+    //Return Token JWT
+    const accessToken = jwt.sign(
+      { userId: user._id },
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN }
+    )
+    res.json({
+      success: true,
+      message: "User logged in successfully",
+      accessToken,
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ success: false, message: "Internal server error" })
+  }
+})
+
 // @route POST api/auth/register
 // @decs Register user
 // @access public
@@ -80,44 +118,6 @@ router.get("/", verifyToken, async (req, res) => {
 //   }
 // })
 
-// @route POST api/auth/login
-// @decs Login user
-// @access public
-router.post("/login", async (req, res) => {
-  const { email, password } = req.body
-  try {
-    // Check for existing email
-    const user = await User.findOne({ email })
-    if (!user)
-      return res
-        .status(400)
-        .json({ success: false, message: "Incorrect email or password" })
-
-    // Email found
-    const passwordValid = await bcrypt.compare(password, user.password)
-    if (!passwordValid)
-      return res
-        .status(400)
-        .json({ success: false, message: "Incorrect email or password" })
-
-    //All good
-    //Return Token JWT
-    const accessToken = jwt.sign(
-      { userId: user._id },
-      process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: process.env.JWT_EXPIRES_IN }
-    )
-    res.json({
-      success: true,
-      message: "User logged in successfully",
-      accessToken,
-    })
-  } catch (error) {
-    console.log(error)
-    res.status(500).json({ success: false, message: "Internal server error" })
-  }
-})
-
 // // @route POST api/auth
 // // @decs Forgot Password
 // // @access public
@@ -153,12 +153,20 @@ router.post("/forgot-password", async (req, res) => {
       "host"
     )}/api/auth/reset-password/${resetToken}`
 
-    const message =
-      `${
-        "You are receiving this because you have requested to reset your password for your account.\n\n" +
-        "Please click on the following link, or paste this into your browser to complete the process:\n\n"
-      }${resetURL}\n\n` +
-      `If you did not request this, please ignore this email and your password will remain unchanged.\n`
+    const txt = "Reset your password"
+
+    const message = `
+    <div style="max-width: 700px; margin:auto; border: 4px solid #ddd; padding: 50px 20px; font-size: 110%;">
+    <h2 style="text-align: center; text-transform: uppercase;color: teal;">Welcome to the DTHSOFT</h2>
+    <p>Just click the button below to reset your password !</p>
+    
+    <a href=${resetURL} style="background: crimson; text-decoration: none; color: white; padding: 10px 20px; margin: 10px 0; display: inline-block;">${txt}</a>
+
+    <p>If the button doesn't work for any reason, you can also click on the link below:</p>
+
+    <div>${resetURL}</div>
+    </div>
+`
 
     await sendEmail({
       email: user.email,

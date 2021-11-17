@@ -1,10 +1,13 @@
 const router = require("express").Router()
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
+const cloudinary = require("cloudinary")
+const fs = require("fs")
 const User = require("../../models/User")
 const { userValidation } = require("../../tools/validation")
 const { checkAdmin, checkManager } = require("../../middleware/authentication")
 const verifyToken = require("../../middleware/authorization")
+const uploadImage = require("../../middleware/uploadImage")
 require("dotenv").config()
 
 // @route GET api/user/
@@ -20,7 +23,6 @@ router.get("/", verifyToken, async (req, res) => {
       users,
     })
   } catch (error) {
-    console.log(error)
     res.status(500).json({
       success: false,
       message: "Internal server error",
@@ -41,7 +43,6 @@ router.get("/:id", verifyToken, async (req, res) => {
       user,
     })
   } catch (error) {
-    console.log(error)
     res.status(500).json({
       success: false,
       message: "Internal server error",
@@ -63,7 +64,7 @@ router.post("/", verifyToken, checkManager, async (req, res) => {
     })
   try {
     //Check for existing email
-    const emailExist = await User.findOne({ email })
+    const emailExist = await User.findOne({ email, isActive: true })
     if (emailExist)
       return res.status(400).json({
         success: false,
@@ -99,7 +100,52 @@ router.post("/", verifyToken, checkManager, async (req, res) => {
       newUser: newUser,
     })
   } catch (error) {
-    console.log(error)
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    })
+  }
+})
+
+// @route PUT api/user/
+// @decs UPDATE PROFILE
+// @access Private
+router.put(`/update-profile/:id`, verifyToken, async (req, res) => {
+  const { name, email, password, phone, address } = req.body
+
+  //Simple Validation
+  if (!name || !email)
+    return res.status(400).json({
+      success: false,
+      message: "Name and email are required",
+    })
+
+  try {
+    //All good
+    const salt = await bcrypt.genSalt(10)
+    const hashedPassword = await bcrypt.hash(password, salt)
+
+    let updateUser = {
+      name: name,
+      email: email,
+      password: hashedPassword,
+      phone: phone,
+      address: address,
+      updateBy: req.userId,
+    }
+
+    const userUpdateCondition = { _id: req.params.id }
+
+    updatedUser = await User.findOneAndUpdate(userUpdateCondition, updateUser, {
+      new: true,
+    })
+
+    res.json({
+      success: true,
+      message: "User updated successfully",
+      updatedUser,
+    })
+  } catch (error) {
     res.status(500).json({
       success: false,
       message: "Internal server error",
@@ -142,7 +188,6 @@ router.put(`/update/:id`, verifyToken, checkManager, async (req, res) => {
       updatedUser,
     })
   } catch (error) {
-    console.log(error)
     res.status(500).json({
       success: false,
       message: "Internal server error",
@@ -171,7 +216,6 @@ router.put(`/delete/:id`, verifyToken, checkManager, async (req, res) => {
       deletedUser,
     })
   } catch (error) {
-    console.log(error)
     res.status(500).json({
       success: false,
       message: "Internal server error",
@@ -200,7 +244,6 @@ router.put(`/change-role/:id`, verifyToken, checkAdmin, async (req, res) => {
       updatedUser,
     })
   } catch (error) {
-    console.log(error)
     res.status(500).json({
       success: false,
       message: "Internal server error",
@@ -208,4 +251,51 @@ router.put(`/change-role/:id`, verifyToken, checkAdmin, async (req, res) => {
   }
 })
 
+// @route UPDATE api/user/
+// @decs UPDATE FILE AVATAR
+// @access Private
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_API_KEY,
+  api_secret: process.env.CLOUD_API_SECRET,
+})
+
+router.post(`/upload-avatar`, uploadImage, verifyToken, async (req, res) => {
+  try {
+    const file = req.files.file
+
+    cloudinary.v2.uploader.upload(
+      file.tempFilePath,
+      {
+        folder: "avatar",
+        width: 150,
+        height: 150,
+        crop: "fill",
+      },
+      async (err, result) => {
+        if (err) throw err
+
+        removeTmp(file.tempFilePath)
+
+        res.json({
+          success: true,
+          message: "Upload file successfully !",
+          url: result.secure_url,
+        })
+      }
+    )
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    })
+  }
+})
+
+const removeTmp = (path) => {
+  fs.unlink(path, (err) => {
+    if (err) throw err
+  })
+}
 module.exports = router
