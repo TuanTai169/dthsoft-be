@@ -79,7 +79,9 @@ router.post("/", verifyToken, checkManager, async (req, res) => {
       password: hashedPassword,
       phone: phone || "",
       address: address || "",
-      image: image || "",
+      image:
+        image ||
+        "https://res.cloudinary.com/dgd99lsii/image/upload/v1637135199/avatar/male_avatar_bvpfgh.png",
       roles: roles || "EMPLOYEE",
       createBy: req.userId,
       updateBy: null,
