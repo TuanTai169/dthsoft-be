@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from "react"
+import { useHistory } from "react-router-dom"
 import moment from "moment"
 import { Modal, Button, Form, Row, Col } from "react-bootstrap"
 import DatePicker from "react-datepicker"
 import Select from "react-select"
-import AddCustomerModal from "../Customer/AddCustomerModal"
 import { useDispatch, useSelector } from "react-redux"
 import CustomerForm from "../FormBooking/CustomerForm"
 import RoomForm from "../FormBooking/RoomForm"
 import ServiceForm from "../FormBooking/ServiceForm"
 import { addBooking } from "../../redux/actions/bookingAction"
-import { getAllRoom } from "./../../redux/actions/roomAction"
+import ViewAllRoomModal from "../Room/ViewAllRoomModal"
 
 const BookingModal = (props) => {
   const { show, handlerModalClose, handlerParentModalClose, currentRoom } =
     props
   const dispatch = useDispatch()
+  let history = useHistory()
 
   //Get info by redux
   const listCustomer = useSelector((state) => state.customerReducer.customers)
@@ -22,7 +23,6 @@ const BookingModal = (props) => {
   const listService = useSelector((state) => state.serviceReducer.services)
 
   // useState
-  const [isOpenAddModal, setIsOpenAddModal] = useState(false)
   const [startDate, setStartDate] = useState(new Date())
   const [endDate, setEndDate] = useState(
     startDate.getTime() + 12 * 60 * 60 * 1000
@@ -49,6 +49,9 @@ const BookingModal = (props) => {
     customer: "",
     services: [],
   })
+  const [openViewRoom, setOpenViewRoom] = useState(false)
+
+  //
 
   useEffect(() => {
     const { checkInDate, checkOutDate, deposit, discount } = newBooking
@@ -76,27 +79,33 @@ const BookingModal = (props) => {
       const sumServicesPrice = services
         .map((item) => item.price)
         .reduce((prev, curr) => prev + curr, 0)
+
+      const VAT = 10
       return (
-        sumRoomsPrice * dayDiff +
-        sumServicesPrice -
-        deposit -
-        ((sumRoomsPrice * dayDiff + sumServicesPrice) * discount) / 100
-      )
+        (sumRoomsPrice * dayDiff + sumServicesPrice) *
+          (1 + VAT / 100 - discount / 100) -
+        deposit
+      ).toFixed()
     }
     setTotalPrice(calculatorPrice)
-  }, [newBooking])
+  }, [newBooking, rooms, services])
 
   // Handler
-  const handlerCloseAddModal = () => {
-    setIsOpenAddModal(false)
+  const handlerCustomer = () => {
+    history.push("/customers")
+  }
+  const handlerService = () => {
+    history.push("/services")
   }
 
   const handlerSubmit = (e) => {
     e.preventDefault()
     dispatch(addBooking(newBooking, "book"))
-    dispatch(getAllRoom())
     resetDataBooking()
   }
+
+  const closeViewRoomModal = () => setOpenViewRoom(false)
+
   const resetDataBooking = () => {
     handlerParentModalClose()
     handlerModalClose()
@@ -224,17 +233,10 @@ const BookingModal = (props) => {
                 />
               </Col>
               <Col sm={3}>
-                <Button
-                  variant="success"
-                  onClick={() => setIsOpenAddModal(true)}
-                >
+                <Button variant="success" onClick={handlerCustomer}>
                   Add Customer
                 </Button>
               </Col>
-              <AddCustomerModal
-                show={isOpenAddModal}
-                handlerModalClose={handlerCloseAddModal}
-              />
               <CustomerForm customer={customer} />
             </Row>
             <Row>
@@ -250,13 +252,17 @@ const BookingModal = (props) => {
                 />
               </Col>
               <Col sm={3}>
-                <Button
-                // onClick={() => setIsOpenAddModal(true)}
-                >
+                <Button onClick={() => setOpenViewRoom(true)}>
                   View All Room
                 </Button>
               </Col>
               <RoomForm rooms={rooms} />
+              <ViewAllRoomModal
+                show={openViewRoom}
+                handlerModalClose={closeViewRoomModal}
+                roomChoose={currentRoom}
+                getRoom={onChangeRoom}
+              />
             </Row>
             <Row>
               <Col sm={3}>
@@ -274,7 +280,7 @@ const BookingModal = (props) => {
                 <Button
                   variant="warning"
                   style={{ color: "#fff" }}
-                  // onClick={() => setIsOpenAddModal(true)}
+                  onClick={handlerService}
                 >
                   View All Service
                 </Button>
@@ -282,9 +288,9 @@ const BookingModal = (props) => {
               <ServiceForm services={services} />
             </Row>
             <p>
-              Total Price:{" "}
+              Total Price (USA):{" "}
               <strong style={{ color: "red", fontSize: "20px" }}>
-                $ {totalPrice > 0 ? totalPrice : 0}
+                {totalPrice > 0 ? totalPrice : 0}
               </strong>{" "}
             </p>
           </Modal.Body>

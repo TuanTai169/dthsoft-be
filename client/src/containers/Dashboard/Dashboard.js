@@ -213,7 +213,7 @@ const Dashboard = () => {
               />
             </div>
             <div className="card__footer">
-              <Link to="/">view all</Link>
+              <Link to="/customers">view all</Link>
             </div>
           </div>
         </div>

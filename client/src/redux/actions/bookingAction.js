@@ -49,7 +49,7 @@ export const updateBooking = (updateBooking) => {
   return async (dispatch) => {
     try {
       const response = await axios.put(
-        `${HOST_API_URL}/room/update/${updateBooking._id}`,
+        `${HOST_API_URL}/booking/update/${updateBooking._id}`,
         updateBooking
       )
       if (response.data.success) {
@@ -91,6 +91,26 @@ export const changeRoom = (bookingId, startRoom, endRoom) => {
     try {
       const response = await axios.put(
         `${HOST_API_URL}/booking/change-room/${bookingId}/${startRoom}/${endRoom}`
+      )
+      if (response.data.success) {
+        dispatch({
+          type: types.UPDATE_BOOKING,
+          payload: response.data.updatedBooking,
+        })
+        toast.success(response.data.message)
+      }
+    } catch (error) {
+      toast.error(error.response.data.message)
+    }
+  }
+}
+
+//CHANGE BOOKING TO CHECK IN
+export const changeBookingToCheckIn = (bookingId) => {
+  return async (dispatch) => {
+    try {
+      const response = await axios.put(
+        `${HOST_API_URL}/booking/change-to-check-in/${bookingId}`
       )
       if (response.data.success) {
         dispatch({

@@ -7,7 +7,7 @@ function ServiceTable(props) {
   const { services, role } = props
 
   //Reder Table
-  const tableHead = ["name", "price (VND)", "action"]
+  const tableHead = ["name", "price (USA)", "action"]
   const renderHead = tableHead.map((item, index) => {
     return <th key={index}>{item}</th>
   })

@@ -1,17 +1,17 @@
 import React, { useState } from "react"
 import { Form, Modal, Button, FloatingLabel } from "react-bootstrap"
 import { useDispatch } from "react-redux"
-import { updateUser } from "../../redux/actions/userAction"
+import { updateProfile } from "../../redux/actions/userAction"
 
-function EditUserModal(props) {
+function EditProfileModal(props) {
   const { show, handlerModalClose, user } = props
   const dispatch = useDispatch()
 
   const [editUser, setEditUser] = useState({
     name: user.name,
-    email: user.email,
     phone: user.phone,
     address: user.address,
+    password: "12345678",
     image: user.image,
   })
 
@@ -24,27 +24,27 @@ function EditUserModal(props) {
   const handleSubmit = (e) => {
     e.preventDefault()
     resetAddPostData()
-    dispatch(updateUser(editUser, user._id))
+    dispatch(updateProfile(editUser, user._id))
   }
 
   const resetAddPostData = () => {
     handlerModalClose()
     setEditUser({
       name: user.name,
-      email: user.email,
       phone: user.phone,
       address: user.address,
+      password: "12345678",
       image: user.image,
     })
   }
 
-  const { name, email, phone, address } = editUser
+  const { name, phone, address, password } = editUser
 
   return (
     <div>
       <Modal show={show} onHide={resetAddPostData} animation={false}>
         <Modal.Header closeButton>
-          <Modal.Title>Edit User</Modal.Title>
+          <Modal.Title>Edit Profile</Modal.Title>
         </Modal.Header>
         <Form onSubmit={handleSubmit}>
           <Modal.Body>
@@ -71,13 +71,30 @@ function EditUserModal(props) {
                 type="text"
                 placeholder="email"
                 name="email"
-                value={email || ""}
+                value={user.email}
                 onChange={onChangeNewForm}
                 disabled
                 required
               />
             </FloatingLabel>
-
+            <FloatingLabel
+              controlId="floatingPass"
+              label="Password"
+              className="mb-3"
+            >
+              <Form.Control
+                type="password"
+                placeholder="*"
+                name="password"
+                value={password}
+                onChange={onChangeNewForm}
+                required
+              />
+              <Form.Text className="text-muted">
+                Password must be 8-20 characters consisting of numbers,
+                uppercase and lowercase letters
+              </Form.Text>
+            </FloatingLabel>
             <FloatingLabel
               controlId="floatingPhone"
               label="Phone"
@@ -121,4 +138,4 @@ function EditUserModal(props) {
   )
 }
 
-export default EditUserModal
+export default EditProfileModal

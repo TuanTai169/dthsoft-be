@@ -17,7 +17,7 @@ function Customers() {
   )
 
   const totalItems = customers.length
-  const limit = 6
+  const limit = 10
   const totalPages = Math.ceil(totalItems / limit)
 
   const currentData = customers.slice(

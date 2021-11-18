@@ -2,6 +2,7 @@ import React, { useEffect } from "react"
 import { HashRouter, Route, Switch } from "react-router-dom"
 import Layout from "./components/Layout/Layout"
 import Login from "./containers/Login/Login"
+import ForgotPassword from "./containers/Login/ForgotPassword"
 
 import { loadUser } from "./redux/actions/authAction"
 import { useDispatch } from "react-redux"
@@ -21,6 +22,7 @@ function App() {
         <Switch>
           <Route exact path="/login" component={Login} />
           <ProtectedRoute exact path="/" component={Layout} />
+          <Route exact path="/forgot_password" component={ForgotPassword} />
         </Switch>
       </HashRouter>
       <ToastContainer autoClose={3000} theme="colored" />

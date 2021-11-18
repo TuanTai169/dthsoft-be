@@ -35,7 +35,7 @@ const renderUserMenu = (item, index) => (
   </Link>
 )
 
-const Topnav = () => {
+const TopNav = () => {
   const user = useSelector((state) => state.auth.user)
   const dispatch = useDispatch()
 
@@ -65,7 +65,7 @@ const Topnav = () => {
             badge="12"
             contentData={notifications}
             renderItems={(item, index) => renderNotificationItem(item, index)}
-            renderFooter={() => <Link to="/">View All</Link>}
+            renderFooter={() => <Link to="/customers">View All</Link>}
           />
           {/* dropdown here */}
         </div>
@@ -87,4 +87,4 @@ const Topnav = () => {
   )
 }
 
-export default Topnav
+export default TopNav

@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Form, Modal, Button } from "react-bootstrap"
+import { Form, Modal, Button, FloatingLabel } from "react-bootstrap"
 import { useDispatch } from "react-redux"
 import { addService } from "../../redux/actions/serviceAction"
 
@@ -34,8 +34,11 @@ const AddServiceModal = (props) => {
         </Modal.Header>
         <Form onSubmit={handleSubmit}>
           <Modal.Body>
-            <Form.Group className="mb-3" controlId="formBasicName">
-              <Form.Label>Name</Form.Label>
+            <FloatingLabel
+              controlId="floatingName"
+              label="Name"
+              className="mb-3"
+            >
               <Form.Control
                 type="text"
                 placeholder="Name"
@@ -44,10 +47,13 @@ const AddServiceModal = (props) => {
                 onChange={onChangeNewForm}
                 required
               />
-            </Form.Group>
+            </FloatingLabel>
 
-            <Form.Group className="mb-3" controlId="formBasicPrice">
-              <Form.Label>Price(VND)</Form.Label>
+            <FloatingLabel
+              controlId="floatingPrice"
+              label="Price"
+              className="mb-3"
+            >
               <Form.Control
                 type="text"
                 placeholder="0"
@@ -56,7 +62,7 @@ const AddServiceModal = (props) => {
                 onChange={onChangeNewForm}
                 required
               />
-            </Form.Group>
+            </FloatingLabel>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="primary" type="submit">
