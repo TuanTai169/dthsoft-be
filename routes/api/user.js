@@ -113,7 +113,7 @@ router.post("/", verifyToken, checkManager, async (req, res) => {
 // @decs UPDATE PROFILE
 // @access Private
 router.put(`/update-profile/:id`, verifyToken, async (req, res) => {
-  const { name, email, password, phone, address, image } = req.body
+  const { name, password, phone, address, image } = req.body
 
   //Simple Validation
   if (!name || !email)
@@ -129,7 +129,6 @@ router.put(`/update-profile/:id`, verifyToken, async (req, res) => {
 
     let updateUser = {
       name: name,
-      email: email,
       password: hashedPassword,
       phone: phone,
       address: address,
