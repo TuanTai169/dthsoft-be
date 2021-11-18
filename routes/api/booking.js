@@ -250,7 +250,8 @@ router.put(`/update/:id`, verifyToken, async (req, res) => {
       }
     )
     //Change STATUS ROOM
-    await toolRoom.changeStatusArrayRooms(rooms, status, userId)
+    const statusRoom = status === "CHECK IN" ? "OCCUPIED" : "BOOKING"
+    await toolRoom.changeStatusArrayRooms(rooms, statusRoom, userId)
 
     res.json({
       success: true,
@@ -322,6 +323,7 @@ router.put(
       //Change STATUS room
       await toolRoom.changeStatusArrayRooms(newRooms, "OCCUPIED", userId)
       await toolRoom.changeStatusOneRoom(roomChooseID, "READY", userId)
+
       res.json({
         success: true,
         message: "Change room successfully",
