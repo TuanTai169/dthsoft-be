@@ -57,7 +57,9 @@ const Login = () => {
           />
         </FloatingLabel>
 
-        <Button className="login-btn-submit">Login</Button>
+        <Button className="login-btn-submit" type="submit">
+          Login
+        </Button>
         <div style={{ marginTop: "12px" }}>
           <Link to="/forgot_password">Forgot your password?</Link>
         </div>
