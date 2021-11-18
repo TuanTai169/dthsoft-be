@@ -5,7 +5,7 @@ const CustomerForm = (props) => {
   const { customer } = props
 
   //Render Table
-  const tableHead = ["Name", "Phone", "CMND", "Email"]
+  const tableHead = ["Name", "Phone", "Email"]
   const renderHead = tableHead.map((item, index) => {
     return (
       <th key={index} style={{ fontWeight: 500 }}>
@@ -25,7 +25,6 @@ const CustomerForm = (props) => {
               <>
                 <td>{customer.name}</td>
                 <td>{customer.phone}</td>
-                <td>{customer.cmnd}</td>
                 <td>{customer.email}</td>
               </>
             )}

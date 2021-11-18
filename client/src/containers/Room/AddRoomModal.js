@@ -97,10 +97,10 @@ const AddRoomModal = (props) => {
             </Row>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="primary" type="submit">
+            <Button variant="danger" type="submit">
               Save
             </Button>
-            <Button variant="danger" onClick={resetAddPostData}>
+            <Button variant="secondary" onClick={resetAddPostData}>
               Close
             </Button>
           </Modal.Footer>

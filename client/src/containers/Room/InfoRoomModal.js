@@ -7,6 +7,7 @@ import { deleteRoom } from "../../redux/actions/roomAction"
 import { useDispatch, useSelector } from "react-redux"
 import { convertStringToDate } from "../../utils/convertDateTime"
 import CustomerForm from "../FormBooking/CustomerForm"
+import ServiceForm from "../FormBooking/ServiceForm"
 
 const InfoRoomModal = (props) => {
   const { show, handlerModalClose, room } = props
@@ -20,22 +21,33 @@ const InfoRoomModal = (props) => {
 
   const role = useSelector((state) => state.auth.user.roles)
   const bookings = useSelector((state) => state.bookingReducer.bookings)
+
   const dispatch = useDispatch()
 
   const booking = bookings.filter((item) =>
     item.rooms.find((room) => room.roomNumber === roomNumber)
   )
 
+  const getBooking = booking.map((item) => item)
+
   const renderTable = booking.map((item) => {
-    const { code, customer, checkInDate, checkOutDate, deposit, totalPrice } =
-      item
+    const {
+      code,
+      customer,
+      services,
+      checkInDate,
+      checkOutDate,
+      deposit,
+      serviceCharge,
+      totalPrice,
+    } = item
 
     const checkInDateConvert = convertStringToDate(checkInDate)
     const checkOutDateConvert = convertStringToDate(checkOutDate)
 
     return (
       <Form key={item._id}>
-        <Row>
+        <Row className="mb-3" style={{ borderBottom: "1px solid #bbb" }}>
           <Col>
             <FloatingLabel
               controlId="floatingCode"
@@ -45,8 +57,6 @@ const InfoRoomModal = (props) => {
               <Form.Control type="text" value={code} disabled />
             </FloatingLabel>
           </Col>
-        </Row>
-        <Row className="mb-3" style={{ borderBottom: "1px solid #bbb" }}>
           <Col>
             <FloatingLabel
               controlId="floatingCheckIn"
@@ -68,23 +78,35 @@ const InfoRoomModal = (props) => {
           <Col>
             <FloatingLabel
               controlId="floatingDeposit"
-              label="Deposit"
+              label="Deposit (USD)"
               className="mb-3"
             >
-              <Form.Control type="text" value={`$ ${deposit}`} disabled />
+              <Form.Control type="text" value={deposit} disabled />
             </FloatingLabel>
           </Col>
         </Row>
         <Row className="mb-3" style={{ borderBottom: "1px solid #bbb" }}>
           <Form.Group controlId="formGridCustomer">
-            <Form.Label>Customer</Form.Label>
+            <h5>Customer</h5>
             <CustomerForm customer={customer} />
           </Form.Group>
         </Row>
+        <Row className="mb-3" style={{ borderBottom: "1px solid #bbb" }}>
+          <Form.Group as={Col} controlId="formGridService">
+            <div className="form-label">
+              <h5>Service</h5>
+              <p>
+                Price (USD):{" "}
+                <strong style={{ color: "red" }}>{serviceCharge}</strong>
+              </p>
+            </div>
+            <ServiceForm services={services} />
+          </Form.Group>
+        </Row>
         <p>
-          Total Price:{" "}
+          Total Price (USD):{" "}
           <strong style={{ color: "red", fontSize: "20px" }}>
-            $ {totalPrice}
+            {totalPrice}
           </strong>{" "}
         </p>
       </Form>
@@ -120,10 +142,10 @@ const InfoRoomModal = (props) => {
             <Col>
               <FloatingLabel
                 controlId="floatingPrice"
-                label="Price"
+                label="Price (USD)"
                 className="mb-3"
               >
-                <Form.Control type="text" value={`$ ${price} `} disabled />
+                <Form.Control type="text" value={price} disabled />
               </FloatingLabel>
             </Col>
           </Row>
@@ -153,7 +175,11 @@ const InfoRoomModal = (props) => {
               </Button>
             </>
           )}
-          <RoomActionButton room={room} handlerModalClose={handlerModalClose} />
+          <RoomActionButton
+            room={room}
+            booking={getBooking}
+            handlerModalClose={handlerModalClose}
+          />
           <EditRoomModal
             show={isOpenEditModal}
             handlerEditModalClose={handlerEditModalClose}

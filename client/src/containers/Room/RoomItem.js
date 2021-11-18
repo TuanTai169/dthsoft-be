@@ -1,10 +1,14 @@
 import React, { useState } from "react"
+import { useDispatch } from "react-redux"
+import { getAllBooking } from "../../redux/actions/bookingAction"
 import InfoRoomModal from "./InfoRoomModal"
 
 const RoomItem = (props) => {
   const [isInfoOpen, setIsInfoOpen] = useState(false)
   const { room } = props
+
   const { roomNumber, price, roomType, status } = room
+  const dispatch = useDispatch()
 
   const handlerCloseInfoModal = () => setIsInfoOpen(false)
 
@@ -25,7 +29,10 @@ const RoomItem = (props) => {
               ? "#0FF"
               : "#fff",
         }}
-        onClick={() => setIsInfoOpen(true)}
+        onClick={() => {
+          setIsInfoOpen(true)
+          dispatch(getAllBooking())
+        }}
       >
         <div className="status-card__info">
           <h4>{roomNumber}</h4>

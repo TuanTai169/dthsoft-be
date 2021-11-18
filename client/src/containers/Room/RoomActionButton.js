@@ -4,21 +4,44 @@ import { changeStatusRoom } from "../../redux/actions/roomAction"
 import { useDispatch } from "react-redux"
 import BookingModal from "../Booking/BookingModal"
 import CheckInModal from "../Booking/CheckInModal"
+import ViewAllRoomModal from "./ViewAllRoomModal"
+import { changeBookingToCheckIn } from "../../redux/actions/bookingAction"
+import DialogChange from "../../components/Dialog/DialogChange"
+import CheckOutModal from "../Receipt/CheckOutModal"
+import EditBookingModal from "./../Booking/EditBookingModal"
 
 const RoomActionButton = (props) => {
   const dispatch = useDispatch()
 
-  const { room, handlerModalClose } = props
+  const { room, handlerModalClose, booking } = props
+
   const [isOpenBooking, setIsOpenBooking] = useState(false)
   const [isOpenCheckIn, setIsOpenCheckIn] = useState(false)
+  const [isOpenCheckOut, setIsOpenCheckOut] = useState(false)
+  const [isOpenViewRoom, setIsOpenViewRoom] = useState(false)
+  const [isOpenEditBooking, setIsOpenEditBooking] = useState(false)
+
+  const [conformDialog, setConformDialog] = useState({
+    isOpenDialog: false,
+    title: "",
+    message: "",
+  })
 
   const handlerCloseBookingModal = () => setIsOpenBooking(false)
   const handlerCloseCheckInModal = () => setIsOpenCheckIn(false)
+  const handlerCloseCheckOutModal = () => setIsOpenCheckOut(false)
+  const handlerCloseViewRoomModal = () => setIsOpenViewRoom(false)
+  const handlerCloseEditBookingModal = () => setIsOpenEditBooking(false)
 
   const { status, _id } = room
+  const bookingId = booking.map((item) => item._id)
 
   const changeStatus = (id, status) => {
     dispatch(changeStatusRoom(id, status))
+    handlerModalClose()
+  }
+  const changeFromBookingToCheckIn = () => {
+    dispatch(changeBookingToCheckIn(bookingId.toString()))
     handlerModalClose()
   }
   return (
@@ -51,27 +74,62 @@ const RoomActionButton = (props) => {
           <Button
             variant="warning"
             style={{ marginLeft: "4px", color: "#fff" }}
+            onClick={() => setIsOpenViewRoom(true)}
           >
             <i className="bx bx-transfer-alt"></i>
             <span>&ensp; Change Room</span>
           </Button>
         )}
-        {/* CHECK IN */}
+        {/* BOOKING */}
         {status === "READY" && (
-          <Button
-            variant="info"
-            style={{ marginLeft: "4px", color: "#fff" }}
-            onClick={() => setIsOpenBooking(true)}
-          >
-            <i className="bx bxs-user-x"></i>
-            <span>&ensp;Booking</span>
-          </Button>
+          <>
+            <Button
+              variant="info"
+              style={{ marginLeft: "4px", color: "#fff" }}
+              onClick={() => setIsOpenBooking(true)}
+            >
+              <i className="bx bxs-user-x"></i>
+              <span>&ensp;Booking</span>
+            </Button>
+            <BookingModal
+              show={isOpenBooking}
+              handlerModalClose={handlerCloseBookingModal}
+              currentRoom={room}
+              handlerParentModalClose={handlerModalClose}
+            />
+          </>
         )}
-        {(status === "BOOKING" || status === "READY") && (
+        {status === "READY" && (
+          <>
+            <Button
+              variant="primary"
+              style={{ marginLeft: "4px" }}
+              onClick={() => setIsOpenCheckIn(true)}
+            >
+              <i className="bx bxs-user-check"></i>
+              <span>&ensp;Check in</span>
+            </Button>
+            <CheckInModal
+              show={isOpenCheckIn}
+              handlerModalClose={handlerCloseCheckInModal}
+              currentRoom={room}
+              handlerParentModalClose={handlerModalClose}
+            />
+          </>
+        )}
+
+        {status === "BOOKING" && (
           <Button
             variant="primary"
             style={{ marginLeft: "4px" }}
-            onClick={() => setIsOpenCheckIn(true)}
+            onClick={() =>
+              setConformDialog({
+                isOpenDialog: true,
+                title: "Change to Check in",
+                message: "Are you sure change to check in from  this booking?",
+                onConform: () => changeFromBookingToCheckIn(),
+              })
+            }
           >
             <i className="bx bxs-user-check"></i>
             <span>&ensp;Check in</span>
@@ -79,22 +137,52 @@ const RoomActionButton = (props) => {
         )}
         {/* CHECK OUT */}
         {status === "OCCUPIED" && (
-          <Button variant="danger" style={{ marginLeft: "4px" }}>
-            <i className="bx bxs-magic-wand"></i>
-            <span>&ensp;Check out</span>
-          </Button>
+          <>
+            <Button
+              variant="success"
+              style={{ marginLeft: "4px" }}
+              onClick={() => setIsOpenEditBooking(true)}
+            >
+              <i className="bx bx-plus-medical"></i>
+              <span>&ensp;Add Service</span>
+            </Button>
+            <EditBookingModal
+              show={isOpenEditBooking}
+              handlerModalClose={handlerCloseEditBookingModal}
+              handlerParentModalClose={handlerModalClose}
+              booking={booking}
+            />
+          </>
         )}
-        <BookingModal
-          show={isOpenBooking}
-          handlerModalClose={handlerCloseBookingModal}
-          currentRoom={room}
+        {status === "OCCUPIED" && (
+          <>
+            <Button
+              variant="danger"
+              style={{ marginLeft: "4px" }}
+              onClick={() => setIsOpenCheckOut(true)}
+            >
+              <i className="bx bxs-magic-wand"></i>
+              <span>&ensp;Check out</span>
+            </Button>
+            <CheckOutModal
+              show={isOpenCheckOut}
+              handlerModalClose={handlerCloseCheckOutModal}
+              handlerParentModalClose={handlerModalClose}
+              booking={booking}
+            />
+          </>
+        )}
+
+        <ViewAllRoomModal
+          show={isOpenViewRoom}
+          handlerModalClose={handlerCloseViewRoomModal}
+          roomChoose={room}
+          bookingId={bookingId.toString()}
           handlerParentModalClose={handlerModalClose}
         />
-        <CheckInModal
-          show={isOpenCheckIn}
-          handlerModalClose={handlerCloseCheckInModal}
-          currentRoom={room}
-          handlerParentModalClose={handlerModalClose}
+        <DialogChange
+          conformDialog={conformDialog}
+          setConformDialog={setConformDialog}
         />
       </ButtonToolbar>
     </>

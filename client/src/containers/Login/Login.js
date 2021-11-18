@@ -1,9 +1,10 @@
-import "./login.css"
 import React, { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { login } from "../../redux/actions/authAction"
-import { Spinner } from "react-bootstrap"
+import { Spinner, Form, FloatingLabel, Button } from "react-bootstrap"
 import { Redirect } from "react-router"
+import { Link } from "react-router-dom"
+import logo from "../../assets/images/logo.png"
 
 const Login = () => {
   const [email, setEmail] = useState("")
@@ -27,32 +28,40 @@ const Login = () => {
   else if (isAuthenticated) return <Redirect to="/" />
   return (
     <div className="login-page">
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
+      <div className="company-logo">
+        <img src={logo} alt="company-logo" />
+      </div>
+      <Form onSubmit={handleSubmit}>
+        <FloatingLabel controlId="floatingEmail" label="Email" className="mb-3">
+          <Form.Control
+            type="text"
+            placeholder="email"
+            name="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email"
-            id="email"
-            name="email"
+            required
           />
-        </div>
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input
+        </FloatingLabel>
+        <FloatingLabel
+          controlId="floatingPass"
+          label="Password"
+          className="mb-3"
+        >
+          <Form.Control
             type="password"
+            placeholder="*"
+            name="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
-            id="password"
-            name="password"
+            required
           />
+        </FloatingLabel>
+
+        <Button className="login-btn-submit">Login</Button>
+        <div style={{ marginTop: "12px" }}>
+          <Link to="/forgot_password">Forgot your password?</Link>
         </div>
-        <button type="submit">Login</button>
-      </form>
+      </Form>
     </div>
   )
 }

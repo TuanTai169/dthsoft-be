@@ -1,17 +1,15 @@
-import React from "react";
-import { Form, Modal, Button, Row, Col, FloatingLabel } from "react-bootstrap";
-import { convertBirthDate } from "../../utils/convertDateTime";
+import React from "react"
+import { Form, Modal, Button, Row, Col, FloatingLabel } from "react-bootstrap"
 
 function DetailUserModal(props) {
-  const { show, handlerModalClose, user } = props;
-  const { name, email, phone, address, image, roles, createdAt, } = user;
-  const formatCreatedAt = convertBirthDate(createdAt);
+  const { show, handlerModalClose, user } = props
+  const { name, email, phone, address, image, roles } = user
 
   return (
     <>
       <Modal show={show} onHide={handlerModalClose} animation={false}>
         <Modal.Header closeButton>
-          <Modal.Title>View User {name}</Modal.Title>
+          <Modal.Title>View User </Modal.Title>
         </Modal.Header>
         <Form>
           <Modal.Body>
@@ -26,7 +24,7 @@ function DetailUserModal(props) {
                 name="name"
                 value={name || ""}
                 required
-                disabled
+                readOnly
               />
             </FloatingLabel>
             <FloatingLabel
@@ -38,7 +36,7 @@ function DetailUserModal(props) {
                 type="text"
                 name="email"
                 value={email || ""}
-                disabled
+                readOnly
                 required
               />
             </FloatingLabel>
@@ -55,44 +53,12 @@ function DetailUserModal(props) {
                     placeholder="Phone Number"
                     name="phone"
                     value={phone || ""}
-                    disabled
+                    readOnly
                     required
                   />
                 </FloatingLabel>
               </Col>
-              <Col>
-                <FloatingLabel
-                  controlId="floatingimage"
-                  label="Image"
-                  className="mb-3"
-                >
-                  <Form.Control
-                    type="text"
-                    name="image"
-                    placeholder="Image"
-                    value={image || ""}
-                    disabled
-                    required
-                  />
-                </FloatingLabel>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <FloatingLabel
-                  controlId="floatingCreatedAt"
-                  label="CreatedAt"
-                  className="mb-3"
-                >
-                  <Form.Control
-                    type="date"
-                    name="createdAt"
-                    value={formatCreatedAt || ""}
-                    disabled
-                    required
-                  />
-                </FloatingLabel>
-              </Col>
+
               <Col>
                 <FloatingLabel
                   controlId="floatingRoles"
@@ -104,12 +70,28 @@ function DetailUserModal(props) {
                     placeholder="Roles"
                     name="roles"
                     value={roles || ""}
-                    disabled
+                    readOnly
                     required
                   />
                 </FloatingLabel>
               </Col>
             </Row>
+            <Col>
+              <FloatingLabel
+                controlId="floatingImage"
+                label="Image"
+                className="mb-3"
+              >
+                <Form.Control
+                  type="text"
+                  name="image"
+                  placeholder="Image"
+                  value={image || ""}
+                  readOnly
+                  required
+                />
+              </FloatingLabel>
+            </Col>
             <FloatingLabel
               controlId="floatingAddress"
               label="Address"
@@ -133,7 +115,7 @@ function DetailUserModal(props) {
         </Form>
       </Modal>
     </>
-  );
+  )
 }
 
-export default DetailUserModal;
+export default DetailUserModal

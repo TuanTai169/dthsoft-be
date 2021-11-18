@@ -1,14 +1,17 @@
-import React from "react"
+import React, { useState } from "react"
 import { Modal, Button, Form, Row, Col, FloatingLabel } from "react-bootstrap"
+import { useDispatch } from "react-redux"
 import { convertStringToDate } from "../../utils/convertDateTime"
 import CustomerForm from "../FormBooking/CustomerForm"
 import RoomForm from "../FormBooking/RoomForm"
 import ServiceForm from "./../FormBooking/ServiceForm"
+import { checkOut } from "../../redux/actions/receiptAction"
 
-const ViewDetailBookingModal = (props) => {
-  const { show, handlerModalClose, booking } = props
+const CheckOutModal = (props) => {
+  const { show, handlerModalClose, handlerParentModalClose, booking } = props
 
   const {
+    _id,
     code,
     customer,
     rooms,
@@ -19,12 +22,48 @@ const ViewDetailBookingModal = (props) => {
     services,
     roomCharge,
     serviceCharge,
+    VAT,
     totalPrice,
-  } = booking
+  } = booking[0]
+  const dispatch = useDispatch()
+  const [receipt, setReceipt] = useState({
+    booking: _id,
+    paidOut: 0,
+    refund: 0,
+  })
 
   const checkInDateConvert = convertStringToDate(checkInDate)
   const checkOutDateConvert = convertStringToDate(checkOutDate)
 
+  const onChangePaidOut = (e) => {
+    setReceipt({
+      ...receipt,
+      paidOut: e.target.value,
+      refund: e.target.value > totalPrice ? e.target.value - totalPrice : 0,
+    })
+  }
+
+  const onSubmitCheckOut = () => {
+    const newReceipt = {
+      booking: receipt.booking,
+      paidOut: parseInt(receipt.paidOut),
+      refund: receipt.refund,
+    }
+    console.log(newReceipt)
+    dispatch(checkOut(newReceipt))
+    resetData()
+    handlerModalClose()
+    handlerParentModalClose()
+  }
+  const resetData = () => {
+    setReceipt({
+      booking: _id,
+      paidOut: 0,
+      refund: 0,
+    })
+  }
+
+  const { paidOut, refund } = receipt
   return (
     <>
       <Modal show={show} onHide={handlerModalClose} animation={false} size="lg">
@@ -66,7 +105,7 @@ const ViewDetailBookingModal = (props) => {
                   label="Discount (%)"
                   className="mb-3"
                 >
-                  <Form.Control type="text" value={discount} disabled />
+                  <Form.Control type="text" value={` ${discount}`} disabled />
                 </FloatingLabel>
               </Col>
               <Col>
@@ -109,14 +148,52 @@ const ViewDetailBookingModal = (props) => {
                 <ServiceForm services={services} />
               </Form.Group>
             </Row>
-            <p>
-              Total Price (USD):{" "}
-              <strong style={{ color: "red", fontSize: "20px" }}>
-                {totalPrice}
-              </strong>
-            </p>
+            <Row>
+              <Col>
+                <div>
+                  <h6>Total Price (USD)</h6>
+                  <strong style={{ color: "red", fontSize: "20px" }}>
+                    {totalPrice}
+                  </strong>
+                </div>
+              </Col>
+              <Col>
+                <FloatingLabel
+                  controlId="floatingPaidOut"
+                  label="Paid (USD) "
+                  className="mb-3"
+                >
+                  <Form.Control
+                    type="text"
+                    value={paidOut}
+                    onChange={onChangePaidOut}
+                  />
+                </FloatingLabel>
+              </Col>
+              <Col>
+                <FloatingLabel
+                  controlId="floatingRefund"
+                  label="Refund (USD) "
+                  className="mb-3"
+                >
+                  <Form.Control type="text" value={refund} readOnly />
+                </FloatingLabel>
+              </Col>
+              <Col>
+                <FloatingLabel
+                  controlId="floatingVAT"
+                  label="VAT(%) "
+                  className="mb-3"
+                >
+                  <Form.Control type="text" value={VAT} readOnly />
+                </FloatingLabel>
+              </Col>
+            </Row>
           </Modal.Body>
           <Modal.Footer>
+            <Button variant="danger" onClick={onSubmitCheckOut}>
+              Save
+            </Button>
             <Button variant="secondary" onClick={handlerModalClose}>
               Close
             </Button>
@@ -127,4 +204,4 @@ const ViewDetailBookingModal = (props) => {
   )
 }
 
-export default ViewDetailBookingModal
+export default CheckOutModal

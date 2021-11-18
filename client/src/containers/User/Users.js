@@ -1,6 +1,7 @@
-import React, { useCallback, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import { Button, ButtonToolbar, Spinner } from "react-bootstrap"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
+import { getAllUser } from "../../redux/actions/userAction"
 import Pagination from "../../components/Common/Pagination/Pagination"
 import UserTable from "./UserTable"
 import AddUserModal from "./AddUserModal"
@@ -14,9 +15,14 @@ function Users() {
   users.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
   const isLoading = useSelector((state) => state.userReducer.isUserLoading)
   const roles = useSelector((state) => state.auth.user.roles)
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(getAllUser())
+  }, [dispatch])
 
   const totalItems = users.length
-  const limit = 6
+  const limit = 10
   const totalPages = Math.ceil(totalItems / limit)
 
   const currentData = users.slice(
@@ -25,6 +31,7 @@ function Users() {
   )
 
   const handlerModalClose = () => setIsOpen(false)
+
   const onChangedPage = useCallback(
     (event, page) => {
       event.preventDefault()

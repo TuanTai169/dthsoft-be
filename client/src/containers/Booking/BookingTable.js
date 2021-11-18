@@ -1,6 +1,7 @@
 import React from "react"
 import { Table } from "react-bootstrap"
 import BookingItem from "./BookingItem"
+
 const BookingTable = (props) => {
   const { bookings } = props
 
