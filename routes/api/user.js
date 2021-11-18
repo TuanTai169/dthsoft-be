@@ -116,10 +116,10 @@ router.put(`/update-profile/:id`, verifyToken, async (req, res) => {
   const { name, password, phone, address, image } = req.body
 
   //Simple Validation
-  if (!name || !email)
+  if (!name || !password)
     return res.status(400).json({
       success: false,
-      message: "Name and email are required",
+      message: "Name and password are required",
     })
 
   try {
