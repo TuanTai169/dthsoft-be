@@ -3,8 +3,26 @@ import "./forgot-password.css"
 import logo from "../../assets/images/logo.png"
 import { Link } from "react-router-dom"
 import { Form, FloatingLabel, Button } from "react-bootstrap"
+import { toast } from "react-toastify"
+import axios from "axios"
+import { HOST_API_URL } from "../../redux/constants/api"
+
 function ForgotPassword() {
   const [email, setEmail] = useState("")
+
+  const sendConformEmail = async () => {
+    try {
+      const res = await axios.post(`${HOST_API_URL}/auth/forgot-password`, {
+        email,
+      })
+
+      if (res.data.success) {
+        toast.success(res.data.message)
+      }
+    } catch (error) {
+      toast.error(error.response.data.message)
+    }
+  }
 
   return (
     <div className="login-page">
@@ -28,7 +46,9 @@ function ForgotPassword() {
           required
         />
       </FloatingLabel>
-      <Button className="login-btn-submit">Verify your email</Button>
+      <Button className="login-btn-submit" onClick={sendConformEmail}>
+        Verify your email
+      </Button>
     </div>
   )
 }
