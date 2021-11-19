@@ -272,8 +272,8 @@ router.post(
         file.tempFilePath,
         {
           folder: "avatar",
-          width: 150,
-          height: 150,
+          width: 600,
+          height: 600,
           crop: "fill",
         },
         async (err, result) => {

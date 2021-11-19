@@ -5,26 +5,78 @@ import { useDispatch, useSelector } from "react-redux"
 import { useState } from "react"
 import EditProfileModal from "./EditProfileModal"
 import { loadUser } from "./../../redux/actions/authAction"
+import axios from "axios"
+import { HOST_API_URL } from "../../redux/constants/api"
+import { toast } from "react-toastify"
 
 function Profile() {
   const user = useSelector((state) => state.auth.user)
   const users = useSelector((state) => state.userReducer.users)
+  const role = useSelector((state) => state.auth.user.roles)
   const dispatch = useDispatch()
   useEffect(() => dispatch(loadUser()), [dispatch, users])
 
   const [isEditOpen, setIsEditOpen] = useState(false)
+  const [avatar, setAvatar] = useState(false)
 
   const handlerModalEditClose = () => setIsEditOpen(false)
+
+  const changeAvatar = async (e) => {
+    e.preventDefault()
+    try {
+      const file = e.target.files[0]
+
+      if (!file) toast.error("No files were uploaded")
+
+      if (file.size > 1024 * 1024) toast.error("Size too large")
+
+      if (file.type !== "image/jpeg" && file.type !== "image/png")
+        toast.error("File format is incorrect")
+
+      let formData = new FormData()
+      formData.append("file", file)
+
+      const res = await axios.post(
+        `${HOST_API_URL}/user/upload-avatar/${user._id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      )
+      toast.success(res.data.message)
+      setAvatar(res.data.url)
+    } catch (err) {
+      toast.error(err.response.message)
+    }
+  }
 
   return (
     <>
       <Row>
+        <h4>
+          {role === "ADMIN"
+            ? "Admin Profile"
+            : role === "MANAGER"
+            ? "Manager Profile"
+            : "Employee Profile"}
+        </h4>
+      </Row>
+      <Row>
         <Col sm={4}>
           <div className="profile-img">
-            <img src={user.image} alt="" />
+            <img src={avatar ? avatar : user.image} alt="" />
             <div className="file btn btn-lg btn-primary">
-              Change Avatar
-              <input type="file" name="file" />
+              <input
+                type="file"
+                name="file"
+                id="avatar-upload"
+                onChange={changeAvatar}
+              />
+              <label className="upload-label" htmlFor="avatar-upload">
+                Change avatar
+              </label>
             </div>
           </div>
         </Col>

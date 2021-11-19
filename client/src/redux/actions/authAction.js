@@ -49,7 +49,6 @@ export const login =
         toast.success(res.data.message)
       }
     } catch (error) {
-      console.log(error.response.data.message)
       toast.error(error.response.data.message)
     }
   }
@@ -68,4 +67,16 @@ export const logout = () => (dispatch) => {
   toast.success("User logout successfully !")
 }
 
-// export default auth.reducer
+//FORGOT PASSWORD
+export const forgotPassword = (email) => async (dispatch) => {
+  try {
+    const res = await axios.post(`${HOST_API_URL}/auth/forgot-password`, {
+      email,
+    })
+    if (res.data.success) {
+      toast.success(res.data.message)
+    }
+  } catch (error) {
+    toast.error(error.response.data.message)
+  }
+}
