@@ -157,7 +157,7 @@ router.put(`/update-profile/:id`, verifyToken, async (req, res) => {
 // @decs UPDATE user
 // @access Private
 router.put(`/update/:id`, verifyToken, checkManager, async (req, res) => {
-  const { name, email, phone, address, image } = req.body
+  const { name, email, phone, address } = req.body
 
   //Simple Validation
   if (!name || !email)
@@ -172,7 +172,6 @@ router.put(`/update/:id`, verifyToken, checkManager, async (req, res) => {
       email: email,
       phone: phone || "",
       address: address || "",
-      image: image || "",
       updateBy: req.userId,
     }
 
@@ -261,37 +260,48 @@ cloudinary.config({
   api_secret: process.env.CLOUD_API_SECRET,
 })
 
-router.post(`/upload-avatar`, uploadImage, verifyToken, async (req, res) => {
-  try {
-    const file = req.files.file
+router.post(
+  `/upload-avatar/:id`,
+  uploadImage,
+  verifyToken,
+  async (req, res) => {
+    try {
+      const file = req.files.file
 
-    cloudinary.v2.uploader.upload(
-      file.tempFilePath,
-      {
-        folder: "avatar",
-        width: 150,
-        height: 150,
-        crop: "fill",
-      },
-      async (err, result) => {
-        if (err) throw err
+      cloudinary.v2.uploader.upload(
+        file.tempFilePath,
+        {
+          folder: "avatar",
+          width: 150,
+          height: 150,
+          crop: "fill",
+        },
+        async (err, result) => {
+          if (err) throw err
 
-        removeTmp(file.tempFilePath)
+          removeTmp(file.tempFilePath)
 
-        res.json({
-          success: true,
-          message: "Upload file successfully !",
-          url: result.secure_url,
-        })
-      }
-    )
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-    })
+          const pathImage = result.secure_url
+          const userUpdateCondition = { _id: req.params.id }
+          const updated = { image: pathImage, updateBy: req.userId }
+          await User.findOneAndUpdate(userUpdateCondition, updated, {
+            new: true,
+          })
+          res.json({
+            success: true,
+            message: "Upload file successfully !",
+            url: pathImage,
+          })
+        }
+      )
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: "Internal server error",
+      })
+    }
   }
-})
+)
 
 const removeTmp = (path) => {
   fs.unlink(path, (err) => {
