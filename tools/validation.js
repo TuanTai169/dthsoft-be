@@ -47,9 +47,11 @@ const receiptValidation = (data) => {
     booking: Joi.objectId(),
     paidOut: Joi.number().required().min(0),
     refund: Joi.number(),
+    modeOfPayment: Joi.string(),
   })
   return schema.validate(data)
 }
+
 module.exports.userValidation = userValidation
 module.exports.customerValidation = customerValidation
 module.exports.roomValidation = roomValidation
