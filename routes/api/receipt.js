@@ -12,7 +12,7 @@ const { receiptValidation } = require("../../tools/validation")
 // @decs CREATE RECEIPT / CHECKOUT
 // @access Private
 router.post("/", verifyToken, async (req, res) => {
-  const { booking, paidOut, refund } = req.body
+  const { booking, paidOut, refund, modeOfPayment } = req.body
   const userId = req.userId
 
   //Validation
@@ -42,6 +42,7 @@ router.post("/", verifyToken, async (req, res) => {
       booking,
       paidOut,
       refund,
+      modeOfPayment,
       status: "PAID",
       isActive: true,
       createBy: userId,
