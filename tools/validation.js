@@ -10,7 +10,6 @@ const userValidation = (data) => {
     password: Joi.string().min(8).required(),
     phone: Joi.string().min(10),
     address: Joi.string(),
-    image: Joi.string(),
     roles: Joi.string(),
   })
   return schema.validate(data)

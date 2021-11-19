@@ -53,7 +53,7 @@ router.get("/:id", verifyToken, async (req, res) => {
 // @decs CREATE user
 // @access Private
 router.post("/", verifyToken, checkManager, async (req, res) => {
-  const { name, email, password, phone, address, image, roles } = req.body
+  const { name, email, password, phone, address, roles } = req.body
 
   //Validation
   const { error } = userValidation(req.body)
@@ -79,9 +79,6 @@ router.post("/", verifyToken, checkManager, async (req, res) => {
       password: hashedPassword,
       phone: phone || "",
       address: address || "",
-      image:
-        image ||
-        "https://res.cloudinary.com/dgd99lsii/image/upload/v1637135199/avatar/male_avatar_bvpfgh.png",
       roles: roles || "EMPLOYEE",
       createBy: req.userId,
       updateBy: null,
@@ -132,9 +129,7 @@ router.put(`/update-profile/:id`, verifyToken, async (req, res) => {
       password: hashedPassword,
       phone: phone,
       address: address,
-      image:
-        image ||
-        "https://res.cloudinary.com/dgd99lsii/image/upload/v1637135199/avatar/male_avatar_bvpfgh.png",
+      image: image,
       updateBy: req.userId,
     }
 
@@ -150,6 +145,7 @@ router.put(`/update-profile/:id`, verifyToken, async (req, res) => {
       updatedUser,
     })
   } catch (error) {
+    console.log(error)
     res.status(500).json({
       success: false,
       message: "Internal server error",
@@ -176,9 +172,7 @@ router.put(`/update/:id`, verifyToken, checkManager, async (req, res) => {
       email: email,
       phone: phone || "",
       address: address || "",
-      image:
-        image ||
-        "https://res.cloudinary.com/dgd99lsii/image/upload/v1637135199/avatar/male_avatar_bvpfgh.png",
+      image: image || "",
       updateBy: req.userId,
     }
 
