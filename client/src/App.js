@@ -25,7 +25,7 @@ function App() {
           <Route exact path="/forgot_password" component={ForgotPassword} />
           <Route
             exact
-            path="/api/auth/reset-password/:token"
+            path="/reset-password/:token"
             component={ResetPassword}
           />
         </Switch>
