@@ -37,13 +37,12 @@ const AddUserModal = (props) => {
       password: "",
       phone: "",
       address: "",
-      image: "",
       roles: "",
     })
     handlerModalClose()
   }
 
-  const { name, email, password, phone, address, roles, image } = newUser
+  const { name, email, password, phone, address, roles } = newUser
 
   return (
     <>
@@ -88,7 +87,7 @@ const AddUserModal = (props) => {
               className="mb-3"
             >
               <Form.Control
-                type="text"
+                type="password"
                 placeholder="Password"
                 name="password"
                 value={password || ""}
@@ -135,21 +134,6 @@ const AddUserModal = (props) => {
                 </FloatingLabel>
               </Col>
             </Row>
-
-            <FloatingLabel
-              controlId="floatingImage"
-              label="Image"
-              className="mb-3"
-            >
-              <Form.Control
-                as="textarea"
-                name="image"
-                placeholder="Image"
-                value={image || ""}
-                onChange={onChangeNewForm}
-                required
-              />
-            </FloatingLabel>
             <FloatingLabel
               controlId="floatingAddress"
               label="Address"
