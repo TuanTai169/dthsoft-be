@@ -25,11 +25,6 @@
     "icon": "bx bx-gift"
   },
   {
-    "display_name": "Rooms",
-    "route": "/rooms",
-    "icon": "bx bx-bookmark"
-  },
-  {
     "display_name": "Income management",
     "route": "/income-managements",
     "icon": "bx bx-cart"

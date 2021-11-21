@@ -85,6 +85,9 @@ input:focus {
 table {
   border-collapse: unset;
 }
+td {
+  text-transform: none !important;
+}
 .page-header {
   margin-bottom: 40px;
   text-transform: capitalize;
@@ -221,4 +224,23 @@ table {
 .profile-img img {
   border-radius: 50%;
   cursor: pointer;
+}
+
+/* SORT */
+
+thead th.ascending::after {
+  content: "\2191";
+  display: inline-block;
+  margin-left: 1em;
+}
+
+thead th.descending::after {
+  content: "\2193";
+  display: inline-block;
+  margin-left: 1em;
+}
+.page__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }

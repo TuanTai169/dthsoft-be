@@ -14,7 +14,8 @@ function Profile() {
   const users = useSelector((state) => state.userReducer.users)
   const role = useSelector((state) => state.auth.user.roles)
   const dispatch = useDispatch()
-  useEffect(() => dispatch(loadUser()), [dispatch, users])
+
+  useEffect(() => dispatch(loadUser()), [dispatch, users, user])
 
   const [isEditOpen, setIsEditOpen] = useState(false)
   const [avatar, setAvatar] = useState(false)
@@ -48,7 +49,7 @@ function Profile() {
       toast.success(res.data.message)
       setAvatar(res.data.url)
     } catch (err) {
-      toast.error(err.response.message)
+      err.response && toast.error(err.response.data.message)
     }
   }
 

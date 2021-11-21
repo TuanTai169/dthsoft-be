@@ -31,7 +31,9 @@ const BookingTable = (props) => {
               </tr>
             ))
           ) : (
-            <h5>No Booking</h5>
+            <tr>
+              <td colSpan={6}>No Booking</td>
+            </tr>
           )}
         </tbody>
       </Table>
