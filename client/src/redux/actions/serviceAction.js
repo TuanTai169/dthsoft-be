@@ -17,7 +17,8 @@ export const getAllService = () => {
         })
       }
     } catch (error) {
-      toast.error(error.response.data.message)
+      console.log(error)
+      error.response.data && toast.error(error.response.data.message)
       dispatch({ type: types.SET_SERVICE_ERROR })
     }
   }
@@ -55,7 +56,8 @@ export const addService = (newService) => {
         toast.success(response.data.message)
       }
     } catch (error) {
-      toast.error(error.response.data.message)
+      console.log(error)
+      error.response.data && toast.error(error.response.data.message)
     }
   }
 }
@@ -73,7 +75,8 @@ export const deleteService = (id) => {
         toast.success(response.data.message)
       }
     } catch (error) {
-      toast.error(error.response.data.message)
+      console.log(error)
+      error.response.data && toast.error(error.response.data.message)
     }
   }
 }
@@ -93,7 +96,8 @@ export const updateService = (updateService) => {
         toast.success(response.data.message)
       }
     } catch (error) {
-      toast.error(error.response.data.message)
+      console.log(error)
+      error.response.data && toast.error(error.response.data.message)
     }
   }
 }

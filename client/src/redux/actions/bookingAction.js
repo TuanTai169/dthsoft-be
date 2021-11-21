@@ -17,7 +17,8 @@ export const getAllBooking = () => {
         })
       }
     } catch (error) {
-      toast.error(error.response.data.message)
+      console.log(error)
+      error.response.data && toast.error(error.response.data.message)
       dispatch({ type: types.SET_BOOKING_ERROR })
     }
   }
@@ -39,7 +40,8 @@ export const addBooking = (newBooking, status) => {
         toast.success(response.data.message)
       }
     } catch (error) {
-      toast.error(error.response.data.message)
+      console.log(error)
+      error.response.data && toast.error(error.response.data.message)
     }
   }
 }
@@ -80,7 +82,8 @@ export const cancelledBooking = (bookingId) => {
         toast.success(response.data.message)
       }
     } catch (error) {
-      toast.error(error.response.data.message)
+      console.log(error)
+      error.response.data && toast.error(error.response.data.message)
     }
   }
 }
@@ -100,7 +103,8 @@ export const changeRoom = (bookingId, startRoom, endRoom) => {
         toast.success(response.data.message)
       }
     } catch (error) {
-      toast.error(error.response.data.message)
+      console.log(error)
+      error.response.data && toast.error(error.response.data.message)
     }
   }
 }
@@ -120,7 +124,8 @@ export const changeBookingToCheckIn = (bookingId) => {
         toast.success(response.data.message)
       }
     } catch (error) {
-      toast.error(error.response.data.message)
+      console.log(error)
+      error.response.data && toast.error(error.response.data.message)
     }
   }
 }

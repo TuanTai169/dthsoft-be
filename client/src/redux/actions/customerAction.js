@@ -17,7 +17,8 @@ export const getAllCustomer = () => {
         })
       }
     } catch (error) {
-      toast.error(error)
+      console.log(error)
+      error.response.data && toast.error(error.response.data.message)
       dispatch({ type: types.SET_CUSTOMER_ERROR })
     }
   }
@@ -36,6 +37,8 @@ export const findCustomer = (id) => {
         })
       }
     } catch (error) {
+      console.log(error)
+      error.response.data && toast.error(error.response.data.message)
       dispatch({ type: types.SET_CUSTOMER_ERROR })
       toast.error("Sever Error")
     }
@@ -55,7 +58,8 @@ export const addCustomer = (newCustomer) => {
         toast.success(response.data.message)
       }
     } catch (error) {
-      toast.error(error.response.data.message)
+      console.log(error)
+      error.response.data && toast.error(error.response.data.message)
     }
   }
 }
@@ -73,7 +77,8 @@ export const deleteCustomer = (id) => {
         toast.success(response.data.message)
       }
     } catch (error) {
-      toast.error(error.response.data.message)
+      console.log(error)
+      error.response.data && toast.error(error.response.data.message)
     }
   }
 }
@@ -94,7 +99,8 @@ export const updateCustomer = (updateCustomer, id) => {
         toast.success(response.data.message)
       }
     } catch (error) {
-      toast.error(error.response.data.message)
+      console.log(error)
+      error.response.data && toast.error(error.response.data.message)
     }
   }
 }

@@ -49,7 +49,8 @@ export const login =
         toast.success(res.data.message)
       }
     } catch (error) {
-      toast.error(error.response.data.message)
+      console.log(error)
+      error.response.data && toast.error(error.response.data.message)
     }
   }
 
@@ -77,6 +78,7 @@ export const forgotPassword = (email) => async (dispatch) => {
       toast.success(res.data.message)
     }
   } catch (error) {
-    toast.error(error.response.data.message)
+    console.log(error)
+    error.response.data && toast.error(error.response.data.message)
   }
 }

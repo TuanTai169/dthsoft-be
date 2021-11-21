@@ -6,6 +6,7 @@ import CustomerForm from "../FormBooking/CustomerForm"
 import RoomForm from "../FormBooking/RoomForm"
 import ServiceForm from "./../FormBooking/ServiceForm"
 import { checkOut } from "../../redux/actions/receiptAction"
+import PayPalModal from "./PayPalModal"
 
 const CheckOutModal = (props) => {
   const { show, handlerModalClose, handlerParentModalClose, booking } = props
@@ -30,7 +31,9 @@ const CheckOutModal = (props) => {
     booking: _id,
     paidOut: 0,
     refund: 0,
+    modeOfPayment: "CASH",
   })
+  const [isPaypal, setIsPaypal] = useState(false)
 
   const checkInDateConvert = convertStringToDate(checkInDate)
   const checkOutDateConvert = convertStringToDate(checkOutDate)
@@ -45,30 +48,35 @@ const CheckOutModal = (props) => {
 
   const onSubmitCheckOut = () => {
     const newReceipt = {
-      booking: receipt.booking,
+      ...receipt,
       paidOut: parseInt(receipt.paidOut),
-      refund: receipt.refund,
     }
-    console.log(newReceipt)
     dispatch(checkOut(newReceipt))
     resetData()
-    handlerModalClose()
-    handlerParentModalClose()
   }
   const resetData = () => {
     setReceipt({
       booking: _id,
       paidOut: 0,
       refund: 0,
+      modeOfPayment: "CASH",
     })
+    handlerModalClose()
+    handlerParentModalClose()
   }
 
-  const { paidOut, refund } = receipt
+  const { paidOut, refund, modeOfPayment } = receipt
   return (
     <>
       <Modal show={show} onHide={handlerModalClose} animation={false} size="lg">
         <Modal.Header closeButton>
           <Modal.Title>{code}</Modal.Title>
+          <div style={{ marginLeft: "30%", fontSize: "20px" }}>
+            Total Price (USD):{" "}
+            <strong style={{ color: "red", fontSize: "20px" }}>
+              {totalPrice}
+            </strong>
+          </div>
         </Modal.Header>
         <Form>
           <Modal.Body>
@@ -118,45 +126,7 @@ const CheckOutModal = (props) => {
                 </FloatingLabel>
               </Col>
             </Row>
-            <Row className="mb-3" style={{ borderBottom: "1px solid #bbb" }}>
-              <Form.Group controlId="formGridCustomer">
-                <h5>Customer</h5>
-                <CustomerForm customer={customer} />
-              </Form.Group>
-            </Row>
-            <Row className="mb-3" style={{ borderBottom: "1px solid #bbb" }}>
-              <Form.Group controlId="formGridRoom">
-                <div className="form-label">
-                  <h5>Room</h5>
-                  <p>
-                    Price (USD):{" "}
-                    <strong style={{ color: "red" }}>{roomCharge}</strong>
-                  </p>
-                </div>
-                <RoomForm rooms={rooms} />
-              </Form.Group>
-            </Row>
-            <Row className="mb-3" style={{ borderBottom: "1px solid #bbb" }}>
-              <Form.Group as={Col} controlId="formGridService">
-                <div className="form-label">
-                  <h5>Service</h5>
-                  <p>
-                    Price (USD):{" "}
-                    <strong style={{ color: "red" }}>{serviceCharge}</strong>
-                  </p>
-                </div>
-                <ServiceForm services={services} />
-              </Form.Group>
-            </Row>
-            <Row>
-              <Col>
-                <div>
-                  <h6>Total Price (USD)</h6>
-                  <strong style={{ color: "red", fontSize: "20px" }}>
-                    {totalPrice}
-                  </strong>
-                </div>
-              </Col>
+            <Row style={{ borderBottom: "1px solid #bbb" }}>
               <Col>
                 <FloatingLabel
                   controlId="floatingPaidOut"
@@ -188,9 +158,69 @@ const CheckOutModal = (props) => {
                   <Form.Control type="text" value={VAT} readOnly />
                 </FloatingLabel>
               </Col>
+              <Col>
+                <FloatingLabel
+                  controlId="floatingModeOfPayment"
+                  label="Mode Of Payment"
+                  className="mb-3"
+                >
+                  <Form.Select
+                    name="modeOfPayment"
+                    value={modeOfPayment}
+                    onChange={(e) =>
+                      setReceipt({ ...receipt, modeOfPayment: e.target.value })
+                    }
+                    required
+                  >
+                    <option>--</option>
+                    <option value="CASH">CASH</option>
+                    <option value="PAYPAL">PAYPAL</option>
+                  </Form.Select>
+                </FloatingLabel>
+              </Col>
+            </Row>
+            <Row className="mb-3" style={{ borderBottom: "1px solid #bbb" }}>
+              <Form.Group controlId="formGridCustomer">
+                <h5>Customer</h5>
+                <CustomerForm customer={customer} />
+              </Form.Group>
+            </Row>
+            <Row className="mb-3" style={{ borderBottom: "1px solid #bbb" }}>
+              <Form.Group controlId="formGridRoom">
+                <div className="form-label">
+                  <h5>Room</h5>
+                  <p>
+                    Price (USD):{" "}
+                    <strong style={{ color: "red" }}>{roomCharge}</strong>
+                  </p>
+                </div>
+                <RoomForm rooms={rooms} />
+              </Form.Group>
+            </Row>
+            <Row className="mb-3">
+              <Form.Group as={Col} controlId="formGridService">
+                <div className="form-label">
+                  <h5>Service</h5>
+                  <p>
+                    Price (USD):{" "}
+                    <strong style={{ color: "red" }}>{serviceCharge}</strong>
+                  </p>
+                </div>
+                <ServiceForm services={services} />
+              </Form.Group>
             </Row>
           </Modal.Body>
           <Modal.Footer>
+            {isPaypal ? (
+              <PayPalModal
+                open={isPaypal}
+                closeModal={() => setIsPaypal(false)}
+                receipt={receipt}
+                closeAllModal={resetData}
+              />
+            ) : (
+              <Button onClick={() => setIsPaypal(true)}>PayPal</Button>
+            )}
             <Button variant="danger" onClick={onSubmitCheckOut}>
               Save
             </Button>

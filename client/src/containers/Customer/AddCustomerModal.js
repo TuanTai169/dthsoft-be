@@ -129,7 +129,6 @@ const AddCustomerModal = (props) => {
                     name="birthDate"
                     value={birthDate || ""}
                     onChange={onChangeNewForm}
-                    required
                   />
                 </FloatingLabel>
               </Col>
@@ -143,7 +142,6 @@ const AddCustomerModal = (props) => {
                     name="gender"
                     value={gender || ""}
                     onChange={onChangeNewForm}
-                    required
                   >
                     <option>--</option>
                     <option value="male">Male</option>
@@ -163,7 +161,6 @@ const AddCustomerModal = (props) => {
                 placeholder="Address"
                 value={address || ""}
                 onChange={onChangeNewForm}
-                required
               />
             </FloatingLabel>
             <FloatingLabel
