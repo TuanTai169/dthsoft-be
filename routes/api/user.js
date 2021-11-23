@@ -157,7 +157,7 @@ router.put(`/update-profile/:id`, verifyToken, async (req, res) => {
 // @decs UPDATE user
 // @access Private
 router.put(`/update/:id`, verifyToken, checkManager, async (req, res) => {
-  const { name, email, phone, address } = req.body
+  const { name, email, phone, address, image } = req.body
 
   //Simple Validation
   if (!name || !email)
@@ -172,6 +172,7 @@ router.put(`/update/:id`, verifyToken, checkManager, async (req, res) => {
       email: email,
       phone: phone || "",
       address: address || "",
+      image: image || "",
       updateBy: req.userId,
     }
 
@@ -272,8 +273,8 @@ router.post(
         file.tempFilePath,
         {
           folder: "avatar",
-          width: 600,
-          height: 600,
+          width: 150,
+          height: 150,
           crop: "fill",
         },
         async (err, result) => {
