@@ -21,7 +21,7 @@ const customerValidation = (data) => {
     name: Joi.string().min(6).required(),
     email: Joi.string().min(10).required().email(),
     phone: Joi.string().min(10).max(10).required(),
-    cmnd: Joi.string(),
+    cmnd: Joi.string().min(9).max(12).required(),
     address: Joi.string(),
     gender: Joi.string(),
     birthDate: Joi.date(),
@@ -51,7 +51,6 @@ const receiptValidation = (data) => {
   })
   return schema.validate(data)
 }
-
 module.exports.userValidation = userValidation
 module.exports.customerValidation = customerValidation
 module.exports.roomValidation = roomValidation

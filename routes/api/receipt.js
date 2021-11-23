@@ -73,6 +73,7 @@ router.post("/", verifyToken, async (req, res) => {
       subject: `THANK YOU !`,
       message,
     })
+
     res.json({
       success: true,
       message: `Receipt created successfully`,
@@ -126,35 +127,35 @@ router.get("/", verifyToken, async (req, res) => {
 // @route POST api/receipt/
 // @decs READ 1 RECEIPT / PAYMENT
 // @access Private
-router.get("/:id", verifyToken, async (req, res) => {
-  try {
-    const booking = await Receipt.findById(req.params.id)
-      .populate({
-        path: "booking",
-        select: "-isActive -createBy -updateBy -createdAt -updatedAt",
-        populate: { path: "customer", select: "name email phone" },
-        populate: [
-          { path: "customer", select: "name email phone" },
-          {
-            path: "rooms",
-            select: "roomNumber floor price roomType status",
-          },
-        ],
-      })
-      .populate({ path: "createBy", select: "name" })
-      .populate({ path: "updateBy", select: "name" })
-    res.json({
-      success: true,
-      booking,
-    })
-  } catch (error) {
-    console.log(error)
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-    })
-  }
-})
+// router.get("/:id", verifyToken, async (req, res) => {
+//   try {
+//     const booking = await Receipt.findById(req.params.id)
+//       .populate({
+//         path: "booking",
+//         select: "-isActive -createBy -updateBy -createdAt -updatedAt",
+//         populate: { path: "customer", select: "name email phone" },
+//         populate: [
+//           { path: "customer", select: "name email phone" },
+//           {
+//             path: "rooms",
+//             select: "roomNumber floor price roomType status",
+//           },
+//         ],
+//       })
+//       .populate({ path: "createBy", select: "name" })
+//       .populate({ path: "updateBy", select: "name" })
+//     res.json({
+//       success: true,
+//       booking,
+//     })
+//   } catch (error) {
+//     console.log(error)
+//     res.status(500).json({
+//       success: false,
+//       message: "Internal server error",
+//     })
+//   }
+// })
 
 // @route PUT api/receipt/
 // @decs UPDATE receipt

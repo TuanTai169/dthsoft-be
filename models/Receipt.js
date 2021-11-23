@@ -17,6 +17,10 @@ const ReceiptSchema = new Schema(
       required: true,
       default: 0,
     },
+    modeOfPayment: {
+      type: String,
+      default: "CASH",
+    },
     status: {
       type: String,
       default: "PAID",
