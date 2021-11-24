@@ -7,7 +7,7 @@ import { HOST_API_URL } from "./../constants/api"
 export const getAllReceipt = () => {
   return async (dispatch) => {
     try {
-      dispatch({ type: types.SET_RECEIPT_LOADING, payload: true })
+      //dispatch({ type: types.SET_RECEIPT_LOADING, payload: true })
 
       const response = await axios.get(`${HOST_API_URL}/receipt`)
       if (response.data.success) {
@@ -15,6 +15,7 @@ export const getAllReceipt = () => {
           type: types.GET_ALL_RECEIPT,
           payload: response.data.receipts,
         })
+        // dispatch({ type: types.SET_RECEIPT_LOADING, payload: false })
       }
     } catch (error) {
       console.log(error)
@@ -28,12 +29,14 @@ export const getAllReceipt = () => {
 export const checkOut = (newReceipt) => {
   return async (dispatch) => {
     try {
+      dispatch({ type: types.SET_RECEIPT_LOADING, payload: true })
       const response = await axios.post(`${HOST_API_URL}/receipt`, newReceipt)
       if (response.data.success) {
         dispatch({
           type: types.ADD_RECEIPT,
           payload: response.data.receipt,
         })
+        dispatch({ type: types.SET_RECEIPT_LOADING, payload: false })
         toast.success(response.data.message)
       }
     } catch (error) {

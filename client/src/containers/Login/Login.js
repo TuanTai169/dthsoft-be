@@ -1,12 +1,14 @@
 import React, { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { login } from "../../redux/actions/authAction"
-import { Spinner, Form, FloatingLabel, Button } from "react-bootstrap"
-import { Redirect } from "react-router"
-import { Link } from "react-router-dom"
+import { Form, FloatingLabel, Button } from "react-bootstrap"
+import { Link, Navigate } from "react-router-dom"
 import logo from "../../assets/images/logo.png"
+import usePasswordToggle from "./../../hooks/usePasswordToggle"
+import FullLoading from "../../components/Common/FullLoading/FullLoading"
 
 const Login = () => {
+  const [inputType, toggleIcon] = usePasswordToggle()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const authLoading = useSelector((state) => state.auth.authLoading)
@@ -19,13 +21,8 @@ const Login = () => {
     dispatch(login({ email, password }))
   }
 
-  if (authLoading)
-    return (
-      <div className="spinner-container">
-        <Spinner animation="border" variant="info" />
-      </div>
-    )
-  else if (isAuthenticated) return <Redirect to="/" />
+  if (authLoading) return <FullLoading />
+  else if (isAuthenticated) return <Navigate to="/" />
   return (
     <div className="login-page">
       <div className="company-logo">
@@ -48,13 +45,14 @@ const Login = () => {
           className="mb-3"
         >
           <Form.Control
-            type="password"
+            type={inputType}
             placeholder="*"
             name="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+          <span className="password-toggle-icon">{toggleIcon}</span>
         </FloatingLabel>
 
         <Button className="login-btn-submit" type="submit">

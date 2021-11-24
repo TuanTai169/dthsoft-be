@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { useHistory } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import moment from "moment"
 import { Modal, Button, Form, Row, Col, FloatingLabel } from "react-bootstrap"
 import Select from "react-select"
@@ -41,7 +41,7 @@ const EditBookingModal = (props) => {
   })
 
   const dispatch = useDispatch()
-  let history = useHistory()
+  let navigate = useNavigate()
 
   //Get info by redux
   const listService = useSelector((state) => state.serviceReducer.services)
@@ -95,7 +95,7 @@ const EditBookingModal = (props) => {
   // Handler
 
   const handlerService = () => {
-    history.push("/services")
+    navigate("/services")
   }
 
   const handlerSubmit = (e) => {

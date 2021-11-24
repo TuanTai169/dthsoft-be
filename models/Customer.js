@@ -16,6 +16,7 @@ const CustomerSchema = new Schema(
     phone: {
       type: String,
       required: true,
+      unique: true,
     },
     address: {
       type: String,

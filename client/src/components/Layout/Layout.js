@@ -1,6 +1,6 @@
 import React, { useEffect } from "react"
 import "./layout.css"
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom"
+import { Route, Routes } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux"
 import themeAction from "../../redux/actions/themeAction"
 import Sidebar from "../Sidebar/Sidebar"
@@ -40,31 +40,23 @@ const Layout = () => {
 
   return (
     <>
-      <Router>
-        <Route
-          render={(props) => (
-            <div
-              className={`layout ${themeReducer.mode} ${themeReducer.color}`}
-            >
-              <Sidebar {...props} />
-              <div className="layout__content">
-                <TopNav />
-                <div className="layout__content-main">
-                  <Switch>
-                    <Route path="/" exact component={Dashboard} />
-                    <Route path="/customers" component={Customers} />
-                    <Route path="/services" component={Services} />
-                    <Route path="/room-diagram" component={Rooms} />
-                    <Route path="/users" component={Users} />
-                    <Route path="/profile" component={Profile} />
-                    <Route path="/*" component={NotFound} />
-                  </Switch>
-                </div>
-              </div>
-            </div>
-          )}
-        />
-      </Router>
+      <div className={`layout ${themeReducer.mode} ${themeReducer.color}`}>
+        <Sidebar />
+        <div className="layout__content">
+          <TopNav />
+          <div className="layout__content-main">
+            <Routes>
+              <Route path="/" exact element={<Dashboard />} />
+              <Route path="/customers" exact element={<Customers />} />
+              <Route path="/services" exact element={<Services />} />
+              <Route path="/room-diagram" exact element={<Rooms />} />
+              <Route path="/users" exact element={<Users />} />
+              <Route path="/profile" exact element={<Profile />} />
+              <Route path="/*" element={<NotFound />} />
+            </Routes>
+          </div>
+        </div>
+      </div>
     </>
   )
 }

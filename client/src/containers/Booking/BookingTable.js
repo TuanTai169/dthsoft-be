@@ -12,6 +12,7 @@ const BookingTable = (props) => {
     "Room",
     "Check in",
     "Check out",
+    "Status",
     "Action",
   ]
   const renderHead = tableHead.map((item, index) => {

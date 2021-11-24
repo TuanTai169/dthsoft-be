@@ -1,6 +1,5 @@
-import "./forgot-password.css"
 import React, { useState } from "react"
-import { useHistory, useParams } from "react-router"
+import { useNavigate, useParams } from "react-router"
 import logo from "../../assets/images/logo.png"
 import { Link } from "react-router-dom"
 import { Form, FloatingLabel, Button } from "react-bootstrap"
@@ -8,15 +7,17 @@ import _ from "lodash"
 import { toast } from "react-toastify"
 import axios from "axios"
 import { HOST_API_URL } from "../../redux/constants/api"
+import usePasswordToggle from "./../../hooks/usePasswordToggle"
 
 const ResetPassword = () => {
+  const [inputType, toggleIcon] = usePasswordToggle()
   const [data, setData] = useState({
     password: "",
     conformPassword: "",
   })
 
   const { token } = useParams()
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const onChangeData = (e) => {
     setData({ ...data, [e.target.name]: e.target.value })
@@ -34,7 +35,7 @@ const ResetPassword = () => {
           password,
         }
       )
-      history.push("/login")
+      navigate("/login")
       return toast.success(res.data.message)
     } catch (err) {
       err.response.data.message && toast.error(err.response.data.message)
@@ -52,13 +53,14 @@ const ResetPassword = () => {
       <div className="forgot-title">Reset Password</div>
       <FloatingLabel controlId="floatingPass" label="Password" className="mb-3">
         <Form.Control
-          type="password"
+          type={inputType}
           placeholder="*"
           name="password"
           value={password}
           onChange={onChangeData}
           required
         />
+        <span className="password-toggle-icon">{toggleIcon}</span>
         <Form.Text className="text-muted">
           Password must be 8-20 characters
         </Form.Text>
@@ -70,7 +72,7 @@ const ResetPassword = () => {
         className="mb-3"
       >
         <Form.Control
-          type="password"
+          type={inputType}
           placeholder="*"
           name="conformPassword"
           value={conformPassword}

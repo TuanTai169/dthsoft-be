@@ -1,11 +1,12 @@
 import React, { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { Button, ButtonToolbar, Spinner } from "react-bootstrap"
+import { Button, ButtonToolbar } from "react-bootstrap"
 import lodash from "lodash"
 import RoomItem from "./RoomItem"
 import AddRoomModal from "./AddRoomModal"
 import ViewAllBookingModal from "../Booking/ViewAllBookingModal"
 import { getAllBooking } from "./../../redux/actions/bookingAction"
+import FullLoading from "../../components/Common/FullLoading/FullLoading"
 
 const Rooms = () => {
   const [isOpenAddModal, setIsOpenAddModal] = useState(false)
@@ -13,7 +14,7 @@ const Rooms = () => {
   const dispatch = useDispatch()
 
   const rooms = useSelector((state) => state.roomReducer.rooms)
-  const isRoomLoading = useSelector((state) => state.roomReducer.isRoomLoading)
+  const isLoading = useSelector((state) => state.roomReducer.isRoomLoading)
   const role = useSelector((state) => state.auth.user.roles)
 
   //Group BY FLOOR
@@ -30,10 +31,8 @@ const Rooms = () => {
 
   return (
     <>
-      {isRoomLoading === false ? (
-        <div className="spinner-container">
-          <Spinner animation="border" variant="info" />
-        </div>
+      {isLoading ? (
+        <FullLoading />
       ) : (
         <div>
           <div className="page__header" style={{ marginBottom: "10px" }}>

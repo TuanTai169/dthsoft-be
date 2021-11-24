@@ -1,30 +1,15 @@
 import React from "react"
-import { Spinner } from "react-bootstrap"
 import { useSelector } from "react-redux"
-import { Route, Redirect } from "react-router"
+import { Navigate } from "react-router-dom"
+import FullLoading from "../components/Common/FullLoading/FullLoading"
 
-const ProtectedRoute = ({ component: Component, ...rest }) => {
+const ProtectedRoute = ({ children }) => {
   const authLoading = useSelector((state) => state.auth.authLoading)
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated)
 
-  if (authLoading)
-    return (
-      <div className="spinner-container">
-        <Spinner animation="border" variant="info" />
-      </div>
-    )
-  return (
-    <Route
-      {...rest}
-      render={(props) =>
-        isAuthenticated ? (
-          <Component {...rest} {...props} />
-        ) : (
-          <Redirect to="/login" />
-        )
-      }
-    />
-  )
+  if (authLoading) return <FullLoading />
+
+  return isAuthenticated ? children : <Navigate to="/login" />
 }
 
 export default ProtectedRoute

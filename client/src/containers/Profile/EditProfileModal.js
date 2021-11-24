@@ -1,12 +1,14 @@
 import React, { useState } from "react"
 import { Form, Modal, Button, FloatingLabel } from "react-bootstrap"
 import { useDispatch } from "react-redux"
+import usePasswordToggle from "../../hooks/usePasswordToggle"
 import { updateProfile } from "../../redux/actions/userAction"
 
 function EditProfileModal(props) {
   const { show, handlerModalClose, user } = props
   const dispatch = useDispatch()
 
+  const [inputType, toggleIcon] = usePasswordToggle()
   const [editUser, setEditUser] = useState({
     name: user.name,
     phone: user.phone,
@@ -83,16 +85,16 @@ function EditProfileModal(props) {
               className="mb-3"
             >
               <Form.Control
-                type="password"
+                type={inputType}
                 placeholder="*"
                 name="password"
                 value={password}
                 onChange={onChangeNewForm}
                 required
               />
+              <span className="password-toggle-icon">{toggleIcon}</span>
               <Form.Text className="text-muted">
-                Password must be 8-20 characters consisting of numbers,
-                uppercase and lowercase letters
+                Password must be 8-20 characters
               </Form.Text>
             </FloatingLabel>
             <FloatingLabel

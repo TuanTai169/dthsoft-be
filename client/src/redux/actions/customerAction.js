@@ -15,6 +15,7 @@ export const getAllCustomer = () => {
           type: types.GET_ALL_CUSTOMER,
           payload: response.data.customers,
         })
+        dispatch({ type: types.SET_CUSTOMER_LOADING, payload: false })
       }
     } catch (error) {
       console.log(error)
@@ -49,12 +50,14 @@ export const findCustomer = (id) => {
 export const addCustomer = (newCustomer) => {
   return async (dispatch) => {
     try {
+      dispatch({ type: types.SET_CUSTOMER_LOADING, payload: true })
       const response = await axios.post(`${HOST_API_URL}/customer`, newCustomer)
       if (response.data.success) {
         dispatch({
           type: types.ADD_CUSTOMER,
           payload: response.data.customer,
         })
+        dispatch({ type: types.SET_CUSTOMER_LOADING, payload: false })
         toast.success(response.data.message)
       }
     } catch (error) {
@@ -68,12 +71,14 @@ export const addCustomer = (newCustomer) => {
 export const deleteCustomer = (id) => {
   return async (dispatch) => {
     try {
+      dispatch({ type: types.SET_CUSTOMER_LOADING, payload: true })
       const response = await axios.put(`${HOST_API_URL}/customer/delete/${id}`)
       if (response.data.success) {
         dispatch({
           type: types.DELETE_CUSTOMER,
           payload: id,
         })
+        dispatch({ type: types.SET_CUSTOMER_LOADING, payload: false })
         toast.success(response.data.message)
       }
     } catch (error) {
@@ -86,6 +91,7 @@ export const deleteCustomer = (id) => {
 export const updateCustomer = (updateCustomer, id) => {
   return async (dispatch) => {
     try {
+      dispatch({ type: types.SET_CUSTOMER_LOADING, payload: true })
       console.log("updateCustomer", updateCustomer)
       const response = await axios.put(
         `${HOST_API_URL}/customer/update/${id}`,
@@ -96,6 +102,7 @@ export const updateCustomer = (updateCustomer, id) => {
           type: types.UPDATE_CUSTOMER,
           payload: response.data.updatedCustomer,
         })
+        dispatch({ type: types.SET_CUSTOMER_LOADING, payload: false })
         toast.success(response.data.message)
       }
     } catch (error) {

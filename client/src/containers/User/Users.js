@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react"
-import { Button, ButtonToolbar, Spinner, Form, Table } from "react-bootstrap"
+import { Button, ButtonToolbar, Form, Table } from "react-bootstrap"
 import { useSelector } from "react-redux"
 import UserItem from "./UserItem"
 import AddUserModal from "./AddUserModal"
@@ -7,6 +7,7 @@ import AddUserModal from "./AddUserModal"
 import TableHeader from "../../components/Common/table/TableHeader"
 import PaginationComponent from "../../components/Common/Pagination/PaginationComponent"
 import Search from "./../../components/Common/Search/Search"
+import FullLoading from "../../components/Common/FullLoading/FullLoading"
 
 function Users() {
   const [totalItems, setTotalItems] = useState(0)
@@ -68,10 +69,8 @@ function Users() {
   return (
     <div>
       <>
-        {isLoading === false ? (
-          <div className="spinner-container">
-            <Spinner animation="border" variant="info" />
-          </div>
+        {isLoading ? (
+          <FullLoading />
         ) : (
           <div className="page">
             <div className="page__header">
