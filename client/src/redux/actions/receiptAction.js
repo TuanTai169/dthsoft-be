@@ -19,7 +19,7 @@ export const getAllReceipt = () => {
       }
     } catch (error) {
       console.log(error)
-      error.response.data && toast.error(error.response.data.message)
+      error.response && toast.error(error.response.data.message)
       dispatch({ type: types.SET_RECEIPT_ERROR })
     }
   }
@@ -41,7 +41,7 @@ export const checkOut = (newReceipt) => {
       }
     } catch (error) {
       console.log(error)
-      error.response.data && toast.error(error.response.data.message)
+      error.response && toast.error(error.response.data.message)
     }
   }
 }
