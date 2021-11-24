@@ -15,6 +15,7 @@ export const getAllUser = () => {
           type: types.GET_ALL_USER,
           payload: response.data.users,
         })
+        dispatch({ type: types.SET_USER_LOADING, payload: false })
       }
     } catch (error) {
       console.log(error)
@@ -29,6 +30,7 @@ export const getAllUser = () => {
 export const updateUser = (updateUser, id) => {
   return async (dispatch) => {
     try {
+      dispatch({ type: types.SET_USER_LOADING, payload: true })
       const response = await axios.put(
         `${HOST_API_URL}/user/update/${id}`,
         updateUser
@@ -39,6 +41,7 @@ export const updateUser = (updateUser, id) => {
           payload: response.data.updatedUser,
         })
         toast.success(response.data.message)
+        dispatch({ type: types.SET_USER_LOADING, payload: false })
       }
     } catch (error) {
       console.log(error)
@@ -52,6 +55,7 @@ export const updateUser = (updateUser, id) => {
 export const updateProfile = (updateUser, id) => {
   return async (dispatch) => {
     try {
+      dispatch({ type: types.SET_USER_LOADING, payload: true })
       const response = await axios.put(
         `${HOST_API_URL}/user/update-profile/${id}`,
         updateUser
@@ -61,6 +65,7 @@ export const updateProfile = (updateUser, id) => {
           type: types.UPDATE_USER,
           payload: response.data.updatedUser,
         })
+        dispatch({ type: types.SET_USER_LOADING, payload: false })
         toast.success(response.data.message)
       }
     } catch (error) {
@@ -74,6 +79,7 @@ export const updateProfile = (updateUser, id) => {
 export const deleteUser = (id) => {
   return async (dispatch) => {
     try {
+      dispatch({ type: types.SET_USER_LOADING, payload: true })
       const response = await axios.put(`${HOST_API_URL}/user/delete/${id}`)
       if (response.data.success) {
         dispatch({
@@ -81,6 +87,7 @@ export const deleteUser = (id) => {
           payload: id,
         })
         toast.success(response.data.message)
+        dispatch({ type: types.SET_USER_LOADING, payload: false })
       }
     } catch (error) {
       console.log(error)
@@ -93,6 +100,7 @@ export const deleteUser = (id) => {
 export const addUser = (newUser) => {
   return async (dispatch) => {
     try {
+      dispatch({ type: types.SET_USER_LOADING, payload: true })
       const response = await axios.post(`${HOST_API_URL}/user`, newUser)
       if (response.data.success) {
         dispatch({
@@ -100,6 +108,7 @@ export const addUser = (newUser) => {
           payload: response.data.newUser,
         })
         toast.success(response.data.message)
+        dispatch({ type: types.SET_USER_LOADING, payload: false })
       }
     } catch (error) {
       console.log(error)

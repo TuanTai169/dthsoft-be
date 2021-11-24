@@ -2,7 +2,8 @@ import React, { useState, useMemo } from "react"
 import { useSelector } from "react-redux"
 import AddCustomerModal from "./AddCustomerModal"
 import CustomerItem from "./CustomerItem"
-import { Button, ButtonToolbar, Spinner, Form, Table } from "react-bootstrap"
+import { Button, ButtonToolbar, Form, Table } from "react-bootstrap"
+import FullLoading from "../../components/Common/FullLoading/FullLoading"
 
 import TableHeader from "../../components/Common/table/TableHeader"
 import PaginationComponent from "../../components/Common/Pagination/PaginationComponent"
@@ -69,10 +70,8 @@ function Customers() {
   return (
     <div>
       <>
-        {isLoading === false ? (
-          <div className="spinner-container">
-            <Spinner animation="border" variant="info" />
-          </div>
+        {isLoading ? (
+          <FullLoading />
         ) : (
           <div className="page">
             <div className="page__header">

@@ -1,6 +1,6 @@
 import React from "react"
 
-import { Link } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 
 import "./sidebar.css"
 
@@ -21,10 +21,10 @@ const SidebarItem = (props) => {
   )
 }
 
-const Sidebar = (props) => {
-  const activeItem = sidebar_items.findIndex(
-    (item) => item.route === props.location.pathname
-  )
+const Sidebar = () => {
+  const { pathname } = useLocation()
+
+  const activeItem = sidebar_items.findIndex((item) => item.route === pathname)
 
   return (
     <div className="sidebar">

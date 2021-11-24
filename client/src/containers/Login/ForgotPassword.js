@@ -1,5 +1,4 @@
 import React, { useState } from "react"
-import "./forgot-password.css"
 import logo from "../../assets/images/logo.png"
 import { Link } from "react-router-dom"
 import { Form, FloatingLabel, Button } from "react-bootstrap"

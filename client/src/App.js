@@ -1,5 +1,5 @@
 import React, { useEffect } from "react"
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom"
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom"
 import Layout from "./components/Layout/Layout"
 import Login from "./containers/Login/Login"
 import ForgotPassword from "./containers/Login/ForgotPassword"
@@ -19,16 +19,23 @@ function App() {
   return (
     <>
       <Router>
-        <Switch>
-          <Route path="/login" component={Login} exact />
-          <ProtectedRoute exact path="/" component={Layout} />
-          <Route exact path="/forgot_password" component={ForgotPassword} />
+        <Routes>
+          <Route path="/login" element={<Login />} exact />
+          <Route
+            path="/*"
+            element={
+              <ProtectedRoute>
+                <Layout />
+              </ProtectedRoute>
+            }
+          />
+          <Route exact path="/forgot_password" element={<ForgotPassword />} />
           <Route
             exact
             path="/reset-password/:token"
-            component={ResetPassword}
+            element={<ResetPassword />}
           />
-        </Switch>
+        </Routes>
       </Router>
       <ToastContainer autoClose={3000} theme="colored" />
     </>

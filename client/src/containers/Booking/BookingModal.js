@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { useHistory } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import moment from "moment"
 import { Modal, Button, Form, Row, Col } from "react-bootstrap"
 import DatePicker from "react-datepicker"
@@ -15,7 +15,7 @@ const BookingModal = (props) => {
   const { show, handlerModalClose, handlerParentModalClose, currentRoom } =
     props
   const dispatch = useDispatch()
-  let history = useHistory()
+  let navigate = useNavigate()
 
   //Get info by redux
   const listCustomer = useSelector((state) => state.customerReducer.customers)
@@ -92,10 +92,10 @@ const BookingModal = (props) => {
 
   // Handler
   const handlerCustomer = () => {
-    history.push("/customers")
+    navigate("/customers")
   }
   const handlerService = () => {
-    history.push("/services")
+    navigate("/services")
   }
 
   const handlerSubmit = (e) => {
@@ -202,7 +202,7 @@ const BookingModal = (props) => {
               <Form.Group as={Col} controlId="formGridDiscount">
                 <Form.Label>Discount (%)</Form.Label>
                 <Form.Control
-                  type="text"
+                  type="number"
                   value={discount}
                   onChange={(e) => {
                     setNewBooking({ ...newBooking, discount: e.target.value })
@@ -212,7 +212,7 @@ const BookingModal = (props) => {
               <Form.Group as={Col} controlId="formGridDeposit">
                 <Form.Label>Deposit</Form.Label>
                 <Form.Control
-                  type="text"
+                  type="number"
                   value={deposit}
                   onChange={(e) => {
                     setNewBooking({ ...newBooking, deposit: e.target.value })

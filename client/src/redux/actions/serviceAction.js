@@ -15,6 +15,7 @@ export const getAllService = () => {
           type: types.GET_ALL_SERVICE,
           payload: response.data.services,
         })
+        dispatch({ type: types.SET_SERVICE_LOADING, payload: false })
       }
     } catch (error) {
       console.log(error)
@@ -28,6 +29,7 @@ export const getAllService = () => {
 export const findService = (id) => {
   return async (dispatch) => {
     try {
+      dispatch({ type: types.SET_SERVICE_LOADING, payload: true })
       const response = await axios.get(`${HOST_API_URL}/service/${id}`)
 
       if (response.data.success) {
@@ -47,6 +49,7 @@ export const findService = (id) => {
 export const addService = (newService) => {
   return async (dispatch) => {
     try {
+      dispatch({ type: types.SET_SERVICE_LOADING, payload: true })
       const response = await axios.post(`${HOST_API_URL}/service`, newService)
       if (response.data.success) {
         dispatch({
@@ -54,6 +57,7 @@ export const addService = (newService) => {
           payload: response.data.service,
         })
         toast.success(response.data.message)
+        dispatch({ type: types.SET_SERVICE_LOADING, payload: false })
       }
     } catch (error) {
       console.log(error)
@@ -66,6 +70,7 @@ export const addService = (newService) => {
 export const deleteService = (id) => {
   return async (dispatch) => {
     try {
+      dispatch({ type: types.SET_SERVICE_LOADING, payload: true })
       const response = await axios.put(`${HOST_API_URL}/service/delete/${id}`)
       if (response.data.success) {
         dispatch({
@@ -73,6 +78,7 @@ export const deleteService = (id) => {
           payload: id,
         })
         toast.success(response.data.message)
+        dispatch({ type: types.SET_SERVICE_LOADING, payload: false })
       }
     } catch (error) {
       console.log(error)
@@ -83,6 +89,7 @@ export const deleteService = (id) => {
 
 export const updateService = (updateService) => {
   return async (dispatch) => {
+    dispatch({ type: types.SET_SERVICE_LOADING, payload: true })
     try {
       const response = await axios.put(
         `${HOST_API_URL}/service/update/${updateService._id}`,
@@ -93,6 +100,7 @@ export const updateService = (updateService) => {
           type: types.UPDATE_SERVICE,
           payload: response.data.updatedService,
         })
+        dispatch({ type: types.SET_SERVICE_LOADING, payload: false })
         toast.success(response.data.message)
       }
     } catch (error) {

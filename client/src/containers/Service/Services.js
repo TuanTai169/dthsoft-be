@@ -1,11 +1,12 @@
 import React, { useState, useMemo } from "react"
 import { useSelector } from "react-redux"
 import AddServiceModal from "./AddServiceModal"
-import { Button, ButtonToolbar, Spinner, Form, Table } from "react-bootstrap"
+import { Button, ButtonToolbar, Form, Table } from "react-bootstrap"
 import ServiceItem from "./ServiceItem"
 import TableHeader from "../../components/Common/table/TableHeader"
 import PaginationComponent from "../../components/Common/Pagination/PaginationComponent"
 import Search from "./../../components/Common/Search/Search"
+import FullLoading from "../../components/Common/FullLoading/FullLoading"
 
 function Services() {
   const [totalItems, setTotalItems] = useState(0)
@@ -17,7 +18,9 @@ function Services() {
 
   //GET LIST SERVICE
   const services = useSelector((state) => state.serviceReducer.services)
-  const isLoading = useSelector((state) => state.serviceReducer.serviceLoading)
+  const isLoading = useSelector(
+    (state) => state.serviceReducer.isServiceLoading
+  )
   const role = useSelector((state) => state.auth.user.roles)
 
   //Header table
@@ -62,10 +65,8 @@ function Services() {
   const handlerModalClose = () => setIsOpen(false)
   return (
     <>
-      {isLoading === false ? (
-        <div className="spinner-container">
-          <Spinner animation="border" variant="info" />
-        </div>
+      {isLoading ? (
+        <FullLoading />
       ) : (
         <div className="page">
           <div className="page__header">
