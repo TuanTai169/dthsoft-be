@@ -201,7 +201,7 @@ router.put(`/update/:id`, verifyToken, async (req, res) => {
 })
 
 // @route GET api/receipt/
-// @decs READ ALL RECEIPT / PAYMENT
+// @decs STATISTIC
 // @access Private
 router.get("/statistic", verifyToken, async (req, res) => {
   try {
@@ -357,14 +357,18 @@ router.get("/statistic", verifyToken, async (req, res) => {
       }, {})
     )
 
-    res.json({
-      success: true,
+    const statistic = {
       totalRevenue: totalRevenue,
       map_day: map_day,
       map_month: map_month,
       users: users,
       rooms: rooms,
       services: services,
+    }
+
+    res.json({
+      success: true,
+      statistic,
     })
   } catch (error) {
     console.log(error)
