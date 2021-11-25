@@ -328,9 +328,11 @@ router.get("/statistic", verifyToken, async (req, res) => {
 
     const rooms = Object.values(
       map_room.reduce((r, { room, price, type }) => {
-        r[room] = { room, type, count: 0, totalPrice: 0 }
-        r[room].count++
-        r[room].totalPrice += price
+        if (r[room] !== undefined) {
+          r[room].count++
+          r[room].totalPrice += price
+        } else r[room] = { room, type, count: 1, totalPrice: price }
+
         return r
       }, {})
     )
@@ -350,9 +352,10 @@ router.get("/statistic", verifyToken, async (req, res) => {
 
     const services = Object.values(
       map_service.reduce((r, { service, price }) => {
-        r[service] = { service, count: 0, totalPrice: 0 }
-        r[service].count++
-        r[service].totalPrice += price
+        if (r[service] !== undefined) {
+          r[service].count++
+          r[service].totalPrice += price
+        } else r[service] = { service, count: 1, totalPrice: price }
         return r
       }, {})
     )
