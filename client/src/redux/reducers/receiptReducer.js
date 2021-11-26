@@ -4,6 +4,7 @@ const initialState = {
   receipts: [],
   receipt: null,
   isReceiptLoading: false,
+  statistic: {},
 }
 const receiptReducer = (state = initialState, action) => {
   const { type, payload } = action
@@ -33,6 +34,11 @@ const receiptReducer = (state = initialState, action) => {
       return {
         ...state,
         receipt: payload,
+      }
+    case types.STATISTIC:
+      return {
+        ...state,
+        statistic: payload,
       }
     default:
       return state

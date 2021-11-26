@@ -34,7 +34,7 @@ const CheckOutModal = (props) => {
   const dispatch = useDispatch()
   const [receipt, setReceipt] = useState({
     booking: _id,
-    paidOut: 0,
+    paidOut: "0",
     refund: 0,
     modeOfPayment: "CASH",
   })
@@ -56,14 +56,13 @@ const CheckOutModal = (props) => {
       ...receipt,
       paidOut: parseInt(receipt.paidOut),
     }
-
     dispatch(checkOut(newReceipt))
     resetData()
   }
   const resetData = () => {
     setReceipt({
       booking: _id,
-      paidOut: 0,
+      paidOut: "0",
       refund: 0,
       modeOfPayment: "CASH",
     })

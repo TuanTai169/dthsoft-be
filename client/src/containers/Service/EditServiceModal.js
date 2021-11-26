@@ -20,6 +20,7 @@ const EditServiceModal = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault()
     resetEditPostData()
+    console.log(editService)
     dispatch(updateService(editService))
   }
 
@@ -53,11 +54,11 @@ const EditServiceModal = (props) => {
 
             <FloatingLabel
               controlId="floatingPrice"
-              label="Price"
+              label="Price (USD)"
               className="mb-3"
             >
               <Form.Control
-                type="text"
+                type="number"
                 placeholder="0"
                 name="price"
                 value={price || ""}

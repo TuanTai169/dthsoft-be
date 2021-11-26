@@ -19,7 +19,7 @@ export const getAllUser = () => {
       }
     } catch (error) {
       console.log(error)
-      error.response && toast.error(error.response.data.message)
+      error.response.data && toast.error(error.response.data.message)
       dispatch({ type: types.SET_USER_ERROR })
     }
   }
@@ -45,7 +45,7 @@ export const updateUser = (updateUser, id) => {
       }
     } catch (error) {
       console.log(error)
-      error.response && toast.error(error.response.data.message)
+      error.response.data && toast.error(error.response.data.message)
     }
   }
 }
@@ -70,7 +70,7 @@ export const updateProfile = (updateUser, id) => {
       }
     } catch (error) {
       console.log(error)
-      error.response && toast.error(error.response.data.message)
+      error.response.data && toast.error(error.response.data.message)
     }
   }
 }
@@ -91,7 +91,7 @@ export const deleteUser = (id) => {
       }
     } catch (error) {
       console.log(error)
-      error.response && toast.error(error.response.data.message)
+      error.response.data && toast.error(error.response.data.message)
     }
   }
 }
@@ -112,7 +112,7 @@ export const addUser = (newUser) => {
       }
     } catch (error) {
       console.log(error)
-      error.response && toast.error(error.response.data.message)
+      error.response.data && toast.error(error.response.data.message)
     }
   }
 }

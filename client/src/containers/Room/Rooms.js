@@ -1,12 +1,13 @@
 import React, { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { Button, ButtonToolbar } from "react-bootstrap"
+import { Button, ButtonToolbar, Tooltip, OverlayTrigger } from "react-bootstrap"
 import lodash from "lodash"
 import RoomItem from "./RoomItem"
 import AddRoomModal from "./AddRoomModal"
 import ViewAllBookingModal from "../Booking/ViewAllBookingModal"
 import { getAllBooking } from "./../../redux/actions/bookingAction"
 import FullLoading from "../../components/Common/FullLoading/FullLoading"
+import ScrollToTop from "./../../components/Common/ScrollToTop/ScrollToTop"
 
 const Rooms = () => {
   const [isOpenAddModal, setIsOpenAddModal] = useState(false)
@@ -34,7 +35,7 @@ const Rooms = () => {
       {isLoading ? (
         <FullLoading />
       ) : (
-        <div>
+        <>
           <div className="page__header" style={{ marginBottom: "10px" }}>
             <div className="page__title">
               <h3>Room Diagram</h3>
@@ -89,15 +90,46 @@ const Rooms = () => {
             </div>
             <div className="page__action">
               <ButtonToolbar>
-                <Button
-                  onClick={() => {
-                    seIsOpenBookingModal(true)
-                    dispatch(getAllBooking())
-                  }}
-                  style={{ marginRight: "10px" }}
+                <OverlayTrigger
+                  overlay={<Tooltip id="tooltip-disabled">Refresh !</Tooltip>}
                 >
-                  List Booking
-                </Button>
+                  <span className="d-inline-block">
+                    <Button
+                      variant="info"
+                      onClick={() => {
+                        dispatch(getAllBooking())
+                      }}
+                      style={{ marginRight: "10px", color: "#fff" }}
+                    >
+                      <i
+                        className="bx bx-refresh"
+                        style={{ fontSize: "22px" }}
+                      ></i>
+                    </Button>
+                  </span>
+                </OverlayTrigger>
+
+                <OverlayTrigger
+                  overlay={
+                    <Tooltip id="tooltip-disabled">List Booking</Tooltip>
+                  }
+                >
+                  <span className="d-inline-block">
+                    <Button
+                      onClick={() => {
+                        seIsOpenBookingModal(true)
+                        dispatch(getAllBooking())
+                      }}
+                      style={{ marginRight: "10px" }}
+                    >
+                      <i
+                        className="bx bx-list-ul"
+                        style={{ fontSize: "22px" }}
+                      ></i>
+                    </Button>
+                  </span>
+                </OverlayTrigger>
+
                 {role !== "EMPLOYEE" && (
                   <Button
                     variant="success"
@@ -132,8 +164,9 @@ const Rooms = () => {
               </div>
             </div>
           </div>
-        </div>
+        </>
       )}
+      <ScrollToTop />
     </>
   )
 }
