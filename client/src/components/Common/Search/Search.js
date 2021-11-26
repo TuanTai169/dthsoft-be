@@ -10,9 +10,10 @@ const Search = ({ onSearch }) => {
   }
   return (
     <>
-      <InputGroup className="mb-3">
+      <InputGroup>
         <FormControl
           type="text"
+          placeholder="Search..."
           value={search}
           onChange={(e) => onInputChange(e.target.value)}
         />

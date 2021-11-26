@@ -57,7 +57,7 @@ export const addRoom = (newRoom) => {
       }
     } catch (error) {
       console.log(error)
-      error.response && toast.error(error.response.data.message)
+      error.response.data && toast.error(error.response.data.message)
     }
   }
 }
@@ -79,7 +79,7 @@ export const deleteRoom = (id) => {
       }
     } catch (error) {
       console.log(error)
-      error.response && toast.error(error.response.data.message)
+      error.response.data && toast.error(error.response.data.message)
     }
   }
 }
@@ -103,7 +103,7 @@ export const updateRoom = (updateRoom) => {
       }
     } catch (error) {
       console.log(error)
-      error.response && toast.error(error.response.data.message)
+      error.response.data && toast.error(error.response.data.message)
     }
   }
 }
@@ -126,7 +126,7 @@ export const changeStatusRoom = (id, status) => {
       }
     } catch (error) {
       console.log(error)
-      error.response && toast.error(error.response.data.message)
+      error.response.data && toast.error(error.response.data.message)
     }
   }
 }

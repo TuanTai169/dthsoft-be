@@ -27,7 +27,7 @@ function Services() {
   const headers = [
     { name: "No#", field: "id", sortable: false },
     { name: "Name", field: "name", sortable: true },
-    { name: "Price", field: "price", sortable: true },
+    { name: "Price (USD)", field: "price", sortable: true },
     { name: "Action", field: "action", sortable: false },
   ]
 

@@ -223,7 +223,7 @@ router.get("/statistic", verifyToken, async (req, res) => {
     })
 
     // BOOKING
-    const bookings = await Booking.find({ status: "CHECK OUT" })
+    const allBookings = await Booking.find()
       .populate({ path: "customer", select: "name email phone" })
       .populate({
         path: "rooms",
@@ -235,10 +235,11 @@ router.get("/statistic", verifyToken, async (req, res) => {
       })
 
     let map_month = []
-    let map_day = []
+    let map_booking_day = []
     let map_service = []
     let map_user = []
     let map_room = []
+    let map_room_status = []
     const monthNames = [
       "Jan",
       "Feb",
@@ -266,12 +267,20 @@ router.get("/statistic", verifyToken, async (req, res) => {
     let totalRevenue = _.sumBy(receipts, (item) => item.booking.totalPrice)
 
     // Group
-    const groupByMonth = _.groupBy(receipts, (instance) => {
-      return moment(new Date(instance.booking.checkOutDate)).format("MMM")
+    // const groupByMonth = _.groupBy(receipts, (instance) => {
+    //   return moment(new Date(instance.booking.checkOutDate)).format("MMM")
+    // })
+
+    // const groupByDay = _.groupBy(receipts, (instance) => {
+    //   return moment(new Date(instance.booking.checkOutDate)).format("dddd")
+    // })
+
+    const groupByMonth = _.groupBy(allBookings, (instance) => {
+      return moment(new Date(instance.createdAt)).format("MMM")
     })
 
-    const groupByDay = _.groupBy(receipts, (instance) => {
-      return moment(new Date(instance.booking.checkOutDate)).format("dddd")
+    const groupByDay = _.groupBy(allBookings, (instance) => {
+      return moment(new Date(instance.createdAt)).format("dddd")
     })
 
     // FOREACH
@@ -282,18 +291,25 @@ router.get("/statistic", verifyToken, async (req, res) => {
       }
     })
 
+    _.forEach(allBookings, (booking) => {
+      _.forEach(booking.rooms, (room) => {
+        let newRoom = { type: room.roomType }
+        map_room_status.push(newRoom)
+      })
+    })
+
     _.forEach(dayNames, (value) => {
       if (groupByDay[value] !== undefined) {
         let newItem = { day: value, amount: groupByDay[value].length }
-        map_day.push(newItem)
+        map_booking_day.push(newItem)
       }
     })
 
     // USER
-    _.forEach(bookings, (item) => {
+    _.forEach(receipts, (item) => {
       let newItem = {
-        name: item.customer.name,
-        total: item.totalPrice + item.deposit,
+        name: item.booking.customer.name,
+        total: item.booking.totalPrice + item.booking.deposit,
       }
       map_user.push(newItem)
     })
@@ -337,6 +353,15 @@ router.get("/statistic", verifyToken, async (req, res) => {
       }, {})
     )
 
+    // STATUS'S ROOM ARRAY
+    const statusRoom = Object.values(
+      map_room_status.reduce((r, { type }) => {
+        if (r[type] !== undefined) {
+          r[type].count++
+        } else r[type] = { type, count: 1 }
+        return r
+      }, {})
+    )
     // SERVICE
     _.forEach(receipts, (instance) => {
       let services = []
@@ -361,12 +386,13 @@ router.get("/statistic", verifyToken, async (req, res) => {
     )
 
     const statistic = {
-      totalRevenue: totalRevenue,
-      map_day: map_day,
-      map_month: map_month,
-      users: users,
-      rooms: rooms,
-      services: services,
+      totalRevenue,
+      map_booking_day,
+      map_month,
+      users,
+      rooms,
+      services,
+      statusRoom,
     }
 
     res.json({

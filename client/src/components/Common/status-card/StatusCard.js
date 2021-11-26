@@ -1,6 +1,6 @@
 import React from "react"
 
-import "./statuscard.css"
+import "./status-card.css"
 
 const StatusCard = (props) => {
   return (

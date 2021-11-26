@@ -51,11 +51,11 @@ const AddServiceModal = (props) => {
 
             <FloatingLabel
               controlId="floatingPrice"
-              label="Price"
+              label="Price (USD)"
               className="mb-3"
             >
               <Form.Control
-                type="text"
+                type="number"
                 placeholder="0"
                 name="price"
                 value={price || ""}

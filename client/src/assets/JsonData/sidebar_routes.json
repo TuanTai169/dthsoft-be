@@ -1,37 +1,36 @@
-[
-  {
-    "display_name": "Dashboard",
-    "route": "/",
-    "icon": "bx bx-category-alt"
-  },
-  {
-    "display_name": "Room Diagram",
-    "route": "/room-diagram",
-    "icon": "bx bx-dialpad"
-  },
-  {
-    "display_name": "Customers",
-    "route": "/customers",
-    "icon": "bx bx-user"
-  },
-  {
-    "display_name": "Users",
-    "route": "/users",
-    "icon": "bx bxs-user-rectangle"
-  },
-  {
-    "display_name": "Services",
-    "route": "/services",
-    "icon": "bx bx-gift"
-  },
-  {
-    "display_name": "Income management",
-    "route": "/income-managements",
-    "icon": "bx bx-cart"
-  },
-  {
-    "display_name": "settings",
-    "route": "/settings",
-    "icon": "bx bx-cog"
-  }
+[{
+        "display_name": "Dashboard",
+        "route": "/",
+        "icon": "bx bx-category-alt"
+    },
+    {
+        "display_name": "Room Diagram",
+        "route": "/room-diagram",
+        "icon": "bx bx-dialpad"
+    },
+    {
+        "display_name": "Customers",
+        "route": "/customers",
+        "icon": "bx bx-user"
+    },
+    {
+        "display_name": "Users",
+        "route": "/users",
+        "icon": "bx bxs-user-rectangle"
+    },
+    {
+        "display_name": "Services",
+        "route": "/services",
+        "icon": "bx bx-gift"
+    },
+    {
+        "display_name": "Income management",
+        "route": "/receipt",
+        "icon": "bx bx-cart"
+    },
+    {
+        "display_name": "settings",
+        "route": "/settings",
+        "icon": "bx bx-cog"
+    }
 ]
