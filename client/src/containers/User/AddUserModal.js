@@ -126,7 +126,7 @@ const AddUserModal = (props) => {
                     onChange={onChangeNewForm}
                     required
                   >
-                    <option>--</option>
+                    <option value="">--</option>
                     {role === "ADMIN" && <option value="ADMIN">ADMIN</option>}
                     <option value="MANAGER">MANAGER</option>
                     <option value="EMPLOYEE">EMPLOYEE</option>

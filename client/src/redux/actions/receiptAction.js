@@ -43,6 +43,7 @@ export const checkOut = (newReceipt) => {
       }
     } catch (error) {
       console.log(error)
+      dispatch({ type: types.SET_RECEIPT_LOADING, payload: false })
       error.response && toast.error(error.response.data.message)
     }
   }
@@ -52,15 +53,18 @@ export const checkOut = (newReceipt) => {
 export const getStatistic = () => {
   return async (dispatch) => {
     try {
-      const response = await axios.get(`${LOCAL_API_URL}/receipt/statistic`)
+      dispatch({ type: types.SET_RECEIPT_LOADING, payload: true })
+      const response = await axios.get(`${HOST_API_URL}/receipt/statistic`)
       if (response.data.success) {
         dispatch({
           type: types.STATISTIC,
           payload: response.data.statistic,
         })
+        dispatch({ type: types.SET_RECEIPT_LOADING, payload: false })
       }
     } catch (error) {
       console.log(error)
+      dispatch({ type: types.SET_RECEIPT_LOADING, payload: false })
     }
   }
 }

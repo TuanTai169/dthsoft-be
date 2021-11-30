@@ -7,11 +7,11 @@ const { customerValidation } = require("../../tools/validation")
 // @decs CREATE customer
 // @access Private
 router.post("/", verifyToken, async (req, res) => {
-  const { name, email, phone, address, cmnd, gender, birthDate, note } =
+  const { name, email, phone, cmnd, address, gender, birthDate, note } =
     req.body
 
   //Validation
-  const { error } = customerValidation(req.body)
+  const { error } = customerValidation({ name, email, phone, cmnd })
   if (error)
     return res.status(400).json({
       success: false,
@@ -39,8 +39,8 @@ router.post("/", verifyToken, async (req, res) => {
       name,
       email,
       phone,
+      cmnd,
       address: address || "",
-      cmnd: cmnd || "",
       gender: gender || "male",
       birthDate: birthDate || "",
       note: note || "",

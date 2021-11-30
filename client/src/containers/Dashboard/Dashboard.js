@@ -380,7 +380,7 @@ const Dashboard = () => {
               </div>
             </div>
             <div className="card__footer">
-              <Link to="/income-managements">view all</Link>
+              <Link to="/receipts">view all</Link>
             </div>
           </div>
         </div>

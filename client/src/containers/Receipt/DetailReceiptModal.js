@@ -7,15 +7,7 @@ import ServiceForm from "./../FormBooking/ServiceForm"
 
 function DetailReceiptModal(props) {
   const { show, handlerModalClose, receipt } = props
-  const {
-    booking,
-    paidOut,
-    refund,
-    status,
-    createBy,
-    updateBy,
-    modeOfPayment,
-  } = receipt
+  const { booking, paidOut, refund, modeOfPayment } = receipt
 
   const checkInDateConvert = convertStringToDate(booking.checkInDate)
   const checkOutDateConvert = convertStringToDate(booking.checkOutDate)
@@ -160,36 +152,6 @@ function DetailReceiptModal(props) {
                 </div>
                 <ServiceForm services={booking.services} />
               </Form.Group>
-            </Row>
-
-            <Row className="mb-3" style={{ borderBottom: "1px solid #bbb" }}>
-              <Col>
-                <FloatingLabel
-                  controlId="floatingCreateBy"
-                  label="CreateBy"
-                  className="mb-3"
-                >
-                  <Form.Control type="text" value={createBy.name} disabled />
-                </FloatingLabel>
-              </Col>
-              <Col>
-                <FloatingLabel
-                  controlId="floatingUpdateby"
-                  label="Updateby "
-                  className="mb-3"
-                >
-                  <Form.Control type="text" value={updateBy} disabled />
-                </FloatingLabel>
-              </Col>
-              <Col>
-                <FloatingLabel
-                  controlId="floatingStatus"
-                  label="Status"
-                  className="mb-3"
-                >
-                  <Form.Control type="text" value={status} disabled />
-                </FloatingLabel>
-              </Col>
             </Row>
           </Modal.Body>
           <Modal.Footer>

@@ -240,6 +240,7 @@ router.get("/statistic", verifyToken, async (req, res) => {
     let map_user = []
     let map_room = []
     let map_room_status = []
+    let invoiceRevenue = []
     const monthNames = [
       "Jan",
       "Feb",
@@ -266,14 +267,28 @@ router.get("/statistic", verifyToken, async (req, res) => {
 
     let totalRevenue = _.sumBy(receipts, (item) => item.booking.totalPrice)
 
-    // Group
-    // const groupByMonth = _.groupBy(receipts, (instance) => {
-    //   return moment(new Date(instance.booking.checkOutDate)).format("MMM")
-    // })
-
-    // const groupByDay = _.groupBy(receipts, (instance) => {
-    //   return moment(new Date(instance.booking.checkOutDate)).format("dddd")
-    // })
+    _.forEach(receipts, (item) => {
+      let invoice = {
+        bookingId: item.booking.code,
+        customer: item.booking.customer.name,
+        checkInDate: item.booking.checkInDate,
+        checkOutDate: item.booking.checkOutDate,
+        deposit: item.booking.deposit,
+        serviceCharge: item.booking.serviceCharge,
+        roomCharge: item.booking.roomCharge,
+        discount: item.booking.discount,
+        VAT: parseInt(
+          (
+            item.booking.totalPrice -
+            item.booking.totalPrice / (item.booking.VAT / 100 + 1)
+          ).toFixed()
+        ),
+        totalPrice: item.booking.totalPrice,
+        paidOut: item.paidOut,
+        refund: item.refund,
+      }
+      invoiceRevenue.push(invoice)
+    })
 
     const groupByMonth = _.groupBy(allBookings, (instance) => {
       return moment(new Date(instance.createdAt)).format("MMM")
@@ -325,6 +340,7 @@ router.get("/statistic", verifyToken, async (req, res) => {
     }, [])
 
     // ROOMS
+
     _.forEach(receipts, (instance) => {
       let rooms = []
       let dayDiff = toolRoom.getNumberOfDays(
@@ -336,6 +352,9 @@ router.get("/statistic", verifyToken, async (req, res) => {
           room: item.roomNumber,
           type: item.roomType,
           price: item.price * dayDiff,
+          additional: 0,
+          checkInDate: instance.booking.checkInDate,
+          checkOutDate: instance.booking.checkOutDate,
         }
         rooms.push(newRoom)
       })
@@ -347,7 +366,13 @@ router.get("/statistic", verifyToken, async (req, res) => {
         if (r[room] !== undefined) {
           r[room].count++
           r[room].totalPrice += price
-        } else r[room] = { room, type, count: 1, totalPrice: price }
+        } else
+          r[room] = {
+            room,
+            type,
+            count: 1,
+            totalPrice: price,
+          }
 
         return r
       }, {})
@@ -369,6 +394,8 @@ router.get("/statistic", verifyToken, async (req, res) => {
         let newService = {
           service: item.name,
           price: item.price,
+          bookingId: instance.booking.code,
+          checkOutDate: instance.booking.checkOutDate,
         }
         services.push(newService)
       })
@@ -387,8 +414,11 @@ router.get("/statistic", verifyToken, async (req, res) => {
 
     const statistic = {
       totalRevenue,
+      invoiceRevenue,
       map_booking_day,
       map_month,
+      map_room,
+      map_service,
       users,
       rooms,
       services,

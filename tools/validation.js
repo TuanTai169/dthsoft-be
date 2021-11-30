@@ -22,10 +22,6 @@ const customerValidation = (data) => {
     email: Joi.string().min(10).required().email(),
     phone: Joi.string().min(10).max(10).required(),
     cmnd: Joi.string().min(9).max(12).required(),
-    address: Joi.string(),
-    gender: Joi.string(),
-    birthDate: Joi.date(),
-    note: Joi.string(),
   })
   return schema.validate(data)
 }

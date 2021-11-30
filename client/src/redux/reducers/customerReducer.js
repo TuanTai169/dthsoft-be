@@ -1,5 +1,4 @@
 import * as types from "../constants/customerConstant"
-//import { error } from "react-notification-system-redux"
 
 const initialState = {
   customers: [],

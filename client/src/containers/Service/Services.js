@@ -125,6 +125,9 @@ function Services() {
                 <option value="10">10</option>
               </Form.Select>
             </div>
+            <div className="page__sumOfRecord">
+              <h6>Total number of records: {totalItems} </h6>
+            </div>
             <div className="page__pagination">
               <PaginationComponent
                 total={totalItems}

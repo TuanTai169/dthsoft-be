@@ -50,7 +50,7 @@ export const login =
       }
     } catch (error) {
       console.log(error)
-      error.response.data && toast.error(error.response.data.message)
+      error.response && toast.error(error.response.data.message)
     }
   }
 
