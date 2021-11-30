@@ -1,5 +1,4 @@
 import * as types from "../constants/serviceConstant"
-//import { error } from "react-notification-system-redux"
 
 const initialState = {
   services: [],

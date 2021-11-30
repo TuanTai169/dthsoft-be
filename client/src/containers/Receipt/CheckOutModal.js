@@ -126,11 +126,7 @@ const CheckOutModal = (props) => {
                     label="Discount (%)"
                     className="mb-3"
                   >
-                    <Form.Control
-                      type="number"
-                      value={` ${discount}`}
-                      disabled
-                    />
+                    <Form.Control type="number" value={discount} disabled />
                   </FloatingLabel>
                 </Col>
                 <Col>

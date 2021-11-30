@@ -90,6 +90,7 @@ export const cancelledBooking = (bookingId) => {
       }
     } catch (error) {
       console.log(error)
+      dispatch({ type: types.SET_BOOKING_LOADING, payload: false })
       error.response.data && toast.error(error.response.data.message)
     }
   }
@@ -113,6 +114,7 @@ export const changeRoom = (bookingId, startRoom, endRoom) => {
       }
     } catch (error) {
       console.log(error)
+      dispatch({ type: types.SET_BOOKING_LOADING, payload: false })
       error.response.data && toast.error(error.response.data.message)
     }
   }
@@ -136,6 +138,7 @@ export const changeBookingToCheckIn = (bookingId) => {
       }
     } catch (error) {
       console.log(error)
+      dispatch({ type: types.SET_BOOKING_LOADING, payload: false })
       error.response.data && toast.error(error.response.data.message)
     }
   }
