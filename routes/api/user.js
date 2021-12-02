@@ -9,6 +9,7 @@ const { checkAdmin, checkManager } = require("../../middleware/authentication")
 const verifyToken = require("../../middleware/authorization")
 const uploadImage = require("../../middleware/uploadImage")
 require("dotenv").config()
+const _ = require("lodash")
 
 // @route GET api/user/
 // @decs READ all user
@@ -110,26 +111,20 @@ router.post("/", verifyToken, checkManager, async (req, res) => {
 // @decs UPDATE PROFILE
 // @access Private
 router.put(`/update-profile/:id`, verifyToken, async (req, res) => {
-  const { name, password, phone, address, image } = req.body
+  const { name, phone, address } = req.body
 
   //Simple Validation
-  if (!name || !password)
+  if (!name)
     return res.status(400).json({
       success: false,
-      message: "Name and password are required",
+      message: "Name are required",
     })
 
   try {
-    //All good
-    const salt = await bcrypt.genSalt(10)
-    const hashedPassword = await bcrypt.hash(password, salt)
-
     let updateUser = {
       name: name,
-      password: hashedPassword,
       phone: phone,
       address: address,
-      image: image,
       updateBy: req.userId,
     }
 
@@ -142,6 +137,69 @@ router.put(`/update-profile/:id`, verifyToken, async (req, res) => {
     res.json({
       success: true,
       message: "User updated successfully",
+      updatedUser,
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    })
+  }
+})
+
+// @route PUT api/user/
+// @decs CHANGE PASSWORD
+// @access Private
+router.put(`/change-password/:id`, verifyToken, async (req, res) => {
+  const { oldPassword, newPassword, conformPassword } = req.body
+
+  const userId = req.params.id
+
+  try {
+    const user = await User.findById(userId)
+    if (!user)
+      return res
+        .status(400)
+        .json({ success: false, message: "User not found !" })
+
+    const passwordValid = await bcrypt.compare(oldPassword, user.password)
+    if (!passwordValid)
+      return res.status(400).json({
+        success: false,
+        message:
+          "Incorrect old password ! Please check configuration parameters !",
+      })
+
+    if (_.size(newPassword) < 8)
+      return res.status(400).json({
+        success: false,
+        message: "Password must be at least 8 characters",
+      })
+
+    if (_.isEqual(newPassword, conformPassword) === false)
+      return res.status(400).json({
+        success: false,
+        message: "Password did not match",
+      })
+
+    //All good
+    const salt = await bcrypt.genSalt(10)
+    const hashedPassword = await bcrypt.hash(newPassword, salt)
+
+    let updateUser = {
+      password: hashedPassword,
+    }
+
+    const userUpdateCondition = { _id: userId }
+
+    updatedUser = await User.findOneAndUpdate(userUpdateCondition, updateUser, {
+      new: true,
+    })
+
+    res.json({
+      success: true,
+      message: "Password changed successfully.",
       updatedUser,
     })
   } catch (error) {

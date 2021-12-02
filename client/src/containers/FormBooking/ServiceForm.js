@@ -1,12 +1,11 @@
 import React from "react"
 import { Table } from "react-bootstrap"
-import { arrayService } from "./../../utils/countService"
 
 const ServiceForm = (props) => {
   const { services } = props
 
   //Render Table
-  const tableHead = ["Name", "Price", "Quantity"]
+  const tableHead = ["No#", "Name", "Price (USD)"]
   const renderHead = tableHead.map((item, index) => {
     return (
       <th key={index} style={{ fontWeight: 500 }}>
@@ -14,7 +13,6 @@ const ServiceForm = (props) => {
       </th>
     )
   })
-  const array = arrayService(services)
 
   return (
     <>
@@ -23,11 +21,11 @@ const ServiceForm = (props) => {
           <tr>{renderHead}</tr>
         </thead>
         <tbody>
-          {array.map((service) => (
+          {services.map((service, index) => (
             <tr key={service._id}>
+              <td>{index + 1}</td>
               <td>{service.name}</td>
               <td>{service.price}</td>
-              <td>{service.count}</td>
             </tr>
           ))}
         </tbody>

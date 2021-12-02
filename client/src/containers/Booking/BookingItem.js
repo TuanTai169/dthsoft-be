@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { convertStringToDate } from "../../utils/convertDateTime"
-import { Button } from "react-bootstrap"
+import { Button, OverlayTrigger, Tooltip } from "react-bootstrap"
 import ViewDetailBookingModal from "./ViewDetailBookingModal"
 import DialogDelete from "../../components/Dialog/DialogDelete"
 import { cancelledBooking } from "../../redux/actions/bookingAction"
@@ -47,22 +47,30 @@ const BookingItem = (props) => {
           <i className="bx bx-detail icon-bg" style={{ color: "#fff" }}></i>
         </Button>{" "}
         {status === "BOOKING" && (
-          <Button
-            variant="danger"
-            onClick={() => {
-              setConformDialog({
-                isOpenDialog: true,
-                title: "Cancelled Booking",
-                message: "Are you sure cancel this booking?",
-                onConform: () => handlerCancel(booking._id),
-              })
-            }}
+          <OverlayTrigger
+            overlay={
+              <Tooltip id="tooltip-disabled">Cancelled Booking!</Tooltip>
+            }
           >
-            <i
-              className="bx bx-trash-alt icon-bg"
-              style={{ color: "#fff" }}
-            ></i>
-          </Button>
+            <span className="d-inline-block">
+              <Button
+                variant="danger"
+                onClick={() => {
+                  setConformDialog({
+                    isOpenDialog: true,
+                    title: "Cancelled Booking",
+                    message: "Are you sure cancel this booking?",
+                    onConform: () => handlerCancel(booking._id),
+                  })
+                }}
+              >
+                <i
+                  className="bx bx-trash-alt icon-bg"
+                  style={{ color: "#fff" }}
+                ></i>
+              </Button>
+            </span>
+          </OverlayTrigger>
         )}
         <ViewDetailBookingModal
           show={isOpenViewModal}

@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import moment from "moment"
-import { Modal, Button, Form, Row, Col } from "react-bootstrap"
+import { Modal, Button, Form, Row, Col, Table } from "react-bootstrap"
 import DatePicker from "react-datepicker"
 import Select from "react-select"
 import { useDispatch, useSelector } from "react-redux"
+
 import CustomerForm from "../FormBooking/CustomerForm"
-import RoomForm from "../FormBooking/RoomForm"
-import ServiceForm from "../FormBooking/ServiceForm"
 import { addBooking } from "../../redux/actions/bookingAction"
 import ViewAllRoomModal from "../Room/ViewAllRoomModal"
 
@@ -29,9 +28,9 @@ const BookingModal = (props) => {
   )
   const [customer, setCustomer] = useState({})
   const [arrayRoom, setArrayRoom] = useState(
-    listRoom.filter(
-      (room) => room.status === "READY" && room._id !== currentRoom._id
-    )
+    listRoom
+      .filter((room) => room.status === "READY" && room._id !== currentRoom._id)
+      .sort((a, b) => (a.roomNumber < b.roomNumber ? -1 : 1))
   )
   const [rooms, setRooms] = useState([currentRoom])
   const [services, setServices] = useState([])
@@ -49,9 +48,8 @@ const BookingModal = (props) => {
     customer: "",
     services: [],
   })
-  const [openViewRoom, setOpenViewRoom] = useState(false)
 
-  //
+  const [openViewRoom, setOpenViewRoom] = useState(false)
 
   useEffect(() => {
     const { checkInDate, checkOutDate, deposit, discount } = newBooking
@@ -138,6 +136,24 @@ const BookingModal = (props) => {
       rooms: newArrayRoom.map((room) => room._id),
     })
   }
+
+  const onRemoveRoom = (e, selectRoom) => {
+    e.preventDefault()
+
+    let newArrayRoom = rooms.filter((room) => room._id !== selectRoom._id)
+
+    setRooms(newArrayRoom)
+    setArrayRoom(
+      [...arrayRoom, selectRoom].sort((a, b) =>
+        a.roomNumber < b.roomNumber ? -1 : 1
+      )
+    )
+    setNewBooking({
+      ...newBooking,
+      rooms: newArrayRoom.map((room) => room._id),
+    })
+  }
+
   const onChangeService = (selectService) => {
     let newArrayService = [...services, selectService]
     setServices(newArrayService)
@@ -149,6 +165,40 @@ const BookingModal = (props) => {
       services: newArrayService.map((service) => service._id),
     })
   }
+
+  const onRemoveService = (e, selectService) => {
+    e.preventDefault()
+
+    let newArrayService = services.filter(
+      (service) => service._id !== selectService._id
+    )
+    setServices(newArrayService)
+    setArrayService([...arrayService, selectService])
+    setNewBooking({
+      ...newBooking,
+      services: newArrayService.map((service) => service._id),
+    })
+  }
+
+  //Render room Table
+  const tableRoomHead = ["Number", "Floor", "Type", "Price (USD)", ""]
+  const renderRoomHead = tableRoomHead.map((item, index) => {
+    return (
+      <th key={index} style={{ fontWeight: 500 }}>
+        {item}
+      </th>
+    )
+  })
+
+  //Render Service Table
+  const tableServiceHead = ["No#", "Name", "Price (USD)"]
+  const renderServiceHead = tableServiceHead.map((item, index) => {
+    return (
+      <th key={index} style={{ fontWeight: 500 }}>
+        {item}
+      </th>
+    )
+  })
 
   const { deposit, discount } = newBooking
   return (
@@ -256,7 +306,30 @@ const BookingModal = (props) => {
                   View All Room
                 </Button>
               </Col>
-              <RoomForm rooms={rooms} />
+              <Table striped>
+                <thead>
+                  <tr>{renderRoomHead}</tr>
+                </thead>
+                <tbody>
+                  {rooms.map((room) => (
+                    <tr key={room._id}>
+                      <td>{room.roomNumber}</td>
+                      <td>{room.floor}</td>
+                      <td>{room.roomType}</td>
+                      <td>{room.price}</td>
+
+                      <td>
+                        <button
+                          onClick={(e) => onRemoveRoom(e, room)}
+                          className="btn-remove"
+                        >
+                          x
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
               <ViewAllRoomModal
                 show={openViewRoom}
                 handlerModalClose={closeViewRoomModal}
@@ -285,10 +358,31 @@ const BookingModal = (props) => {
                   View All Service
                 </Button>
               </Col>
-              <ServiceForm services={services} />
+              <Table striped>
+                <thead>
+                  <tr>{renderServiceHead}</tr>
+                </thead>
+                <tbody>
+                  {services.map((service, index) => (
+                    <tr key={service._id}>
+                      <td>{index + 1}</td>
+                      <td>{service.name}</td>
+                      <td>{service.price}</td>
+                      <td>
+                        <button
+                          onClick={(e) => onRemoveService(e, service)}
+                          className="btn-remove"
+                        >
+                          x
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
             </Row>
             <p>
-              Total Price (USA):{" "}
+              Total Price (USD):{" "}
               <strong style={{ color: "red", fontSize: "20px" }}>
                 {totalPrice > 0 ? totalPrice : 0}
               </strong>{" "}

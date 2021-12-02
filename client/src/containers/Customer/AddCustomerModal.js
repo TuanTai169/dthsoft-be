@@ -26,8 +26,8 @@ const AddCustomerModal = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    resetAddPostData()
     dispatch(addCustomer(newCustomer))
+    resetAddPostData()
   }
 
   const resetAddPostData = () => {
@@ -181,7 +181,7 @@ const AddCustomerModal = (props) => {
             <Button variant="primary" type="submit">
               Save
             </Button>
-            <Button variant="danger" onClick={resetAddPostData}>
+            <Button variant="secondary" onClick={resetAddPostData}>
               Close
             </Button>
           </Modal.Footer>

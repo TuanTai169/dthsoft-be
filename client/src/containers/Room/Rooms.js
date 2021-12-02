@@ -8,6 +8,7 @@ import ViewAllBookingModal from "../Booking/ViewAllBookingModal"
 import { getAllBooking } from "./../../redux/actions/bookingAction"
 import FullLoading from "../../components/Common/FullLoading/FullLoading"
 import ScrollToTop from "./../../components/Common/ScrollToTop/ScrollToTop"
+import { getAllReceipt } from "./../../redux/actions/receiptAction"
 
 const Rooms = () => {
   const [isOpenAddModal, setIsOpenAddModal] = useState(false)
@@ -98,6 +99,7 @@ const Rooms = () => {
                       variant="info"
                       onClick={() => {
                         dispatch(getAllBooking())
+                        dispatch(getAllReceipt())
                       }}
                       style={{ marginRight: "10px", color: "#fff" }}
                     >
@@ -111,7 +113,9 @@ const Rooms = () => {
 
                 <OverlayTrigger
                   overlay={
-                    <Tooltip id="tooltip-disabled">List Booking</Tooltip>
+                    <Tooltip id="tooltip-disabled">
+                      List Booking/Check In
+                    </Tooltip>
                   }
                 >
                   <span className="d-inline-block">

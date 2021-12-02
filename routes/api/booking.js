@@ -69,6 +69,7 @@ router.post("/:book", verifyToken, async (req, res) => {
       createBy: userId,
       updateBy: null,
     })
+
     await newBooking.save()
 
     //Change STATUS ROOM
@@ -313,6 +314,7 @@ router.put(
         totalPrice,
         updateBy: userId,
       }
+
       let updatedBooking = await Booking.findOneAndUpdate(
         bookingUpdateCondition,
         updateBooking,

@@ -5,7 +5,7 @@ const usePasswordToggle = () => {
 
   const Icon = (
     <i
-      className={visible ? "bx bx-show" : "bx bx-hide"}
+      className={visible ? "bx bx-hide" : "bx bx-show"}
       onClick={() => setVisible((visible) => !visible)}
     ></i>
   )

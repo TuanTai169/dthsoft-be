@@ -44,7 +44,6 @@ router.post("/login", async (req, res) => {
         .status(400)
         .json({ success: false, message: "Incorrect email or password" })
 
-    // Email found
     const passwordValid = await bcrypt.compare(password, user.password)
     if (!passwordValid)
       return res
@@ -151,7 +150,7 @@ router.post("/forgot-password", async (req, res) => {
     // Send it to user's email
     const resetURL = `${req.protocol}://${req.get(
       "host"
-    )}/reset-password/${resetToken}`
+    )}/api/auth/reset-password/${resetToken}`
 
     const txt = "Reset your password"
 

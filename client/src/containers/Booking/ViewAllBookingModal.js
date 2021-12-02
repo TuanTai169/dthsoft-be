@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react"
-import { Modal, Button, Table, Form } from "react-bootstrap"
+import { Modal, Button, Table, Form, FloatingLabel } from "react-bootstrap"
 import { useDispatch, useSelector } from "react-redux"
 
 import { getAllRoom } from "./../../redux/actions/roomAction"
@@ -17,6 +17,8 @@ const ViewAllBookingModal = (props) => {
   const [limit, setLimit] = useState(6)
   const [sorting, setSorting] = useState({ field: "", order: "" })
   const [search, setSearch] = useState("")
+  const [bookingType, setBookingType] = useState("BOTH")
+
   const dispatch = useDispatch()
 
   // GET ALL BOOKING
@@ -41,9 +43,11 @@ const ViewAllBookingModal = (props) => {
   ]
 
   const currentData = useMemo(() => {
-    let computedBookings = [...bookings].sort((a, b) =>
-      a.createdAt < b.createdAt ? 1 : -1
-    )
+    let computedBookings = [...bookings]
+      .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
+      .filter((item) =>
+        bookingType === "BOTH" ? true : item.status === bookingType
+      )
 
     if (search) {
       computedBookings = computedBookings.filter((booking) =>
@@ -69,7 +73,7 @@ const ViewAllBookingModal = (props) => {
     const indexOfLastNews = currentPage * limit
     const indexOfFirstNews = indexOfLastNews - limit
     return computedBookings.slice(indexOfFirstNews, indexOfLastNews)
-  }, [bookings, currentPage, limit, sorting, search])
+  }, [bookings, currentPage, limit, sorting, search, bookingType])
 
   return (
     <>
@@ -83,10 +87,36 @@ const ViewAllBookingModal = (props) => {
           dialogClassName="modal-80w"
         >
           <Modal.Header closeButton>
-            <Modal.Title>LIST BOOKING</Modal.Title>
+            <Modal.Title style={{ width: "30%" }}>
+              LIST BOOKING/CHECK IN
+            </Modal.Title>
+            <div
+              className="page_selectBookingType"
+              style={{ marginLeft: "10%", width: "15%", marginTop: "12px" }}
+            >
+              <FloatingLabel
+                controlId="floatingSelectType"
+                label="Select Type"
+                className="mb-3"
+              >
+                <Form.Control
+                  as="select"
+                  name="bookingType"
+                  value={bookingType}
+                  onChange={(e) => setBookingType(e.target.value)}
+                >
+                  <option className="d-none" value="">
+                    Select Type...
+                  </option>
+                  <option value="BOTH">BOTH</option>
+                  <option value="BOOKING">BOOKING</option>
+                  <option value="CHECK IN">CHECK IN</option>
+                </Form.Control>
+              </FloatingLabel>
+            </div>
             <div
               className="page__search"
-              style={{ marginLeft: "60%", marginTop: "12px" }}
+              style={{ marginLeft: "20%", marginTop: "12px" }}
             >
               <Search
                 onSearch={(value) => {

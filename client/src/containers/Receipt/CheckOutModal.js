@@ -1,6 +1,9 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { Modal, Button, Form, Row, Col, FloatingLabel } from "react-bootstrap"
 import { useDispatch, useSelector } from "react-redux"
+import moment from "moment"
+import DatePicker from "react-datepicker"
+
 import { convertStringToDate } from "../../utils/convertDateTime"
 import CustomerForm from "../FormBooking/CustomerForm"
 import RoomForm from "../FormBooking/RoomForm"
@@ -8,6 +11,7 @@ import ServiceForm from "./../FormBooking/ServiceForm"
 import { checkOut } from "../../redux/actions/receiptAction"
 import PayPalModal from "./PayPalModal"
 import FullLoading from "./../../components/Common/FullLoading/FullLoading"
+import { updateBooking } from "./../../redux/actions/bookingAction"
 
 const CheckOutModal = (props) => {
   const { show, handlerModalClose, handlerParentModalClose, booking } = props
@@ -15,14 +19,12 @@ const CheckOutModal = (props) => {
   const isLoading = useSelector(
     (state) => state.receiptReducer.isReceiptLoading
   )
-
   const {
     _id,
     code,
     customer,
     rooms,
     checkInDate,
-    checkOutDate,
     deposit,
     discount,
     services,
@@ -30,7 +32,24 @@ const CheckOutModal = (props) => {
     serviceCharge,
     VAT,
     totalPrice,
+    status,
   } = booking[0]
+  const [newCheckOut, setNewCheckOut] = useState(Date.now())
+
+  const [editBooking, setEditBooking] = useState({
+    _id: _id,
+    rooms: rooms.map((room) => room._id),
+    customer: customer._id,
+    checkInDate: moment(checkInDate).format("YYYY-MM-DD HH:mm"),
+    checkOutDate: moment(newCheckOut).format("YYYY-MM-DD HH:mm"),
+    services: services,
+    deposit: deposit,
+    discount: discount,
+    status: status,
+  })
+
+  const [sumPrice, setSumPrice] = useState(totalPrice)
+
   const dispatch = useDispatch()
   const [receipt, setReceipt] = useState({
     booking: _id,
@@ -40,23 +59,62 @@ const CheckOutModal = (props) => {
   })
   const [isPaypal, setIsPaypal] = useState(false)
 
+  useEffect(() => {
+    const { checkInDate, checkOutDate, deposit, discount } = editBooking
+
+    //Calculator
+    const calculatorDayDiff = () => {
+      const start = moment(checkInDate, "YYYY-MM-DD HH:mm")
+      const end = moment(checkOutDate, "YYYY-MM-DD HH:mm")
+
+      //Difference in number of days
+      const dayDiff =
+        Math.round(moment.duration(end.diff(start)).asDays()) < 1
+          ? 1
+          : Math.round(moment.duration(end.diff(start)).asDays())
+
+      return dayDiff
+    }
+
+    const calculatorPrice = () => {
+      const dayDiff = calculatorDayDiff()
+
+      const sumRoomsPrice = rooms
+        .map((item) => item.price)
+        .reduce((prev, curr) => prev + curr, 0)
+
+      const sumServicesPrice = services
+        .map((item) => item.price)
+        .reduce((prev, curr) => prev + curr, 0)
+
+      const VAT = 10
+      return (
+        (sumRoomsPrice * dayDiff + sumServicesPrice) *
+          (1 + VAT / 100 - discount / 100) -
+        deposit
+      ).toFixed()
+    }
+    setSumPrice(calculatorPrice)
+  }, [editBooking, rooms, services])
+
   const checkInDateConvert = convertStringToDate(checkInDate)
-  const checkOutDateConvert = convertStringToDate(checkOutDate)
 
   const onChangePaidOut = (e) => {
     setReceipt({
       ...receipt,
       paidOut: e.target.value,
-      refund: e.target.value > totalPrice ? e.target.value - totalPrice : 0,
+      refund: e.target.value > sumPrice ? e.target.value - sumPrice : 0,
     })
   }
 
   const onSubmitCheckOut = () => {
+    console.log(editBooking)
+    dispatch(updateBooking(editBooking))
     const newReceipt = {
       ...receipt,
       paidOut: parseInt(receipt.paidOut),
     }
-    dispatch(checkOut(newReceipt))
+    setTimeout(() => dispatch(checkOut(newReceipt)), 3000)
     resetData()
   }
   const resetData = () => {
@@ -71,6 +129,7 @@ const CheckOutModal = (props) => {
   }
 
   const { paidOut, refund, modeOfPayment } = receipt
+
   return (
     <>
       {isLoading ? (
@@ -87,7 +146,7 @@ const CheckOutModal = (props) => {
             <div style={{ marginLeft: "30%", fontSize: "20px" }}>
               Total Price (USD):{" "}
               <strong style={{ color: "red", fontSize: "20px" }}>
-                {totalPrice}
+                {sumPrice > 0 ? sumPrice : 0}
               </strong>
             </div>
           </Modal.Header>
@@ -107,19 +166,27 @@ const CheckOutModal = (props) => {
                     />
                   </FloatingLabel>
                 </Col>
-                <Col>
-                  <FloatingLabel
-                    controlId="floatingCheckOut"
-                    label="Check out"
-                    className="mb-3"
-                  >
-                    <Form.Control
-                      type="text"
-                      value={checkOutDateConvert}
-                      disabled
-                    />
-                  </FloatingLabel>
-                </Col>
+                <Form.Group as={Col} controlId="formGridCheckOut">
+                  <Form.Label>Check out</Form.Label>
+                  <DatePicker
+                    selected={newCheckOut}
+                    onChange={(date) => {
+                      setNewCheckOut(date)
+                      setEditBooking({
+                        ...editBooking,
+                        checkOutDate: moment(date).format("YYYY-MM-DD HH:mm"),
+                      })
+                    }}
+                    selectsEnd
+                    startDate={new Date(checkInDate)}
+                    endDate={newCheckOut}
+                    minDate={new Date(checkInDate)}
+                    showTimeSelect
+                    timeFormat="HH:mm"
+                    dateFormat="dd/MM/yyyy HH:mm"
+                  />
+                </Form.Group>
+
                 <Col>
                   <FloatingLabel
                     controlId="floatingDiscount"

@@ -1,7 +1,7 @@
 import * as types from "../constants/receiptConstant"
 import axios from "axios"
 import { toast } from "react-toastify"
-import { HOST_API_URL, LOCAL_API_URL } from "./../constants/api"
+import { HOST_API_URL } from "./../constants/api"
 
 // READ ALL Receipt
 export const getAllReceipt = () => {
