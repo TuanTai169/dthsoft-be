@@ -127,26 +127,24 @@ const ViewAllBookingModal = (props) => {
             </div>
           </Modal.Header>
           <Modal.Body>
-            <Table striped>
-              <TableHeader
-                headers={headers}
-                onSorting={(field, order) => setSorting({ field, order })}
-              />
-              <tbody>
-                {Array.isArray(currentData) && currentData.length ? (
-                  currentData.map((booking, index) => (
+            {currentData.length ? (
+              <Table striped>
+                <TableHeader
+                  headers={headers}
+                  onSorting={(field, order) => setSorting({ field, order })}
+                />
+                <tbody>
+                  {currentData.map((booking, index) => (
                     <tr key={booking._id}>
                       <td>{index + 1 + (currentPage - 1) * limit}</td>
                       <BookingItem booking={booking} />
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={6}>No Booking</td>
-                  </tr>
-                )}
-              </tbody>
-            </Table>
+                  ))}
+                </tbody>
+              </Table>
+            ) : (
+              <p>Note! There are currently no records found!</p>
+            )}
             <div className="page__footer">
               <div className="page__select">
                 <Form.Select

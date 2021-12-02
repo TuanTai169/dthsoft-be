@@ -4,6 +4,10 @@
   position: fixed;
   left: 0;
   top: 0;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
   background-color: var(--main-bg);
   box-shadow: var(--box-shadow);
 }
@@ -17,6 +21,12 @@
 
 .sidebar__logo > img {
   height: 120px;
+}
+.sidebar__footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
 .sidebar__item {

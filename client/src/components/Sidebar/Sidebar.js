@@ -31,15 +31,22 @@ const Sidebar = () => {
       <div className="sidebar__logo">
         <img src={logo} alt="company logo" />
       </div>
-      {sidebar_items.map((item, index) => (
-        <Link to={item.route} key={index}>
-          <SidebarItem
-            title={item.display_name}
-            icon={item.icon}
-            active={index === activeItem}
-          />
-        </Link>
-      ))}
+      <div className="sidebar__body">
+        {sidebar_items.map((item, index) => (
+          <Link to={item.route} key={index}>
+            <SidebarItem
+              title={item.display_name}
+              icon={item.icon}
+              active={index === activeItem}
+            />
+          </Link>
+        ))}
+      </div>
+
+      <div className="sidebar__footer">
+        <p>Version 1.0</p>
+        <p>Copyright © 2018 DTHSOFT</p>
+      </div>
     </div>
   )
 }
