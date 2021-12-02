@@ -17,7 +17,9 @@ function Receipt() {
 
   //Get all Receipt
   const receipts = useSelector((state) => state.receiptReducer.receipts)
-  const isLoading = useSelector((state) => state.receiptReducer.receiptLoading)
+  const isLoading = useSelector(
+    (state) => state.receiptReducer.isReceiptLoading
+  )
 
   //Header table
   const headers = [

@@ -1,12 +1,19 @@
 import React, { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import moment from "moment"
-import { Modal, Button, Form, Row, Col, FloatingLabel } from "react-bootstrap"
+import {
+  Modal,
+  Button,
+  Form,
+  Row,
+  Col,
+  FloatingLabel,
+  Table,
+} from "react-bootstrap"
 import Select from "react-select"
 import { useDispatch, useSelector } from "react-redux"
 import CustomerForm from "../FormBooking/CustomerForm"
 import RoomForm from "../FormBooking/RoomForm"
-import ServiceForm from "../FormBooking/ServiceForm"
 import { convertStringToDate } from "../../utils/convertDateTime"
 import { updateBooking } from "./../../redux/actions/bookingAction"
 
@@ -100,7 +107,6 @@ const EditBookingModal = (props) => {
 
   const handlerSubmit = (e) => {
     e.preventDefault()
-    console.log(editBooking)
     dispatch(updateBooking(editBooking))
     resetDataBooking()
   }
@@ -122,6 +128,30 @@ const EditBookingModal = (props) => {
       services: newArrayService.map((service) => service._id),
     })
   }
+
+  const onRemoveService = (e, selectService) => {
+    e.preventDefault()
+
+    let newArrayService = newServices.filter(
+      (service) => service._id !== selectService._id
+    )
+    setNewServices(newArrayService)
+    setArrayService([...arrayService, selectService])
+    setEditBooking({
+      ...editBooking,
+      services: newArrayService.map((service) => service._id),
+    })
+  }
+
+  //Render Service Table
+  const tableServiceHead = ["No#", "Name", "Price (USD)"]
+  const renderServiceHead = tableServiceHead.map((item, index) => {
+    return (
+      <th key={index} style={{ fontWeight: 500 }}>
+        {item}
+      </th>
+    )
+  })
 
   const checkInDateConvert = convertStringToDate(checkInDate)
   const checkOutDateConvert = convertStringToDate(checkOutDate)
@@ -219,7 +249,28 @@ const EditBookingModal = (props) => {
                   View All Service
                 </Button>
               </Col>
-              <ServiceForm services={newServices} />
+              <Table striped>
+                <thead>
+                  <tr>{renderServiceHead}</tr>
+                </thead>
+                <tbody>
+                  {newServices.map((service, index) => (
+                    <tr key={service._id}>
+                      <td>{index + 1}</td>
+                      <td>{service.name}</td>
+                      <td>{service.price}</td>
+                      <td>
+                        <button
+                          onClick={(e) => onRemoveService(e, service)}
+                          className="btn-remove"
+                        >
+                          x
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
             </Row>
             <p>
               Total Price:{" "}

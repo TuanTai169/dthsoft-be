@@ -9,20 +9,22 @@ import axios from "axios"
 import { HOST_API_URL } from "../../redux/constants/api"
 import { toast } from "react-toastify"
 import FullLoading from "../../components/Common/FullLoading/FullLoading"
+import ChangePasswordModal from "./ChangePasswordModal"
 
-function Profile() {
+const Profile = () => {
   const user = useSelector((state) => state.auth.user)
   const users = useSelector((state) => state.userReducer.users)
   const isLoading = useSelector((state) => state.userReducer.isUserLoading)
   const role = useSelector((state) => state.auth.user.roles)
   const dispatch = useDispatch()
-
-  useEffect(() => dispatch(loadUser()), [dispatch, users, user])
+  useEffect(() => dispatch(loadUser()), [dispatch, users])
 
   const [isEditOpen, setIsEditOpen] = useState(false)
+  const [isChangePassOpen, setIsChangePassOpen] = useState(false)
   const [avatar, setAvatar] = useState(false)
 
   const handlerModalEditClose = () => setIsEditOpen(false)
+  const handlerModalChangePassClose = () => setIsChangePassOpen(false)
 
   const changeAvatar = async (e) => {
     e.preventDefault()
@@ -50,6 +52,7 @@ function Profile() {
       )
       toast.success(res.data.message)
       setAvatar(res.data.url)
+      dispatch(loadUser())
     } catch (err) {
       err.response && toast.error(err.response.data.message)
     }
@@ -99,19 +102,30 @@ function Profile() {
                 <Col>
                   <Button
                     className="profile-edit-btn"
-                    variant="outline-secondary"
-                    style={{ marginLeft: "12px" }}
+                    variant="outline-success"
+                    style={{ marginLeft: "12px", marginBottom: "12px" }}
                     onClick={() => setIsEditOpen(true)}
                   >
-                    <i className="bx bxs-edit-alt icon-bg"></i> Edit Profile
+                    Edit Profile
                   </Button>
-                  {
-                    <EditProfileModal
-                      handlerModalClose={handlerModalEditClose}
-                      show={isEditOpen}
-                      user={user}
-                    />
-                  }
+                  <Button
+                    className="profile-edit-btn"
+                    variant="outline-danger"
+                    style={{ marginLeft: "12px" }}
+                    onClick={() => setIsChangePassOpen(true)}
+                  >
+                    Change password
+                  </Button>
+                  <EditProfileModal
+                    handlerModalClose={handlerModalEditClose}
+                    show={isEditOpen}
+                    user={user}
+                  />
+                  <ChangePasswordModal
+                    handlerModalClose={handlerModalChangePassClose}
+                    show={isChangePassOpen}
+                    user={user}
+                  />
                 </Col>
               </Row>
               <Row>

@@ -1,16 +1,18 @@
 import React, { useState } from "react"
 import { Form, Modal, Button, FloatingLabel } from "react-bootstrap"
 import { useDispatch } from "react-redux"
-import { updateProfile } from "../../redux/actions/userAction"
+import usePasswordToggle from "../../hooks/usePasswordToggle"
+import { changePassword } from "../../redux/actions/userAction"
 
-function EditProfileModal(props) {
+const ChangePasswordModal = (props) => {
   const { show, handlerModalClose, user } = props
   const dispatch = useDispatch()
 
+  const [inputType, toggleIcon] = usePasswordToggle()
   const [editUser, setEditUser] = useState({
-    name: user.name,
-    phone: user.phone,
-    address: user.address,
+    oldPassword: "",
+    newPassword: "",
+    conformPassword: "",
   })
 
   const onChangeNewForm = (event) =>
@@ -21,82 +23,72 @@ function EditProfileModal(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault()
+    dispatch(changePassword(editUser, user._id))
     resetAddPostData()
-    dispatch(updateProfile(editUser, user._id))
   }
 
   const resetAddPostData = () => {
     handlerModalClose()
     setEditUser({
-      name: user.name,
-      phone: user.phone,
-      address: user.address,
+      oldPassword: "",
+      newPassword: "",
+      conformPassword: "",
     })
   }
 
-  const { name, phone, address } = editUser
+  const { oldPassword, newPassword, conformPassword } = editUser
 
   return (
     <div>
       <Modal show={show} onHide={resetAddPostData} animation={false}>
         <Modal.Header closeButton>
-          <Modal.Title>Edit Profile</Modal.Title>
+          <Modal.Title>Change Password</Modal.Title>
         </Modal.Header>
         <Form onSubmit={handleSubmit}>
           <Modal.Body>
             <FloatingLabel
-              controlId="floatingName"
-              label="Name"
+              controlId="floatingPass"
+              label="Password"
               className="mb-3"
             >
               <Form.Control
-                type="text"
-                placeholder="Name"
-                name="name"
-                value={name || ""}
+                type={inputType}
+                placeholder="*"
+                name="oldPassword"
+                value={oldPassword}
                 onChange={onChangeNewForm}
                 required
               />
+              <span className="password-toggle-icon">{toggleIcon}</span>
             </FloatingLabel>
             <FloatingLabel
-              controlId="floatingEmail"
-              label="Email"
+              controlId="floatingPass"
+              label="Password"
               className="mb-3"
             >
               <Form.Control
-                type="text"
-                placeholder="email"
-                name="email"
-                value={user.email}
-                onChange={onChangeNewForm}
-                disabled
-                required
-              />
-            </FloatingLabel>
-            <FloatingLabel
-              controlId="floatingPhone"
-              label="Phone"
-              className="mb-3"
-            >
-              <Form.Control
-                type="text"
-                placeholder="Phone Number"
-                name="phone"
-                value={phone || ""}
+                type={inputType}
+                placeholder="*"
+                name="newPassword"
+                value={newPassword}
                 onChange={onChangeNewForm}
                 required
               />
+              <Form.Text className="text-muted">
+                Password must be 8-20 characters
+              </Form.Text>
             </FloatingLabel>
+
             <FloatingLabel
-              controlId="floatingAddress"
-              label="Address"
+              controlId="floatingConformPass"
+              label="Conform Password"
               className="mb-3"
             >
               <Form.Control
-                as="textarea"
-                name="address"
-                placeholder="Address"
-                value={address || ""}
+                type={inputType}
+                placeholder="*"
+                name="conformPassword"
+                value={conformPassword}
                 onChange={onChangeNewForm}
                 required
               />
@@ -116,4 +108,4 @@ function EditProfileModal(props) {
   )
 }
 
-export default EditProfileModal
+export default ChangePasswordModal

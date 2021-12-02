@@ -312,3 +312,15 @@ thead th.descending::after {
     opacity: 1;
   }
 }
+
+.btn-remove {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4px;
+  width: 20px;
+  height: 20px;
+  color: #fff;
+  background-color: rgb(245, 56, 23);
+  border-radius: 50%;
+}

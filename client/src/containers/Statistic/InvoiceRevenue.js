@@ -138,7 +138,7 @@ const InvoiceRevenue = () => {
                   />
                   <tbody>
                     {currentData.map((receipt, index) => (
-                      <tr key={receipt._id}>
+                      <tr key={receipt.bookingId}>
                         <td>{index + 1 + (currentPage - 1) * limit}</td>
                         <InvoiceRevenueItem receipt={receipt} />
                       </tr>

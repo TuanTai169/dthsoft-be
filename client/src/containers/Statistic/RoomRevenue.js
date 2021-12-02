@@ -97,7 +97,7 @@ const RoomRevenue = () => {
           <div className="page">
             <div className="page__header">
               <div className="page__title">
-                <h4>Services</h4>
+                <h4>Rooms</h4>
               </div>
               <div
                 className="page__selectDate"
