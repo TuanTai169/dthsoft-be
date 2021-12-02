@@ -35,8 +35,8 @@
     "icon": "bx bx-line-chart"
   },
   {
-    "display_name": "settings",
-    "route": "/settings",
+    "display_name": "about",
+    "route": "/about",
     "icon": "bx bx-cog"
   }
 ]

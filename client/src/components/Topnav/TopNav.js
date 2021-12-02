@@ -1,47 +1,26 @@
-import React from "react"
 import "./topnav.css"
-import { Link } from "react-router-dom"
-import Dropdown from "../Common/dropdown/Dropdown"
-import ThemeMenu from "../../containers/Theme/ThemeMenu"
-import notifications from "../../assets/JsonData/notification.json"
-import user_menu from "../../assets/JsonData/user_menus.json"
+import "../Common/dropdown/dropdown.css"
+
+import React from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { Button } from "react-bootstrap"
+import { useNavigate } from "react-router-dom"
+
 import male_avatar from "../../assets/images/male_avatar.png"
+import ThemeMenu from "../../containers/Theme/ThemeMenu"
 import { logout } from "../../redux/actions/authAction"
-
-const renderNotificationItem = (item, index) => (
-  <div className="notification-item" key={index}>
-    <i className={item.icon}></i>
-    <span>{item.content}</span>
-  </div>
-)
-
-const renderUserToggle = (user) => (
-  <div className="topnav__right-user">
-    <div className="topnav__right-user__image">
-      <img src={user.image ? user.image : male_avatar} alt="avatar" />
-    </div>
-    <div className="topnav__right-user__name">{user.name}</div>
-  </div>
-)
-
-const renderUserMenu = (item, index) => (
-  <Link to={item.link} key={index}>
-    <div className="notification-item">
-      <i className={item.icon}></i>
-      <span>{item.content}</span>
-    </div>
-  </Link>
-)
 
 const TopNav = () => {
   const user = useSelector((state) => state.auth.user)
 
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const handlerLogout = () => {
     dispatch(logout())
+  }
+  const handlerToProfile = () => {
+    navigate("/profile")
   }
 
   return (
@@ -49,14 +28,18 @@ const TopNav = () => {
       <div className="topnav__left"></div>
       <div className="topnav__right">
         <div className="topnav__right-item">
-          {/* dropdown here */}
-          <Dropdown
-            customToggle={() => renderUserToggle(user)}
-            contentData={user_menu}
-            renderItems={(item, index) => renderUserMenu(item, index)}
-          />
+          <div
+            className="topnav__right-user"
+            style={{ cursor: "pointer" }}
+            onClick={handlerToProfile}
+          >
+            <div className="topnav__right-user__image">
+              <img src={user.image ? user.image : male_avatar} alt="avatar" />
+            </div>
+            <div className="topnav__right-user__name">{user.name}</div>
+          </div>
         </div>
-        <div className="topnav__right-item">
+        {/* <div className="topnav__right-item">
           <Dropdown
             icon="bx bx-bell"
             badge="12"
@@ -64,8 +47,7 @@ const TopNav = () => {
             renderItems={(item, index) => renderNotificationItem(item, index)}
             renderFooter={() => <Link to="/customers">View All</Link>}
           />
-          {/* dropdown here */}
-        </div>
+        </div> */}
         <div className="topnav__right-item">
           <ThemeMenu />
         </div>
