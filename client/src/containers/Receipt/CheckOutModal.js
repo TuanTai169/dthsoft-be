@@ -294,16 +294,15 @@ const CheckOutModal = (props) => {
               </Row>
             </Modal.Body>
             <Modal.Footer>
-              {isPaypal ? (
-                <PayPalModal
-                  open={isPaypal}
-                  closeModal={() => setIsPaypal(false)}
-                  receipt={receipt}
-                  closeAllModal={resetData}
-                />
-              ) : (
+              {modeOfPayment === "PAYPAL" && (
                 <Button onClick={() => setIsPaypal(true)}>PayPal</Button>
               )}
+              <PayPalModal
+                open={isPaypal}
+                closeModal={() => setIsPaypal(false)}
+                receipt={receipt}
+                closeAllModal={resetData}
+              />
               <Button variant="danger" onClick={onSubmitCheckOut}>
                 Save
               </Button>
