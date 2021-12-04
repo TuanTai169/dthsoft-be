@@ -150,7 +150,7 @@ router.post("/forgot-password", async (req, res) => {
     // Send it to user's email
     const resetURL = `${req.protocol}://${req.get(
       "host"
-    )}/api/auth/reset-password/${resetToken}`
+    )}/reset-password/${resetToken}`
 
     const txt = "Reset your password"
 
