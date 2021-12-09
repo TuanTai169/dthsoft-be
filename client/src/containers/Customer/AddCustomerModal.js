@@ -2,6 +2,13 @@ import React, { useState } from "react"
 import { Form, Modal, FloatingLabel, Button, Row, Col } from "react-bootstrap"
 import { useDispatch } from "react-redux"
 import { addCustomer } from "../../redux/actions/customerAction"
+import {
+  phoneValidation,
+  IdNumberValidation,
+  emailValidation,
+  nameValidation,
+  textValidation,
+} from "../../utils/validation"
 
 const AddCustomerModal = (props) => {
   const { show, handlerModalClose } = props
@@ -17,7 +24,6 @@ const AddCustomerModal = (props) => {
     birthDate: "",
     note: "",
   })
-
   const onChangeNewForm = (event) =>
     setNewCustomer({
       ...newCustomer,
@@ -26,8 +32,17 @@ const AddCustomerModal = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    dispatch(addCustomer(newCustomer))
-    resetAddPostData()
+    if (
+      nameValidation(newCustomer.name) &&
+      emailValidation(newCustomer.email) &&
+      phoneValidation(newCustomer.phone) &&
+      IdNumberValidation(newCustomer.cmnd) &&
+      textValidation(newCustomer.address) &&
+      textValidation(newCustomer.note)
+    ) {
+      dispatch(addCustomer(newCustomer))
+      resetAddPostData()
+    }
   }
 
   const resetAddPostData = () => {
@@ -161,6 +176,7 @@ const AddCustomerModal = (props) => {
                 placeholder="Address"
                 value={address || ""}
                 onChange={onChangeNewForm}
+                required
               />
             </FloatingLabel>
             <FloatingLabel
@@ -174,6 +190,7 @@ const AddCustomerModal = (props) => {
                 placeholder="Note"
                 value={note || ""}
                 onChange={onChangeNewForm}
+                required
               />
             </FloatingLabel>
           </Modal.Body>

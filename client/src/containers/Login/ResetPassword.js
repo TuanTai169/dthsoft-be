@@ -3,17 +3,20 @@ import { useNavigate, useParams } from "react-router"
 import logo from "../../assets/images/logo.png"
 import { Link } from "react-router-dom"
 import { Form, FloatingLabel, Button } from "react-bootstrap"
-import _ from "lodash"
 import { toast } from "react-toastify"
 import axios from "axios"
 import { HOST_API_URL } from "../../redux/constants/api"
 import usePasswordToggle from "./../../hooks/usePasswordToggle"
+import {
+  passwordValidation,
+  matchPasswordValidation,
+} from "../../utils/validation"
 
 const ResetPassword = () => {
   const [inputType, toggleIcon] = usePasswordToggle()
   const [data, setData] = useState({
     password: "",
-    conformPassword: "",
+    confirmPassword: "",
   })
 
   const { token } = useParams()
@@ -23,25 +26,25 @@ const ResetPassword = () => {
     setData({ ...data, [e.target.name]: e.target.value })
   }
   const handlerResetPass = async () => {
-    if (_.size(password) < 8)
-      return toast.error("Password must be at least 8 characters")
-
-    if (_.isEqual(password, conformPassword) === false)
-      return toast.error("Password did not match")
-    try {
-      const res = await axios.post(
-        `${HOST_API_URL}/auth/reset-password/${token}`,
-        {
-          password,
-        }
-      )
-      navigate("/login")
-      return toast.success(res.data.message)
-    } catch (err) {
-      err.response.data.message && toast.error(err.response.data.message)
+    if (
+      passwordValidation(password) &&
+      matchPasswordValidation(password, confirmPassword)
+    ) {
+      try {
+        const res = await axios.post(
+          `${HOST_API_URL}/auth/reset-password/${token}`,
+          {
+            password,
+          }
+        )
+        navigate("/login")
+        return toast.success(res.data.message)
+      } catch (err) {
+        err.response.data.message && toast.error(err.response.data.message)
+      }
     }
   }
-  const { password, conformPassword } = data
+  const { password, confirmPassword } = data
 
   return (
     <div className="login-page">
@@ -61,21 +64,18 @@ const ResetPassword = () => {
           required
         />
         <span className="password-toggle-icon">{toggleIcon}</span>
-        <Form.Text className="text-muted">
-          Password must be 8-20 characters
-        </Form.Text>
       </FloatingLabel>
 
       <FloatingLabel
         controlId="floatingConformPass"
-        label="Conform Password"
+        label="Confirm Password"
         className="mb-3"
       >
         <Form.Control
           type={inputType}
           placeholder="*"
-          name="conformPassword"
-          value={conformPassword}
+          name="confirmPassword"
+          value={confirmPassword}
           onChange={onChangeData}
           required
         />

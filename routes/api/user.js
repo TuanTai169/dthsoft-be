@@ -152,7 +152,7 @@ router.put(`/update-profile/:id`, verifyToken, async (req, res) => {
 // @decs CHANGE PASSWORD
 // @access Private
 router.put(`/change-password/:id`, verifyToken, async (req, res) => {
-  const { oldPassword, newPassword, conformPassword } = req.body
+  const { oldPassword, newPassword, confirmPassword } = req.body
 
   const userId = req.params.id
 
@@ -177,7 +177,7 @@ router.put(`/change-password/:id`, verifyToken, async (req, res) => {
         message: "Password must be at least 8 characters",
       })
 
-    if (_.isEqual(newPassword, conformPassword) === false)
+    if (_.isEqual(newPassword, confirmPassword) === false)
       return res.status(400).json({
         success: false,
         message: "Password did not match",

@@ -3,13 +3,13 @@ import { Form, Modal, Button, Row, Col, FloatingLabel } from "react-bootstrap"
 
 function DetailUserModal(props) {
   const { show, handlerModalClose, user } = props
-  const { name, email, phone, address, image, roles } = user
+  const { name, email, phone, address, roles } = user
 
   return (
     <>
       <Modal show={show} onHide={handlerModalClose} animation={false}>
         <Modal.Header closeButton>
-          <Modal.Title>View User </Modal.Title>
+          <Modal.Title>View {name} </Modal.Title>
         </Modal.Header>
         <Form>
           <Modal.Body>
@@ -76,22 +76,6 @@ function DetailUserModal(props) {
                 </FloatingLabel>
               </Col>
             </Row>
-            <Col>
-              <FloatingLabel
-                controlId="floatingImage"
-                label="Image"
-                className="mb-3"
-              >
-                <Form.Control
-                  type="text"
-                  name="image"
-                  placeholder="Image"
-                  value={image || ""}
-                  readOnly
-                  required
-                />
-              </FloatingLabel>
-            </Col>
             <FloatingLabel
               controlId="floatingAddress"
               label="Address"
@@ -108,7 +92,7 @@ function DetailUserModal(props) {
             </FloatingLabel>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="danger" onClick={handlerModalClose}>
+            <Button variant="secondary" onClick={handlerModalClose}>
               Close
             </Button>
           </Modal.Footer>

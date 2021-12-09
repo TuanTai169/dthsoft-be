@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux"
 import CustomerForm from "../FormBooking/CustomerForm"
 import { addBooking } from "../../redux/actions/bookingAction"
 import ViewAllRoomModal from "../Room/ViewAllRoomModal"
+import { numberValidation } from "../../utils/validation"
 
 const CheckInModal = (props) => {
   const { show, handlerModalClose, handlerParentModalClose, currentRoom } =
@@ -99,8 +100,13 @@ const CheckInModal = (props) => {
 
   const handlerSubmit = (e) => {
     e.preventDefault()
-    dispatch(addBooking(newBooking, "check-in"))
-    resetDataBooking()
+    if (
+      numberValidation(newBooking.discount) &&
+      numberValidation(newBooking.deposit)
+    ) {
+      dispatch(addBooking(newBooking, "check-in"))
+      resetDataBooking()
+    }
   }
 
   const closeViewRoomModal = () => setOpenViewRoom(false)
@@ -182,7 +188,7 @@ const CheckInModal = (props) => {
   }
 
   //Render room Table
-  const tableRoomHead = ["Number", "Floor", "Type", "Price (USD)", ""]
+  const tableRoomHead = ["No#", "Number", "Floor", "Type", "Price (USD)", ""]
   const renderRoomHead = tableRoomHead.map((item, index) => {
     return (
       <th key={index} style={{ fontWeight: 500 }}>
@@ -312,8 +318,9 @@ const CheckInModal = (props) => {
                   <tr>{renderRoomHead}</tr>
                 </thead>
                 <tbody>
-                  {rooms.map((room) => (
+                  {rooms.map((room, index) => (
                     <tr key={room._id}>
+                      <td>{index + 1}</td>
                       <td>{room.roomNumber}</td>
                       <td>{room.floor}</td>
                       <td>{room.roomType}</td>

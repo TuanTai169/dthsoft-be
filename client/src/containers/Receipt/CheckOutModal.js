@@ -12,6 +12,7 @@ import { checkOut } from "../../redux/actions/receiptAction"
 import PayPalModal from "./PayPalModal"
 import FullLoading from "./../../components/Common/FullLoading/FullLoading"
 import { updateBooking } from "./../../redux/actions/bookingAction"
+import { numberValidation } from "../../utils/validation"
 
 const CheckOutModal = (props) => {
   const { show, handlerModalClose, handlerParentModalClose, booking } = props
@@ -108,14 +109,15 @@ const CheckOutModal = (props) => {
   }
 
   const onSubmitCheckOut = () => {
-    console.log(editBooking)
-    dispatch(updateBooking(editBooking))
-    const newReceipt = {
-      ...receipt,
-      paidOut: parseInt(receipt.paidOut),
+    if (numberValidation(receipt.paidOut)) {
+      dispatch(updateBooking(editBooking))
+      const newReceipt = {
+        ...receipt,
+        paidOut: parseInt(receipt.paidOut),
+      }
+      setTimeout(() => dispatch(checkOut(newReceipt)), 3000)
+      resetData()
     }
-    setTimeout(() => dispatch(checkOut(newReceipt)), 3000)
-    resetData()
   }
   const resetData = () => {
     setReceipt({

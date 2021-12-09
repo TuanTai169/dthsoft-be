@@ -46,7 +46,7 @@ function ForgotPassword() {
         />
       </FloatingLabel>
       <Button className="login-btn-submit" onClick={sendConformEmail}>
-        <i className="bx bx-send"></i> Verify your email
+        Verify your email
       </Button>
       <div style={{ marginTop: "12px" }}>
         <Link to="/login">

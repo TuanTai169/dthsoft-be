@@ -44,7 +44,7 @@ function DetailServiceModal(props) {
             </FloatingLabel>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="danger" onClick={handlerModalClose}>
+            <Button variant="secondary" onClick={handlerModalClose}>
               Close
             </Button>
           </Modal.Footer>

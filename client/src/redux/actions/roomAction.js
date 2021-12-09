@@ -16,8 +16,8 @@ export const getAllRoom = () => {
         })
       }
     } catch (error) {
-      toast.error(error.response.data.message)
       dispatch({ type: types.SET_ROOM_ERROR })
+      error.response && toast.error(error.response.data.message)
     }
   }
 }
@@ -36,7 +36,7 @@ export const findRoom = (id) => {
       }
     } catch (error) {
       dispatch({ type: types.SET_ROOM_ERROR })
-      toast.error(error.response)
+      error.response && toast.error(error.response.data.message)
     }
   }
 }
@@ -58,7 +58,7 @@ export const addRoom = (newRoom) => {
     } catch (error) {
       console.log(error)
       dispatch({ type: types.SET_ROOM_LOADING, payload: false })
-      error.response.data && toast.error(error.response.data.message)
+      error.response && toast.error(error.response.data.message)
     }
   }
 }
@@ -81,7 +81,7 @@ export const deleteRoom = (id) => {
     } catch (error) {
       console.log(error)
       dispatch({ type: types.SET_ROOM_LOADING, payload: false })
-      error.response.data && toast.error(error.response.data.message)
+      error.response && toast.error(error.response.data.message)
     }
   }
 }
@@ -106,7 +106,7 @@ export const updateRoom = (updateRoom) => {
     } catch (error) {
       console.log(error)
       dispatch({ type: types.SET_ROOM_LOADING, payload: false })
-      error.response.data && toast.error(error.response.data.message)
+      error.response && toast.error(error.response.data.message)
     }
   }
 }
@@ -130,7 +130,7 @@ export const changeStatusRoom = (id, status) => {
     } catch (error) {
       console.log(error)
       dispatch({ type: types.SET_ROOM_LOADING, payload: false })
-      error.response.data && toast.error(error.response.data.message)
+      error.response && toast.error(error.response.data.message)
     }
   }
 }

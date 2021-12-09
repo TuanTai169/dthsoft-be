@@ -2,6 +2,12 @@ import React, { useState } from "react"
 import { Form, Modal, Button, FloatingLabel } from "react-bootstrap"
 import { useDispatch } from "react-redux"
 import { updateUser } from "../../redux/actions/userAction"
+import {
+  phoneValidation,
+  emailValidation,
+  nameValidation,
+  textValidation,
+} from "../../utils/validation"
 
 function EditUserModal(props) {
   const { show, handlerModalClose, user } = props
@@ -23,8 +29,15 @@ function EditUserModal(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    resetAddPostData()
-    dispatch(updateUser(editUser, user._id))
+    if (
+      nameValidation(editUser.name) &&
+      emailValidation(editUser.email) &&
+      phoneValidation(editUser.phone) &&
+      textValidation(editUser.address)
+    ) {
+      resetAddPostData()
+      dispatch(updateUser(editUser, user._id))
+    }
   }
 
   const resetAddPostData = () => {
@@ -44,7 +57,7 @@ function EditUserModal(props) {
     <div>
       <Modal show={show} onHide={resetAddPostData} animation={false}>
         <Modal.Header closeButton>
-          <Modal.Title>Edit User</Modal.Title>
+          <Modal.Title>Edit {name}</Modal.Title>
         </Modal.Header>
         <Form onSubmit={handleSubmit}>
           <Modal.Body>
@@ -111,7 +124,7 @@ function EditUserModal(props) {
             <Button variant="primary" type="submit">
               Save
             </Button>
-            <Button variant="danger" onClick={resetAddPostData}>
+            <Button variant="secondary" onClick={resetAddPostData}>
               Close
             </Button>
           </Modal.Footer>

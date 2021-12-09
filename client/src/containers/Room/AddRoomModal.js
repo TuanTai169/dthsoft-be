@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import { Form, Modal, Button, Row, Col } from "react-bootstrap"
 import { useDispatch } from "react-redux"
 import { addRoom } from "./../../redux/actions/roomAction"
+import { numberValidation } from "../../utils/validation"
 
 const AddRoomModal = (props) => {
   const { show, handlerModalClose } = props
@@ -19,8 +20,14 @@ const AddRoomModal = (props) => {
 
   const handlerSubmit = (e) => {
     e.preventDefault()
-    resetAddPostData()
-    dispatch(addRoom(newRoom))
+    if (
+      numberValidation(newRoom.floor) &&
+      numberValidation(newRoom.price) &&
+      numberValidation(newRoom.roomNumber)
+    ) {
+      resetAddPostData()
+      dispatch(addRoom(newRoom))
+    }
   }
   const resetAddPostData = () => {
     setNewRoom({
