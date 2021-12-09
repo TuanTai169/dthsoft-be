@@ -1,9 +1,18 @@
-import React from "react"
-import { Form, Modal, Button, Row, Col, FloatingLabel } from "react-bootstrap"
+import React, { useState } from "react"
+import {
+  Form,
+  Modal,
+  Button,
+  ButtonToolbar,
+  Row,
+  Col,
+  FloatingLabel,
+} from "react-bootstrap"
 import { convertStringToDate } from "../../utils/convertDateTime"
 import CustomerForm from "../FormBooking/CustomerForm"
 import RoomForm from "../FormBooking/RoomForm"
 import ServiceForm from "./../FormBooking/ServiceForm"
+import PrintBill from "./PrintBill"
 
 function DetailReceiptModal(props) {
   const { show, handlerModalClose, receipt } = props
@@ -11,6 +20,9 @@ function DetailReceiptModal(props) {
 
   const checkInDateConvert = convertStringToDate(booking.checkInDate)
   const checkOutDateConvert = convertStringToDate(booking.checkOutDate)
+
+  const [isViewOpen, setIsViewOpen] = useState(false)
+  const handlerModalViewClose = () => setIsViewOpen(false)
 
   //print
 
@@ -155,10 +167,17 @@ function DetailReceiptModal(props) {
             </Row>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="danger" onClick={() => window.print()}>
-              Print
-            </Button>
-            <Button variant="danger" onClick={handlerModalClose}>
+            <ButtonToolbar>
+              <Button variant="danger" onClick={() => setIsViewOpen(true)}>
+                Print
+              </Button>
+              <PrintBill
+                handlerModalClose={handlerModalViewClose}
+                show={isViewOpen}
+                receipt={receipt}
+              />
+            </ButtonToolbar>
+            <Button variant="secondary" onClick={handlerModalClose}>
               Close
             </Button>
           </Modal.Footer>

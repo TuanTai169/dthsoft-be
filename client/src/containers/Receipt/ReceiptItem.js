@@ -1,13 +1,12 @@
-import React, { useState } from "react"
-import { Button, ButtonToolbar } from "react-bootstrap"
-import DetailReceiptModal from "./DetailReceiptModal"
+import React, { useState } from "react";
+import { Button, ButtonToolbar } from "react-bootstrap";
+import DetailReceiptModal from "./DetailReceiptModal";
 
 const ReceiptItem = (props) => {
-  const { receipt } = props
+  const { receipt } = props;
 
-  const [isViewOpen, setIsViewOpen] = useState(false)
-
-  const handlerModalViewClose = () => setIsViewOpen(false)
+  const [isViewOpen, setIsViewOpen] = useState(false);
+  const handlerModalViewClose = () => setIsViewOpen(false);
 
   return (
     <>
@@ -32,7 +31,7 @@ const ReceiptItem = (props) => {
         </ButtonToolbar>
       </td>
     </>
-  )
-}
+  );
+};
 
-export default ReceiptItem
+export default ReceiptItem;

@@ -3,6 +3,13 @@ import { Form, Modal, Button, Row, Col, FloatingLabel } from "react-bootstrap"
 import { useDispatch } from "react-redux"
 import { updateCustomer } from "../../redux/actions/customerAction"
 import { convertBirthDate } from "../../utils/convertDateTime"
+import {
+  phoneValidation,
+  IdNumberValidation,
+  emailValidation,
+  nameValidation,
+  textValidation,
+} from "../../utils/validation"
 
 function EditCustomerModal(props) {
   const { show, handlerModalClose, customer } = props
@@ -28,9 +35,17 @@ function EditCustomerModal(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    resetAddPostData()
-    dispatch(updateCustomer(editCustomer, customer._id))
-    console.log(editCustomer)
+    if (
+      nameValidation(editCustomer.name) &&
+      emailValidation(editCustomer.email) &&
+      phoneValidation(editCustomer.phone) &&
+      IdNumberValidation(editCustomer.cmnd) &&
+      textValidation(editCustomer.address) &&
+      textValidation(editCustomer.note)
+    ) {
+      dispatch(updateCustomer(editCustomer, customer._id))
+      resetAddPostData()
+    }
   }
 
   const resetAddPostData = () => {
@@ -179,6 +194,7 @@ function EditCustomerModal(props) {
                 placeholder="Note"
                 value={note || ""}
                 onChange={onChangeNewForm}
+                required
               />
             </FloatingLabel>
           </Modal.Body>

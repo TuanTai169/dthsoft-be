@@ -7,7 +7,7 @@ import { HOST_API_URL } from "./../constants/api"
 export const getAllReceipt = () => {
   return async (dispatch) => {
     try {
-      //dispatch({ type: types.SET_RECEIPT_LOADING, payload: true })
+      dispatch({ type: types.SET_RECEIPT_LOADING, payload: true })
 
       const response = await axios.get(`${HOST_API_URL}/receipt`)
       if (response.data.success) {
@@ -15,12 +15,12 @@ export const getAllReceipt = () => {
           type: types.GET_ALL_RECEIPT,
           payload: response.data.receipts,
         })
-        // dispatch({ type: types.SET_RECEIPT_LOADING, payload: false })
+        dispatch({ type: types.SET_RECEIPT_LOADING, payload: false })
       }
     } catch (error) {
       console.log(error)
-      error.response.data && toast.error(error.response.data.message)
       dispatch({ type: types.SET_RECEIPT_ERROR })
+      error.response && toast.error(error.response.data.message)
     }
   }
 }
@@ -65,6 +65,7 @@ export const getStatistic = () => {
     } catch (error) {
       console.log(error)
       dispatch({ type: types.SET_RECEIPT_LOADING, payload: false })
+      error.response && toast.error(error.response.data.message)
     }
   }
 }

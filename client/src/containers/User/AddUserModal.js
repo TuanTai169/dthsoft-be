@@ -2,12 +2,21 @@ import React, { useState } from "react"
 import { Form, Modal, FloatingLabel, Button, Row, Col } from "react-bootstrap"
 import { useDispatch, useSelector } from "react-redux"
 import { addUser } from "../../redux/actions/userAction"
+import usePasswordToggle from "../../hooks/usePasswordToggle"
+import {
+  phoneValidation,
+  emailValidation,
+  passwordValidation,
+  nameValidation,
+  textValidation,
+} from "../../utils/validation"
 
 const AddUserModal = (props) => {
   const { show, handlerModalClose } = props
   const dispatch = useDispatch()
   const role = useSelector((state) => state.auth.user.roles)
 
+  const [inputType, toggleIcon] = usePasswordToggle()
   const [newUser, setNewUser] = useState({
     name: "",
     email: "",
@@ -25,9 +34,16 @@ const AddUserModal = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    resetAddPostData()
-
-    dispatch(addUser(newUser))
+    if (
+      nameValidation(newUser.name) &&
+      emailValidation(newUser.email) &&
+      passwordValidation(newUser.password) &&
+      phoneValidation(newUser.phone) &&
+      textValidation(newUser.address)
+    ) {
+      resetAddPostData()
+      dispatch(addUser(newUser))
+    }
   }
 
   const resetAddPostData = () => {
@@ -87,13 +103,14 @@ const AddUserModal = (props) => {
               className="mb-3"
             >
               <Form.Control
-                type="password"
-                placeholder="Password"
+                type={inputType}
+                placeholder="*"
                 name="password"
                 value={password || ""}
                 onChange={onChangeNewForm}
                 required
               />
+              <span className="password-toggle-icon">{toggleIcon}</span>
             </FloatingLabel>
             <Row>
               <Col>
@@ -153,7 +170,7 @@ const AddUserModal = (props) => {
             <Button variant="primary" type="submit">
               Save
             </Button>
-            <Button variant="danger" onClick={resetAddPostData}>
+            <Button variant="secondary" onClick={resetAddPostData}>
               Close
             </Button>
           </Modal.Footer>

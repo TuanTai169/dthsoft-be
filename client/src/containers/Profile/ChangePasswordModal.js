@@ -3,6 +3,10 @@ import { Form, Modal, Button, FloatingLabel } from "react-bootstrap"
 import { useDispatch } from "react-redux"
 import usePasswordToggle from "../../hooks/usePasswordToggle"
 import { changePassword } from "../../redux/actions/userAction"
+import {
+  passwordValidation,
+  matchPasswordValidation,
+} from "../../utils/validation"
 
 const ChangePasswordModal = (props) => {
   const { show, handlerModalClose, user } = props
@@ -12,7 +16,7 @@ const ChangePasswordModal = (props) => {
   const [editUser, setEditUser] = useState({
     oldPassword: "",
     newPassword: "",
-    conformPassword: "",
+    confirmPassword: "",
   })
 
   const onChangeNewForm = (event) =>
@@ -23,8 +27,13 @@ const ChangePasswordModal = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    dispatch(changePassword(editUser, user._id))
-    resetAddPostData()
+    if (
+      passwordValidation(editUser.newPassword) &&
+      matchPasswordValidation(editUser.newPassword, editUser.confirmPassword)
+    ) {
+      dispatch(changePassword(editUser, user._id))
+      resetAddPostData()
+    }
   }
 
   const resetAddPostData = () => {
@@ -32,11 +41,11 @@ const ChangePasswordModal = (props) => {
     setEditUser({
       oldPassword: "",
       newPassword: "",
-      conformPassword: "",
+      confirmPassword: "",
     })
   }
 
-  const { oldPassword, newPassword, conformPassword } = editUser
+  const { oldPassword, newPassword, confirmPassword } = editUser
 
   return (
     <div>
@@ -47,7 +56,7 @@ const ChangePasswordModal = (props) => {
         <Form onSubmit={handleSubmit}>
           <Modal.Body>
             <FloatingLabel
-              controlId="floatingPass"
+              controlId="floatingOldPass"
               label="Password"
               className="mb-3"
             >
@@ -62,7 +71,7 @@ const ChangePasswordModal = (props) => {
               <span className="password-toggle-icon">{toggleIcon}</span>
             </FloatingLabel>
             <FloatingLabel
-              controlId="floatingPass"
+              controlId="floatingNewPass"
               label="Password"
               className="mb-3"
             >
@@ -74,21 +83,18 @@ const ChangePasswordModal = (props) => {
                 onChange={onChangeNewForm}
                 required
               />
-              <Form.Text className="text-muted">
-                Password must be 8-20 characters
-              </Form.Text>
             </FloatingLabel>
 
             <FloatingLabel
               controlId="floatingConformPass"
-              label="Conform Password"
+              label="Confirm Password"
               className="mb-3"
             >
               <Form.Control
                 type={inputType}
                 placeholder="*"
-                name="conformPassword"
-                value={conformPassword}
+                name="confirmPassword"
+                value={confirmPassword}
                 onChange={onChangeNewForm}
                 required
               />
