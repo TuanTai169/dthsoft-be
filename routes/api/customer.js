@@ -118,7 +118,7 @@ router.put("/update/:id", verifyToken, async (req, res) => {
     req.body
   const cusId = req.params.id
   //Validation
-  const { error } = customerValidation(req.body)
+  const { error } = customerValidation({ name, email, phone, cmnd })
   if (error)
     return res.status(400).json({
       success: false,
