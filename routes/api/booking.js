@@ -35,9 +35,6 @@ router.post("/:book", verifyToken, async (req, res) => {
     //Calculate diffInDays
     const hourDiff = toolRoom.getNumberOfHour(checkInDate, checkOutDate)
 
-    // //Calculate diffInDays
-    // const diffInDays = toolRoom.getNumberOfDays(checkInDate, checkOutDate)
-
     //Calculate room's price
     const roomCharge = await toolRoom.calculateRoomCharge(rooms)
 
