@@ -95,6 +95,14 @@ const BookingSchema = new Schema(
       type: Number,
       default: 0,
     },
+    earlyCheckIn: {
+      type: Number,
+      default: 0,
+    },
+    lateCheckOut: {
+      type: Number,
+      default: 0,
+    },
     totalPrice: {
       type: Number,
       default: 0,
