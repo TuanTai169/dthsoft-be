@@ -20,8 +20,9 @@ router.post("/:book", verifyToken, async (req, res) => {
 
   const userId = req.userId
   try {
-    // Check status room
-    const checkStatus = await toolRoom.checkStatusRoom(rooms)
+    // Check booking exist
+    const checkStatus = await toolRoom.checkStatusRoom(checkInDate, rooms)
+
     if (checkStatus === false)
       return res.status(400).json({
         success: false,
@@ -32,12 +33,32 @@ router.post("/:book", verifyToken, async (req, res) => {
     const code = "DTH" + Date.now().toString()
 
     //Calculate diffInDays
-    const diffInDays = toolRoom.getNumberOfDays(checkInDate, checkOutDate)
+    const hourDiff = toolRoom.getNumberOfHour(checkInDate, checkOutDate)
 
-    // //Calculate room's price
+    // //Calculate diffInDays
+    // const diffInDays = toolRoom.getNumberOfDays(checkInDate, checkOutDate)
+
+    //Calculate room's price
     const roomCharge = await toolRoom.calculateRoomCharge(rooms)
 
-    const totalRoomCharge = roomCharge * diffInDays
+    // Calculate price
+    let totalRoomCharge
+    let earlyCheckIn
+    let lateCheckOut
+    if (hourDiff < 24) {
+      totalRoomCharge = await toolRoom.priceInHour(hourDiff, roomCharge)
+    } else {
+      const early = await toolRoom.earlyCheckIn(checkInDate, roomCharge)
+      const late = await toolRoom.lateCheckOut(checkOutDate, roomCharge)
+
+      earlyCheckIn = early.price
+      lateCheckOut = late.price
+      totalRoomCharge =
+        ((hourDiff - early.hour - late.hour) * roomCharge) / 24 +
+        earlyCheckIn +
+        lateCheckOut
+    }
+
     // //Calculate service's price
     const serviceCharge = await toolService.calculateServiceCharge(services)
 
@@ -57,7 +78,9 @@ router.post("/:book", verifyToken, async (req, res) => {
       customer,
       checkInDate,
       checkOutDate,
-      roomCharge: totalRoomCharge,
+      earlyCheckIn,
+      lateCheckOut,
+      roomCharge: Math.round(totalRoomCharge),
       services,
       serviceCharge: serviceCharge,
       deposit,
@@ -150,45 +173,45 @@ router.get("/:id", verifyToken, async (req, res) => {
   }
 })
 
-// @route PUT api/booking/
-// @decs Change from BOOKING to CHECK IN
-// @access Private
-router.put(`/change-to-check-in/:id`, verifyToken, async (req, res) => {
-  const userId = req.userId
-  const bookingID = req.params.id
-  try {
-    const booking = await Booking.findById(bookingID)
-    const rooms = booking.rooms
-    //All good
-    let updateBooking = {
-      status: "CHECK IN",
-      updateBy: userId,
-    }
-    const bookingUpdateCondition = { _id: req.params.id }
+// // @route PUT api/booking/
+// // @decs Change from BOOKING to CHECK IN
+// // @access Private
+// router.put(`/change-to-check-in/:id`, verifyToken, async (req, res) => {
+//   const userId = req.userId
+//   const bookingID = req.params.id
+//   try {
+//     const booking = await Booking.findById(bookingID)
+//     const rooms = booking.rooms
+//     //All good
+//     let updateBooking = {
+//       status: "CHECK IN",
+//       updateBy: userId,
+//     }
+//     const bookingUpdateCondition = { _id: req.params.id }
 
-    let updatedBooking = await Booking.findOneAndUpdate(
-      bookingUpdateCondition,
-      updateBooking,
-      {
-        new: true,
-      }
-    )
-    //Change STATUS ROOM
-    await toolRoom.changeStatusArrayRooms(rooms, "OCCUPIED", userId)
+//     let updatedBooking = await Booking.findOneAndUpdate(
+//       bookingUpdateCondition,
+//       updateBooking,
+//       {
+//         new: true,
+//       }
+//     )
+//     //Change STATUS ROOM
+//     await toolRoom.changeStatusArrayRooms(rooms, "OCCUPIED", userId)
 
-    res.json({
-      success: true,
-      message: "Booking updated successfully",
-      updatedBooking,
-    })
-  } catch (error) {
-    console.log(error)
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-    })
-  }
-})
+//     res.json({
+//       success: true,
+//       message: "Booking updated successfully",
+//       updatedBooking,
+//     })
+//   } catch (error) {
+//     console.log(error)
+//     res.status(500).json({
+//       success: false,
+//       message: "Internal server error",
+//     })
+//   }
+// })
 
 // @route PUT api/booking/
 // @decs UPDATE booking
@@ -208,11 +231,28 @@ router.put(`/update/:id`, verifyToken, async (req, res) => {
   const userId = req.userId
   try {
     //Calculate diffInDays
-    const diffInDays = toolRoom.getNumberOfDays(checkInDate, checkOutDate)
+    const hourDiff = toolRoom.getNumberOfHour(checkInDate, checkOutDate)
 
     // //Calculate room's price
     const roomCharge = await toolRoom.calculateRoomCharge(rooms)
-    const totalRoomCharge = roomCharge * diffInDays
+
+    // Calculate price
+    let totalRoomCharge
+    let earlyCheckIn
+    let lateCheckOut
+    if (hourDiff < 24) {
+      totalRoomCharge = await toolRoom.priceInHour(hourDiff, roomCharge)
+    } else {
+      const early = await toolRoom.earlyCheckIn(checkInDate, roomCharge)
+      const late = await toolRoom.lateCheckOut(checkOutDate, roomCharge)
+
+      earlyCheckIn = early.price
+      lateCheckOut = late.price
+      totalRoomCharge =
+        ((hourDiff - early.hour - late.hour) * roomCharge) / 24 +
+        earlyCheckIn +
+        lateCheckOut
+    }
 
     // //Calculate service's price
     const serviceCharge = await toolService.calculateServiceCharge(services)
@@ -230,7 +270,9 @@ router.put(`/update/:id`, verifyToken, async (req, res) => {
       customer,
       checkInDate,
       checkOutDate,
-      roomCharge: totalRoomCharge,
+      earlyCheckIn,
+      lateCheckOut,
+      roomCharge: Math.round(totalRoomCharge),
       services,
       serviceCharge: serviceCharge,
       deposit,
@@ -292,11 +334,28 @@ router.put(
       )
 
       //Calculate diffInDays
-      const diffInDays = toolRoom.getNumberOfDays(checkInDate, checkOutDate)
+      const hourDiff = toolRoom.getNumberOfHour(checkInDate, checkOutDate)
 
       //Calculate room's price
       const roomCharge = await toolRoom.calculateRoomCharge(newRooms)
-      const totalRoomCharge = roomCharge * diffInDays
+
+      // Calculate price
+      let totalRoomCharge
+      let earlyCheckIn
+      let lateCheckOut
+      if (hourDiff < 24) {
+        totalRoomCharge = await toolRoom.priceInHour(hourDiff, roomCharge)
+      } else {
+        const early = await toolRoom.earlyCheckIn(checkInDate, roomCharge)
+        const late = await toolRoom.lateCheckOut(checkOutDate, roomCharge)
+
+        earlyCheckIn = early.price
+        lateCheckOut = late.price
+        totalRoomCharge =
+          ((hourDiff - early.hour - late.hour) * roomCharge) / 24 +
+          earlyCheckIn +
+          lateCheckOut
+      }
 
       //Price
       const VAT = 10
@@ -310,7 +369,9 @@ router.put(
 
       let updateBooking = {
         rooms: newRooms,
-        roomCharge: totalRoomCharge,
+        earlyCheckIn,
+        lateCheckOut,
+        roomCharge: Math.round(totalRoomCharge),
         totalPrice,
         updateBy: userId,
       }
