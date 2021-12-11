@@ -27,6 +27,8 @@ const Rooms = () => {
   const arrayRoom = Object.values(roomGroupedByFloor)
   const arrayStatusRoom = Object.entries(roomGroupedByStatus)
 
+  const statusArray = arrayStatusRoom.filter((item) => item[0] !== "BOOKING")
+
   //Close Add Modal
   const handlerCloseAddModal = () => setIsOpenAddModal(false)
   const handlerCloseBookingModal = () => seIsOpenBookingModal(false)
@@ -59,7 +61,7 @@ const Rooms = () => {
                   {rooms.length}
                 </Button>
               </OverlayTrigger>
-              {arrayStatusRoom.map((item, index) => (
+              {statusArray.map((item, index) => (
                 <OverlayTrigger
                   key={index}
                   overlay={<Tooltip id="tooltip-disabled">{item[0]}</Tooltip>}
@@ -70,8 +72,6 @@ const Rooms = () => {
                         ? "outline-primary"
                         : item[0] === "CLEANING"
                         ? "outline-danger"
-                        : item[0] === "BOOKING"
-                        ? "outline-info"
                         : item[0] === "FIXING"
                         ? "outline-secondary"
                         : "outline-success"
@@ -86,7 +86,6 @@ const Rooms = () => {
                     {item[0] === "READY" && (
                       <i className="bx bxs-check-circle"></i>
                     )}
-                    {item[0] === "BOOKING" && <i className="bx bxs-user-x"></i>}
                     {item[0] === "OCCUPIED" && (
                       <i className="bx bxs-user-check"></i>
                     )}

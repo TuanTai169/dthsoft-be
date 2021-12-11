@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { Form, Modal, Button, FloatingLabel } from "react-bootstrap"
 import { useDispatch } from "react-redux"
 import { updateService } from "./../../redux/actions/serviceAction"
@@ -9,8 +9,6 @@ const EditServiceModal = (props) => {
   const dispatch = useDispatch()
 
   const [editService, setEditService] = useState(service)
-
-  useEffect(() => setEditService(service), [service])
 
   const onChangeNewForm = (event) =>
     setEditService({

@@ -8,9 +8,7 @@ exports.changeStatusArrayRooms = async (rooms, status, userId) => {
     let statusRoomUpdate
     const listRoom = await getAllInfoRoom(rooms)
     for (const room of listRoom) {
-      if (status === "CLEANING") {
-        statusRoomUpdate = status
-      } else if (room.status === "OCCUPIED") {
+      if (room.status === "OCCUPIED") {
         statusRoomUpdate = "OCCUPIED"
       } else if (room.status === "BOOKING" && status === "OCCUPIED") {
         statusRoomUpdate = "OCCUPIED"
@@ -134,7 +132,7 @@ exports.lateCheckOut = (checkOutDate, roomCharge) => {
 
   const start = moment(checkOutDate, "YYYY-MM-DD").set({
     hours: 12,
-    minutes: 00,
+    minutes: 0,
   })
   const end = moment(checkOutDate, "YYYY-MM-DD HH:mm")
 

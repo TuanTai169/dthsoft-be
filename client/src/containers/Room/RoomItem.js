@@ -21,8 +21,6 @@ const RoomItem = (props) => {
               ? "yellow"
               : status === "FIXING"
               ? "#ccc"
-              : status === "BOOKING"
-              ? "#0FF"
               : "#fff",
         }}
         onClick={() => {

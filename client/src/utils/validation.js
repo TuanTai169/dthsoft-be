@@ -1,5 +1,6 @@
 import { toast } from "react-toastify"
 import _ from "lodash"
+import moment from "moment"
 
 export const phoneValidation = (phone) => {
   if (phone.length !== 10) {
@@ -82,4 +83,48 @@ export const matchPasswordValidation = (password, confirmPassword) => {
   }
 
   return true
+}
+
+export const checkStatusRoom = (rooms, bookings) => {
+  let excludeDay = []
+  let listBooking = []
+
+  for (const room of rooms) {
+    const roomId = room._id
+    for (const booking of bookings) {
+      const item = booking.rooms.find((item) => item._id === roomId)
+      if (item) {
+        listBooking.push(booking)
+      }
+    }
+  }
+
+  for (const book of listBooking) {
+    const checkIn = new Date(book.checkInDate)
+    const checkOut = new Date(book.checkOutDate)
+
+    const dates = getDates(checkIn, checkOut)
+    dates.forEach((item) => {
+      const day = moment(item).format("YYYY-MM-DD")
+      if (!excludeDay.includes(day)) {
+        excludeDay.push(day)
+      }
+    })
+  }
+  return excludeDay
+}
+
+function getDates(startDate, endDate) {
+  const dates = []
+  let currentDate = startDate
+  const addDays = function (days) {
+    const date = new Date(this.valueOf())
+    date.setDate(date.getDate() + days)
+    return date
+  }
+  while (currentDate <= endDate) {
+    dates.push(currentDate)
+    currentDate = addDays.call(currentDate, 1)
+  }
+  return dates
 }

@@ -5,10 +5,8 @@ import { useDispatch } from "react-redux"
 import BookingModal from "../Booking/BookingModal"
 import CheckInModal from "../Booking/CheckInModal"
 import ViewAllRoomModal from "./ViewAllRoomModal"
-import { changeBookingToCheckIn } from "../../redux/actions/bookingAction"
 import DialogChange from "../../components/Dialog/DialogChange"
 import CheckOutModal from "../Receipt/CheckOutModal"
-import EditBookingModal from "./../Booking/EditBookingModal"
 
 const RoomActionButton = (props) => {
   const dispatch = useDispatch()
@@ -19,7 +17,6 @@ const RoomActionButton = (props) => {
   const [isOpenCheckIn, setIsOpenCheckIn] = useState(false)
   const [isOpenCheckOut, setIsOpenCheckOut] = useState(false)
   const [isOpenViewRoom, setIsOpenViewRoom] = useState(false)
-  const [isOpenEditBooking, setIsOpenEditBooking] = useState(false)
 
   const [conformDialog, setConformDialog] = useState({
     isOpenDialog: false,
@@ -31,7 +28,6 @@ const RoomActionButton = (props) => {
   const handlerCloseCheckInModal = () => setIsOpenCheckIn(false)
   const handlerCloseCheckOutModal = () => setIsOpenCheckOut(false)
   const handlerCloseViewRoomModal = () => setIsOpenViewRoom(false)
-  const handlerCloseEditBookingModal = () => setIsOpenEditBooking(false)
 
   const { status, _id } = room
   const bookingId = booking.map((item) => item._id)
@@ -40,10 +36,7 @@ const RoomActionButton = (props) => {
     dispatch(changeStatusRoom(id, status))
     handlerModalClose()
   }
-  const changeFromBookingToCheckIn = () => {
-    dispatch(changeBookingToCheckIn(bookingId.toString()))
-    handlerModalClose()
-  }
+
   return (
     <>
       <ButtonToolbar>
@@ -70,7 +63,7 @@ const RoomActionButton = (props) => {
           </Button>
         )}
         {/* CHANGE ROOM */}
-        {status === "OCCUPIED" && (
+        {/* {status === "OCCUPIED" && (
           <Button
             variant="warning"
             style={{ marginLeft: "4px", color: "#fff" }}
@@ -79,9 +72,9 @@ const RoomActionButton = (props) => {
             <i className="bx bx-transfer-alt"></i>
             <span>&ensp; Change Room</span>
           </Button>
-        )}
+        )} */}
         {/* BOOKING */}
-        {status === "READY" && (
+        {status !== "CLEANING" && status !== "FIXING" && (
           <>
             <Button
               variant="info"
@@ -99,7 +92,9 @@ const RoomActionButton = (props) => {
             />
           </>
         )}
-        {status === "READY" && (
+
+        {/* CHECK IN */}
+        {status !== "OCCUPIED" && status !== "CLEANING" && status !== "FIXING" && (
           <>
             <Button
               variant="primary"
@@ -118,25 +113,8 @@ const RoomActionButton = (props) => {
           </>
         )}
 
-        {status === "BOOKING" && (
-          <Button
-            variant="primary"
-            style={{ marginLeft: "4px" }}
-            onClick={() =>
-              setConformDialog({
-                isOpenDialog: true,
-                title: "Change to Check in",
-                message: "Are you sure change to check in from  this booking?",
-                onConform: () => changeFromBookingToCheckIn(),
-              })
-            }
-          >
-            <i className="bx bxs-user-check"></i>
-            <span>&ensp;Check in</span>
-          </Button>
-        )}
         {/* CHECK OUT */}
-        {status === "OCCUPIED" && (
+        {/* {status === "OCCUPIED" && (
           <>
             <Button
               variant="success"
@@ -153,7 +131,7 @@ const RoomActionButton = (props) => {
               booking={booking}
             />
           </>
-        )}
+        )} */}
         {status === "OCCUPIED" && (
           <>
             <Button

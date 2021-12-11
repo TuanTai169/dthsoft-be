@@ -25,12 +25,14 @@ const InfoRoomModal = (props) => {
   const dispatch = useDispatch()
 
   const booking = bookings.filter((item) =>
-    item.rooms.find((room) => room.roomNumber === roomNumber)
+    item.rooms.find(
+      (room) => room.roomNumber === roomNumber && room.status === "OCCUPIED"
+    )
   )
 
-  const getBooking = booking.map((item) => item)
+  const getBooking = booking.filter((item) => item.status === "CHECK IN")
 
-  const renderTable = booking.map((item) => {
+  const renderTable = getBooking.map((item) => {
     const {
       code,
       customer,
