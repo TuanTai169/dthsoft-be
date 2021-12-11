@@ -1,4 +1,4 @@
-import "./Profile.css"
+import "./profile.css"
 import React, { Fragment, useEffect } from "react"
 import { Button, Row, Col } from "react-bootstrap"
 import { useDispatch, useSelector } from "react-redux"
