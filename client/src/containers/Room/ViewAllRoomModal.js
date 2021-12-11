@@ -100,14 +100,13 @@ const ViewAllRoomModal = (props) => {
                           ? "yellow"
                           : room.status === "FIXING"
                           ? "#ccc"
-                          : room.status === "BOOKING"
-                          ? "#0FF"
                           : "#fff",
                     }}
                     onClick={(e) => {
-                      room.status === "READY" &&
+                      ;(room.status === "READY" || room.status === "BOOKING") &&
                         room._id !== roomChoose._id &&
-                        roomChoose.status === "READY" &&
+                        (roomChoose.status === "READY" ||
+                          roomChoose.status === "BOOKING") &&
                         selectedRoom(e, room)
                       room.status === "READY" &&
                         room._id !== roomChoose._id &&
@@ -143,7 +142,8 @@ const ViewAllRoomModal = (props) => {
               Change
             </Button>
           )}
-          {roomChoose.status === "READY" && (
+          {(roomChoose.status === "READY" ||
+            roomChoose.status === "BOOKING") && (
             <Button variant="danger" onClick={submitArrayRoom}>
               Save
             </Button>

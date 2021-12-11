@@ -2,6 +2,11 @@ import React, { useState } from "react"
 import { Form, Modal, Button, FloatingLabel } from "react-bootstrap"
 import { useDispatch } from "react-redux"
 import { updateProfile } from "../../redux/actions/userAction"
+import {
+  phoneValidation,
+  nameValidation,
+  textValidation,
+} from "../../utils/validation"
 
 function EditProfileModal(props) {
   const { show, handlerModalClose, user } = props
@@ -21,8 +26,14 @@ function EditProfileModal(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    resetAddPostData()
-    dispatch(updateProfile(editUser, user._id))
+    if (
+      nameValidation(editUser.name) &&
+      phoneValidation(editUser.phone) &&
+      textValidation(editUser.address)
+    ) {
+      resetAddPostData()
+      dispatch(updateProfile(editUser, user._id))
+    }
   }
 
   const resetAddPostData = () => {
