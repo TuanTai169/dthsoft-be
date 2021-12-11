@@ -43,8 +43,8 @@ router.post("/:book", verifyToken, async (req, res) => {
 
     // Calculate price
     let totalRoomCharge
-    let earlyCheckIn
-    let lateCheckOut
+    let earlyCheckIn = 0
+    let lateCheckOut = 0
     if (hourDiff < 24) {
       totalRoomCharge = await toolRoom.priceInHour(hourDiff, roomCharge)
     } else {
