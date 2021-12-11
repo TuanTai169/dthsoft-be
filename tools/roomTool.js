@@ -9,7 +9,11 @@ exports.changeStatusArrayRooms = async (rooms, status, userId) => {
     const listRoom = await getAllInfoRoom(rooms)
     for (const room of listRoom) {
       if (room.status === "OCCUPIED") {
-        statusRoomUpdate = "OCCUPIED"
+        if (status === "CLEANING") {
+          statusRoomUpdate = "CLEANING"
+        } else {
+          statusRoomUpdate = "OCCUPIED"
+        }
       } else if (room.status === "BOOKING" && status === "OCCUPIED") {
         statusRoomUpdate = "OCCUPIED"
       } else {

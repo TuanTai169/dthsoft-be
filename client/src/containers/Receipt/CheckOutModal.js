@@ -53,6 +53,8 @@ const CheckOutModal = (props) => {
   })
 
   const [sumPrice, setSumPrice] = useState(totalPrice)
+  const [roomPrice, setRoomPrice] = useState(roomCharge)
+  const [servicePrice, setServicePrice] = useState(serviceCharge)
 
   const dispatch = useDispatch()
   const [receipt, setReceipt] = useState({
@@ -69,16 +71,19 @@ const CheckOutModal = (props) => {
     const calculatorPrice = () => {
       const RoomCharge = totalRoomCharge(rooms, checkInDate, checkOutDate)
 
+      setRoomPrice(RoomCharge)
       const sumServicesPrice = services
         .map((item) => item.price)
         .reduce((prev, curr) => prev + curr, 0)
 
+      setServicePrice(sumServicesPrice)
       const VAT = 10
       return (
         (RoomCharge + sumServicesPrice) * (1 + VAT / 100 - discount / 100) -
         deposit
       ).toFixed()
     }
+
     setSumPrice(calculatorPrice)
   }, [editBooking, rooms, services])
 
@@ -260,7 +265,7 @@ const CheckOutModal = (props) => {
                     <h5>Room</h5>
                     <p>
                       Price (USD):{" "}
-                      <strong style={{ color: "red" }}>{roomCharge}</strong>
+                      <strong style={{ color: "red" }}>{roomPrice}</strong>
                     </p>
                   </div>
                   <RoomForm rooms={rooms} />
@@ -272,7 +277,7 @@ const CheckOutModal = (props) => {
                     <h5>Service</h5>
                     <p>
                       Price (USD):{" "}
-                      <strong style={{ color: "red" }}>{serviceCharge}</strong>
+                      <strong style={{ color: "red" }}>{servicePrice}</strong>
                     </p>
                   </div>
                   <ServiceForm services={services} />
