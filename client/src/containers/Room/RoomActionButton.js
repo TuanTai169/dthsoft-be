@@ -41,7 +41,7 @@ const RoomActionButton = (props) => {
     <>
       <ButtonToolbar>
         {/* CHECK OUT */}
-        {status !== "FIXING" && status !== "OCCUPIED" && status !== "BOOKING" && (
+        {status !== "FIXING" && status !== "OCCUPIED" && (
           <Button
             variant="secondary"
             style={{ marginLeft: "4px" }}

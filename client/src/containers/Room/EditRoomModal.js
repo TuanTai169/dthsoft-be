@@ -23,13 +23,13 @@ const EditRoomModal = (props) => {
       numberValidation(editRoom.roomNumber)
     ) {
       resetEditPostData()
+      handlerModalParentClose()
       dispatch(updateRoom(editRoom))
     }
   }
 
   const resetEditPostData = () => {
     handlerEditModalClose()
-    handlerModalParentClose()
     setEditRoom(room)
   }
   const { roomNumber, floor, price, roomType } = editRoom

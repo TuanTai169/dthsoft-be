@@ -1,4 +1,4 @@
-import "./profile.css"
+import "./Profile.css"
 import React, { Fragment, useEffect } from "react"
 import { Button, Row, Col } from "react-bootstrap"
 import { useDispatch, useSelector } from "react-redux"
@@ -83,6 +83,7 @@ const Profile = () => {
                     type="file"
                     name="file"
                     id="avatar-upload"
+                    style={{ cursor: "pointer" }}
                     onChange={changeAvatar}
                   />
                   <label className="upload-label" htmlFor="avatar-upload">
