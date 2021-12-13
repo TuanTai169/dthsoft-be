@@ -2,13 +2,14 @@ import React, { useState } from "react"
 import { Button, ButtonToolbar } from "react-bootstrap"
 import EditServiceModal from "./EditServiceModal"
 import { deleteService } from "../../redux/actions/serviceAction"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import DetailServiceModal from "./DetailServiceModal"
 import DialogDelete from "../../components/Dialog/DialogDelete"
 
 const ServiceItem = (props) => {
-  const { service, role } = props
+  const { service } = props
   const dispatch = useDispatch()
+  const role = useSelector((state) => state.auth.user.roles)
 
   const [isViewOpen, setIsViewOpen] = useState(false)
   const [isEditOpen, setIsEditOpen] = useState(false)

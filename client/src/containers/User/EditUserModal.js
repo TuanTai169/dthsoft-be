@@ -1,6 +1,6 @@
 import React, { useState } from "react"
-import { Form, Modal, Button, FloatingLabel } from "react-bootstrap"
-import { useDispatch } from "react-redux"
+import { Form, Modal, Button, FloatingLabel, Row, Col } from "react-bootstrap"
+import { useDispatch, useSelector } from "react-redux"
 import { updateUser } from "../../redux/actions/userAction"
 import {
   phoneValidation,
@@ -11,7 +11,9 @@ import {
 
 function EditUserModal(props) {
   const { show, handlerModalClose, user } = props
+
   const dispatch = useDispatch()
+  const role = useSelector((state) => state.auth.user.roles)
 
   const [editUser, setEditUser] = useState({
     name: user.name,
@@ -19,6 +21,7 @@ function EditUserModal(props) {
     phone: user.phone,
     address: user.address,
     image: user.image,
+    roles: user.roles,
   })
 
   const onChangeNewForm = (event) =>
@@ -48,10 +51,11 @@ function EditUserModal(props) {
       phone: user.phone,
       address: user.address,
       image: user.image,
+      roles: user.roles,
     })
   }
 
-  const { name, email, phone, address } = editUser
+  const { name, email, phone, address, roles } = editUser
 
   return (
     <div>
@@ -91,20 +95,44 @@ function EditUserModal(props) {
               />
             </FloatingLabel>
 
-            <FloatingLabel
-              controlId="floatingPhone"
-              label="Phone"
-              className="mb-3"
-            >
-              <Form.Control
-                type="text"
-                placeholder="Phone Number"
-                name="phone"
-                value={phone || ""}
-                onChange={onChangeNewForm}
-                required
-              />
-            </FloatingLabel>
+            <Row>
+              <Col>
+                <FloatingLabel
+                  controlId="floatingPhone"
+                  label="Phone"
+                  className="mb-3"
+                >
+                  <Form.Control
+                    type="text"
+                    placeholder="Phone Number"
+                    name="phone"
+                    value={phone || ""}
+                    onChange={onChangeNewForm}
+                    required
+                  />
+                </FloatingLabel>
+              </Col>
+              <Col>
+                <FloatingLabel
+                  controlId="floatingRoles"
+                  label="Roles"
+                  className="mb-3"
+                >
+                  <Form.Select
+                    name="roles"
+                    value={roles || ""}
+                    onChange={onChangeNewForm}
+                    required
+                  >
+                    <option value="">--</option>
+                    {role === "ADMIN" && <option value="ADMIN">ADMIN</option>}
+                    <option value="MANAGER">MANAGER</option>
+                    <option value="EMPLOYEE">EMPLOYEE</option>
+                  </Form.Select>
+                </FloatingLabel>
+              </Col>
+            </Row>
+
             <FloatingLabel
               controlId="floatingAddress"
               label="Address"

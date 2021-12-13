@@ -204,7 +204,7 @@ const CheckInModal = (props) => {
     <>
       <Modal show={show} onHide={resetDataBooking} animation={false} size="lg">
         <Modal.Header closeButton>
-          <Modal.Title>New Booking</Modal.Title>
+          <Modal.Title>New CheckIn</Modal.Title>
         </Modal.Header>
         <Form onSubmit={handlerSubmit}>
           <Modal.Body>
