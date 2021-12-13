@@ -71,7 +71,7 @@ const CheckOutModal = (props) => {
     const calculatorPrice = () => {
       const RoomCharge = totalRoomCharge(rooms, checkInDate, checkOutDate)
 
-      setRoomPrice(RoomCharge)
+      setRoomPrice(Math.round(RoomCharge))
       const sumServicesPrice = services
         .map((item) => item.price)
         .reduce((prev, curr) => prev + curr, 0)

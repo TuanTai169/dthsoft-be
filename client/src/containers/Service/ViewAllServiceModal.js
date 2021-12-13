@@ -40,7 +40,7 @@ const ViewAllServiceModal = (props) => {
         dialogClassName="modal-80w"
       >
         <Modal.Header closeButton>
-          <Modal.Title>List Service</Modal.Title>
+          <Modal.Title>Add a service</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className="row">

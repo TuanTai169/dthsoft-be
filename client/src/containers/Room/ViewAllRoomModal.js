@@ -79,7 +79,7 @@ const ViewAllRoomModal = (props) => {
         dialogClassName="modal-60w"
       >
         <Modal.Header closeButton>
-          <Modal.Title>List Room</Modal.Title>
+          <Modal.Title>Add a room</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {arrayRoom.map((floor, index) => (

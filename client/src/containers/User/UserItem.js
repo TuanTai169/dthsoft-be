@@ -1,29 +1,29 @@
-import React, { useState } from "react";
-import { Button, ButtonToolbar } from "react-bootstrap";
-import { useDispatch } from "react-redux";
-import DialogDelete from "../../components/Dialog/DialogDelete";
-import DetailUserModal from "./DetailUserModal";
-import EditUserModal from "./EditUserModal";
-import { deleteUser } from "../../redux/actions/userAction";
-
+import React, { useState } from "react"
+import { Button, ButtonToolbar } from "react-bootstrap"
+import { useDispatch, useSelector } from "react-redux"
+import DialogDelete from "../../components/Dialog/DialogDelete"
+import DetailUserModal from "./DetailUserModal"
+import EditUserModal from "./EditUserModal"
+import { deleteUser } from "../../redux/actions/userAction"
 
 const UserItem = (props) => {
-  const { user, roles } = props;
-  const dispatch = useDispatch();
+  const { user } = props
+  const dispatch = useDispatch()
+  const role = useSelector((state) => state.auth.user.roles)
 
-  const [isViewOpen, setIsViewOpen] = useState(false);
-  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isViewOpen, setIsViewOpen] = useState(false)
+  const [isEditOpen, setIsEditOpen] = useState(false)
   const [conformDialog, setConformDialog] = useState({
     isOpenDialog: false,
     title: "",
     message: "",
-  });
+  })
 
-  const handlerModalViewClose = () => setIsViewOpen(false);
-  const handlerModalEditClose = () => setIsEditOpen(false);
+  const handlerModalViewClose = () => setIsViewOpen(false)
+  const handlerModalEditClose = () => setIsEditOpen(false)
 
   const handlerDelete = (id) => {
-  dispatch(deleteUser(id))
+    dispatch(deleteUser(id))
   }
 
   return (
@@ -42,7 +42,7 @@ const UserItem = (props) => {
           </Button>
           <Button
             variant="primary"
-            className={roles === "EMPLOYEE" ? "disabled" : "btn btn-edit"}
+            className={role === "EMPLOYEE" ? "disabled" : "btn btn-edit"}
             style={{ marginLeft: "12px" }}
             onClick={() => setIsEditOpen(true)}
           >
@@ -50,7 +50,7 @@ const UserItem = (props) => {
           </Button>
           <Button
             variant="danger"
-            className={roles === "EMPLOYEE" ? "disabled" : "btn btn-delete"}
+            className={role === "EMPLOYEE" ? "disabled" : "btn btn-delete"}
             style={{ marginLeft: "12px" }}
             onClick={() =>
               setConformDialog({
@@ -64,11 +64,13 @@ const UserItem = (props) => {
             {" "}
             <i className="bx bx-trash-alt icon-bg"></i>
           </Button>
-          {<EditUserModal
-            handlerModalClose={handlerModalEditClose}
-            show={isEditOpen}
-            user={user}
-          />}
+          {
+            <EditUserModal
+              handlerModalClose={handlerModalEditClose}
+              show={isEditOpen}
+              user={user}
+            />
+          }
           <DetailUserModal
             handlerModalClose={handlerModalViewClose}
             show={isViewOpen}
@@ -81,7 +83,7 @@ const UserItem = (props) => {
         </ButtonToolbar>
       </td>
     </>
-  );
-};
+  )
+}
 
 export default UserItem

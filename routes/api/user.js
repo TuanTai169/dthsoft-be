@@ -215,7 +215,7 @@ router.put(`/change-password/:id`, verifyToken, async (req, res) => {
 // @decs UPDATE user
 // @access Private
 router.put(`/update/:id`, verifyToken, checkManager, async (req, res) => {
-  const { name, email, phone, address, image } = req.body
+  const { name, email, phone, address, image, roles } = req.body
 
   //Simple Validation
   if (!name || !email)
@@ -230,7 +230,10 @@ router.put(`/update/:id`, verifyToken, checkManager, async (req, res) => {
       email: email,
       phone: phone || "",
       address: address || "",
-      image: image || "",
+      image:
+        image ||
+        "https://res.cloudinary.com/dgd99lsii/image/upload/v1637135199/avatar/male_avatar_bvpfgh.png",
+      roles: roles,
       updateBy: req.userId,
     }
 
@@ -281,33 +284,33 @@ router.put(`/delete/:id`, verifyToken, checkManager, async (req, res) => {
   }
 })
 
-// @route UPDATE api/user/
-// @decs change ROLES
-// @access Private
-router.put(`/change-role/:id`, verifyToken, checkAdmin, async (req, res) => {
-  const { role } = req.body
-  try {
-    const userUpdateCondition = { _id: req.params.id }
-    const updated = { roles: role, updateBy: req.userId }
-    let updatedUser = await User.findOneAndUpdate(
-      userUpdateCondition,
-      updated,
-      {
-        new: true,
-      }
-    )
-    res.json({
-      success: true,
-      message: "User updated successfully",
-      updatedUser,
-    })
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-    })
-  }
-})
+// // @route UPDATE api/user/
+// // @decs change ROLES
+// // @access Private
+// router.put(`/change-role/:id`, verifyToken, checkAdmin, async (req, res) => {
+//   const { role } = req.body
+//   try {
+//     const userUpdateCondition = { _id: req.params.id }
+//     const updated = { roles: role, updateBy: req.userId }
+//     let updatedUser = await User.findOneAndUpdate(
+//       userUpdateCondition,
+//       updated,
+//       {
+//         new: true,
+//       }
+//     )
+//     res.json({
+//       success: true,
+//       message: "User updated successfully",
+//       updatedUser,
+//     })
+//   } catch (error) {
+//     res.status(500).json({
+//       success: false,
+//       message: "Internal server error",
+//     })
+//   }
+// })
 
 // @route UPDATE api/user/
 // @decs UPDATE FILE AVATAR
