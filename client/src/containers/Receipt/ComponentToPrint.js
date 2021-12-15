@@ -21,10 +21,13 @@ export const ComponentToPrint = React.forwardRef((props, ref) => {
   ))
 
   //Render Table
-  const tableHead = ["Number", "Price (USD)", "CheckIn", "CheckOut"]
+  const tableHead = ["Number", "Price(USD)", "CheckIn", "CheckOut"]
   const renderHead = tableHead.map((item, index) => {
     return (
-      <th key={index} style={{ fontWeight: 500, textAlign: "center" }}>
+      <th
+        key={index}
+        style={{ fontWeight: 500, textAlign: "center", paddingRight: "10px" }}
+      >
         {item}
       </th>
     )
@@ -33,10 +36,14 @@ export const ComponentToPrint = React.forwardRef((props, ref) => {
   //Room
   const roomContent = receipt.booking.rooms.map((rooms) => (
     <tr key={rooms._id}>
-      <td>{rooms.roomNumber}</td>
-      <td>{rooms.price}</td>
-      <td>{convertStringToDate(receipt.booking.checkInDate)}</td>
-      <td>{convertStringToDate(receipt.booking.checkOutDate)}</td>
+      <td style={{ textAlign: "center" }}>{rooms.roomNumber}</td>
+      <td style={{ textAlign: "center" }}>{rooms.price}</td>
+      <td style={{ textAlign: "center" }}>
+        {convertStringToDate(receipt.booking.checkInDate)}
+      </td>
+      <td style={{ textAlign: "center" }}>
+        {convertStringToDate(receipt.booking.checkOutDate)}
+      </td>
     </tr>
   ))
 
@@ -194,9 +201,9 @@ export const ComponentToPrint = React.forwardRef((props, ref) => {
               </strong>
             </Col>
           </Row>
-          <div style={{ textAlign: "center", fontSize: "13px" }}>
+          {/* <div style={{ textAlign: "center", fontSize: "13px" }}>
             <strong>(Above prices are inclusive 10% of value added tax)</strong>
-          </div>
+          </div> */}
         </div>
         <div className="mb-3" style={{ borderBottom: "1px solid #bbb" }}>
           <Row>

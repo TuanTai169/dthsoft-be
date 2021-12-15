@@ -2,17 +2,20 @@ import React, { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { Button, ButtonToolbar, Tooltip, OverlayTrigger } from "react-bootstrap"
 import lodash from "lodash"
+
 import RoomItem from "./RoomItem"
 import AddRoomModal from "./AddRoomModal"
 import ViewAllBookingModal from "../Booking/ViewAllBookingModal"
-import { getAllBooking } from "./../../redux/actions/bookingAction"
+import ReservationCalendar from "./ReservationCalendar"
 import FullLoading from "../../components/Common/FullLoading/FullLoading"
 import ScrollToTop from "./../../components/Common/ScrollToTop/ScrollToTop"
+import { getAllBooking } from "./../../redux/actions/bookingAction"
 import { getAllReceipt } from "./../../redux/actions/receiptAction"
 
 const Rooms = () => {
   const [isOpenAddModal, setIsOpenAddModal] = useState(false)
   const [isOpenBookingModal, seIsOpenBookingModal] = useState(false)
+  const [isOpenStatusRoomModal, seIsOpenStatusRoomModal] = useState(false)
   const dispatch = useDispatch()
 
   const rooms = useSelector((state) => state.roomReducer.rooms)
@@ -32,6 +35,7 @@ const Rooms = () => {
   //Close Add Modal
   const handlerCloseAddModal = () => setIsOpenAddModal(false)
   const handlerCloseBookingModal = () => seIsOpenBookingModal(false)
+  const handlerCloseStatusRoomModal = () => seIsOpenStatusRoomModal(false)
 
   return (
     <>
@@ -144,6 +148,27 @@ const Rooms = () => {
                   </span>
                 </OverlayTrigger>
 
+                <OverlayTrigger
+                  overlay={
+                    <Tooltip id="tooltip-disabled">
+                      Reservation Calendar
+                    </Tooltip>
+                  }
+                >
+                  <span className="d-inline-block">
+                    <Button
+                      variant="danger"
+                      onClick={() => seIsOpenStatusRoomModal(true)}
+                      style={{ marginRight: "10px", color: "#fff" }}
+                    >
+                      <i
+                        className="bx bx-calendar"
+                        style={{ fontSize: "22px" }}
+                      ></i>
+                    </Button>
+                  </span>
+                </OverlayTrigger>
+
                 {role !== "EMPLOYEE" && (
                   <Button
                     variant="success"
@@ -159,6 +184,10 @@ const Rooms = () => {
                 <AddRoomModal
                   show={isOpenAddModal}
                   handlerModalClose={handlerCloseAddModal}
+                />
+                <ReservationCalendar
+                  show={isOpenStatusRoomModal}
+                  handlerModalClose={handlerCloseStatusRoomModal}
                 />
               </ButtonToolbar>
             </div>

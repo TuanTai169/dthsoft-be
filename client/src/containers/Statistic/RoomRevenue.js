@@ -25,7 +25,7 @@ const RoomRevenue = () => {
   const [sorting, setSorting] = useState({ field: "", order: "" })
   const [dateRange, setDateRange] = useState([Date.now(), Date.now()])
   const [startDate, endDate] = dateRange
-  const [roomType, setRoomType] = useState("")
+  const [roomType, setRoomType] = useState("ALL")
 
   const fileName = "roomRevenue" + Date.now().toString()
 
@@ -117,7 +117,7 @@ const RoomRevenue = () => {
                   dateFormat="dd/MM/yyyy"
                 />
               </div>
-              <div className="page_selectRoomType">
+              <div className="page_selectRoomType" style={{ width: "150px" }}>
                 <FloatingLabel
                   controlId="floatingSelectType"
                   label="Select Type"
@@ -129,9 +129,6 @@ const RoomRevenue = () => {
                     value={roomType}
                     onChange={(e) => setRoomType(e.target.value)}
                   >
-                    <option className="d-none" value="">
-                      Select Type...
-                    </option>
                     <option value="ALL">ALL</option>
                     <option value="SINGLE">SINGLE</option>
                     <option value="DOUBLE">DOUBLE</option>
